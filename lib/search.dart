@@ -12,7 +12,7 @@ class Search extends StatefulWidget{
 
 class _SearchState extends State <Search> {
   TextEditingController searchController;
-  var _organizations = [[],[]];
+  var _organizations = [[],[],[]];
   Widget _searchBar() {
     return Container(
       margin: EdgeInsets.only(top: 30),
@@ -86,7 +86,7 @@ class _SearchState extends State <Search> {
           child: GestureDetector(
             onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (_) {
-                return DetailScreen("org$i", _organizations[0][i], _organizations[1][i]);
+                return DetailScreen(_organizations[0][i], _organizations[1][i], _organizations[2][i], context);
               }));
             },
             child: ClipRRect(
@@ -94,8 +94,8 @@ class _SearchState extends State <Search> {
               child: Container(
                 width: 300,
                 child: Hero(
-                  tag: 'org$i',
-                  child: Image.network(_organizations[0][i], fit: BoxFit.fill),
+                  tag: '${_organizations[0][i]}',
+                  child: Image.network(_organizations[1][i], fit: BoxFit.fill),
                 ),
               ),
             ),
@@ -134,14 +134,15 @@ class _SearchState extends State <Search> {
 
   _getOrganizations() async {
     var content = 'dope';
-    var _temp = [[],[]];
+    var _temp = [[],[],[]];
     var response = await http.post(_address(), body: content);
     var responseDecode = json.decode(response.body);
     print(response.body);
-    // [["google.com", "gmail.com"]["hi","bye"]]
+    // [["1","2"]["google.com", "gmail.com"]["hi","bye"]]
     for( var i = 0 ; i < responseDecode["imageurls"].length; i++) {
-      _temp[0].add(responseDecode["imageurls"][i]);
-      _temp[1].add(responseDecode["descriptions"][i]);
+      _temp[0].add(responseDecode["ids"][i]);
+      _temp[1].add(responseDecode["imageurls"][i]);
+      _temp[2].add(responseDecode["descriptions"][i]);
     }
     setState(() {
       _organizations = _temp;
