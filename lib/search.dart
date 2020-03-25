@@ -63,7 +63,7 @@ class _SearchState extends State <Search> {
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 40),
         width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height/3,
+        height: MediaQuery.of(context).size.height/3.5,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
         ),

@@ -25,7 +25,7 @@ class DetailScreen extends StatelessWidget {
                       Navigator.pop(context);
                     },
                     child: Card(
-                      margin: EdgeInsets.only(top: 10),
+                      margin: EdgeInsets.only(top: 20),
                       borderOnForeground: true,
                       elevation: 5,
                       shape: RoundedRectangleBorder(
@@ -34,7 +34,7 @@ class DetailScreen extends StatelessWidget {
                       child: ClipRRect(
                         borderRadius: BorderRadius.all(Radius.circular(25)),
                         child: Container(
-                          width: MediaQuery.of(context).size.width/1.2,
+                          width: MediaQuery.of(context).size.width/1.1,
                           height: MediaQuery.of(context).size.height/3,
                           child: Image.network(url, fit: BoxFit.fill),
                         ),
@@ -44,7 +44,7 @@ class DetailScreen extends StatelessWidget {
                 ),
               ),
               Container(
-                margin: EdgeInsets.symmetric(horizontal: 40, vertical: 30),
+                margin: EdgeInsets.symmetric(horizontal: 25, vertical: 40),
                 child: Text(
                   '$description',
                   textAlign: TextAlign.justify,
