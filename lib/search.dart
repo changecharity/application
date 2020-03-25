@@ -12,8 +12,7 @@ class Search extends StatefulWidget{
 
 class _SearchState extends State <Search> {
   TextEditingController searchController;
-  var _urls = [];
-  var _descriptions = [];
+  var _organizations = [[],[]];
   Widget _searchBar() {
     return Container(
       margin: EdgeInsets.only(top: 30),
@@ -76,7 +75,7 @@ class _SearchState extends State <Search> {
   Widget _scrollingList(){
     return ListView.builder(
       scrollDirection: Axis.horizontal,
-      itemCount: _urls.length,
+      itemCount: _organizations[0].length,
       itemBuilder: (BuildContext context, int i){
         return Card(
           borderOnForeground: true,
@@ -87,7 +86,7 @@ class _SearchState extends State <Search> {
           child: GestureDetector(
             onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (_) {
-                return DetailScreen("org$i", _urls[i], _descriptions[i]);
+                return DetailScreen("org$i", _organizations[0][i], _organizations[1][i]);
               }));
             },
             child: ClipRRect(
@@ -96,7 +95,7 @@ class _SearchState extends State <Search> {
                 width: 300,
                 child: Hero(
                   tag: 'org$i',
-                  child: Image.network(_urls[i], fit: BoxFit.fill),
+                  child: Image.network(_organizations[0][i], fit: BoxFit.fill),
                 ),
               ),
             ),
@@ -135,20 +134,18 @@ class _SearchState extends State <Search> {
 
   _getOrganizations() async {
     var content = 'dope';
-    var tempUrls = [];
-    var tempDes = [];
+    var _temp = [[],[]];
     var response = await http.post(_address(), body: content);
     var responseDecode = json.decode(response.body);
     print(response.body);
+    // [["google.com", "gmail.com"]["hi","bye"]]
     for( var i = 0 ; i < responseDecode["imageurls"].length; i++) {
-      tempUrls.add(responseDecode["imageurls"][i]);
-      tempDes.add(responseDecode["descriptions"][i]);
+      _temp[0].add(responseDecode["imageurls"][i]);
+      _temp[1].add(responseDecode["descriptions"][i]);
     }
     setState(() {
-      _urls = tempUrls;
-      _descriptions = tempDes;
+      _organizations = _temp;
     });
-    print(_descriptions);
   }
 
   String _address() {
