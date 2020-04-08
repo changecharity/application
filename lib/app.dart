@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'home.dart';
+import 'login.dart';
+import 'signup.dart';
 
 // Avi sPira was here 
 
@@ -14,13 +16,13 @@ class _ChangeState extends State<Change>{
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      systemNavigationBarColor: Colors.white,
-      statusBarColor: Colors.grey[200],
+      systemNavigationBarColor: Colors.grey[100],
+      statusBarColor: Colors.black12,
       statusBarIconBrightness: Brightness.dark,
     ));
     return MaterialApp(
       title: 'Change',
-      home: Home(),
+      home: Login(),
       theme: lightTheme,
       debugShowCheckedModeBanner: false,
     );
@@ -32,23 +34,28 @@ final lightTheme = _lightTheme();
 ThemeData _lightTheme() {
   final ThemeData base = ThemeData.light();
   return base.copyWith(
-    accentColor: Colors.black,
+    accentColor: Colors.lightBlue[200],
     primaryColor: Colors.lightBlueAccent[400],
     scaffoldBackgroundColor: Colors.grey[100],
     cardColor: Colors.blueGrey[200],
-    textSelectionColor: Colors.lightBlueAccent[400],
+    textSelectionColor: Colors.lightBlueAccent[100],
     errorColor: Colors.redAccent,
     inputDecorationTheme: InputDecorationTheme(
-      hasFloatingPlaceholder: true,
-//      fillColor: Colors.black,
+      hasFloatingPlaceholder: false,
+      filled: false,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(30)),
+      ),
       enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(
+            style: BorderStyle.none,
             color: Colors.grey[900],
             width: 1.0,
           )
       ),
       focusedBorder: OutlineInputBorder(
         borderSide: BorderSide(
+          style: BorderStyle.none,
           color: Colors.lightBlueAccent[400],
           width: 2.0,
         ),
@@ -97,14 +104,14 @@ TextTheme _lightTextTheme(TextTheme base) {
     ),
     caption: base.caption.copyWith(
       fontWeight: FontWeight.w400,
-      fontSize: 14.0,
+      fontSize: 12.0,
     ),
     body2: base.body2.copyWith(
       fontWeight: FontWeight.w500,
       fontSize: 16.0,
     ),
   ).apply(
-    fontFamily: 'JosefinSans',
+    fontFamily: 'Montserrat',
     displayColor: Colors.black,
     bodyColor: Colors.black,
   );
