@@ -14,15 +14,22 @@ class Login extends StatefulWidget{
 class _LoginState extends State<Login> with TickerProviderStateMixin{
   Animation<Offset> animation;
   Animation<Offset> animationB;
+  Animation<Color> animationC;
   AnimationController controller;
+  AnimationController controllerC;
+
 
   double drawTime = 0.0;
   double drawDuration = 2.0;
+  double loadDuration = 1;
+  bool loading = false;
+
 
   void initState() {
     super.initState();
 
     controller = AnimationController(vsync: this, duration: Duration(seconds: drawDuration.toInt()));
+    controllerC = AnimationController(vsync: this, duration: Duration(seconds: loadDuration.toInt()));
 
     animation = Tween<Offset>(
       begin: Offset(-1.0, 1.0),
@@ -38,6 +45,11 @@ class _LoginState extends State<Login> with TickerProviderStateMixin{
       parent: controller,
       curve: Curves.fastLinearToSlowEaseIn,
     ));
+
+    animationC = controllerC.drive(ColorTween(begin: Colors.lightBlue[200], end: Colors.lightBlue[600]));
+
+    controllerC.repeat();
+
     Future<void>.delayed(Duration(milliseconds: 500), () {
       controller.forward();
     });
@@ -51,6 +63,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin{
         'Hello',
         style: TextStyle(
           fontSize: 95,
+          letterSpacing: -5,
         ),
       ),
     );
@@ -83,7 +96,8 @@ class _LoginState extends State<Login> with TickerProviderStateMixin{
       ),
       child: TextField(
         decoration: InputDecoration(
-          hintText: "Email",
+          labelText: "Email",
+          hasFloatingPlaceholder: false,
           prefixIcon:  _emailPrefix(),
         ),
       ),
@@ -116,7 +130,8 @@ class _LoginState extends State<Login> with TickerProviderStateMixin{
       child: TextField(
         obscureText: true,
         decoration: InputDecoration(
-          hintText: "Password",
+          labelText: "Password",
+          hasFloatingPlaceholder: false,
           prefixIcon:  _passPrefix(),
           suffixIcon:  _passSuffix(),
         ),
@@ -149,7 +164,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin{
   Widget _forgotPass() {
     return Container(
       alignment: Alignment.centerRight,
-      margin: EdgeInsets.only(right: 35, top: 25),
+      margin: EdgeInsets.only(right: 35, top: 20),
       child: Text(
         'Forgot your password?',
         style: TextStyle(
@@ -160,9 +175,12 @@ class _LoginState extends State<Login> with TickerProviderStateMixin{
     );
   }
 
-  Widget _signinButton() {
+  Widget _signinContainer() {
     return Container(
+      alignment: Alignment.centerRight,
       margin: EdgeInsets.only(right: 20, top: 50),
+      width: 250,
+      height: 50,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
@@ -175,34 +193,50 @@ class _LoginState extends State<Login> with TickerProviderStateMixin{
               ),
             ),
           ),
-          Container(
-            child: RaisedButton(
-              onPressed: (){
-                Navigator.pushReplacement(
-                  context,
-                    MaterialPageRoute(builder: (context)=> Home())
-                );
-              },
-              padding: EdgeInsets.symmetric(vertical: 0,horizontal: 0),
-              elevation: 10,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(60))),
-              child: Ink(
-                width: 100,
-                height: 50,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(colors: [Colors.lightBlue[400], Colors.lightBlue[300]],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                  ),
-                  borderRadius: BorderRadius.circular(30.0)
-                ),
-                child: Icon(Icons.arrow_forward, color: Colors.white,size: 30,),
-              ),
-            ),
-          ),
+          _signinButton(),
         ],
       ),
     );
+  }
+
+  Widget _signinButton() {
+    if(loading){
+      return Container(
+        margin: EdgeInsets.fromLTRB(32,0,32,0),
+        child: CircularProgressIndicator(
+          valueColor: animationC,
+        ),
+      );
+    } else {
+      return Container(
+        child: RaisedButton(
+          onPressed: (){
+            setState(() {
+              loading = !loading;
+            });
+//            Navigator.pushReplacement(
+//                context,
+//                MaterialPageRoute(builder: (context)=> Home())
+//            );
+          },
+          padding: EdgeInsets.symmetric(vertical: 0,horizontal: 0),
+          elevation: 10,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(60))),
+          child: Ink(
+            width: 100,
+            height: 50,
+            decoration: BoxDecoration(
+                gradient: LinearGradient(colors: [Colors.lightBlue[400], Colors.lightBlue[300]],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+                borderRadius: BorderRadius.circular(30.0)
+            ),
+            child: Icon(Icons.arrow_forward, color: Colors.white,size: 30,),
+          ),
+        ),
+      );
+    }
   }
 
   Widget _createText() {
@@ -263,7 +297,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin{
                       _emailInput(),
                       _passInput(),
                       _forgotPass(),
-                      _signinButton(),
+                      Align(alignment:Alignment.centerRight ,child: _signinContainer()),
                       _createText(),
                     ],
                   ),

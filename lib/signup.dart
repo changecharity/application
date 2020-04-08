@@ -15,7 +15,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin{
   Animation<Offset> animationB;
   AnimationController controller;
   double drawTime = 0.0;
-  double drawDuration = 2.0;
+  double drawDuration = 1.8;
   DateTime selectedDate = DateTime(2012);
   bool _clickedDob;
   String plaidToken;
@@ -86,7 +86,8 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin{
       ),
       child: TextField(
         decoration: InputDecoration(
-          hintText: "Email",
+          labelText: "Email",
+          hasFloatingPlaceholder: false,
           prefixIcon:  _emailPrefix(),
         ),
       ),
@@ -119,7 +120,8 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin{
       child: TextField(
         obscureText: true,
         decoration: InputDecoration(
-          hintText: "Password",
+          labelText: "Password",
+          hasFloatingPlaceholder: false,
           prefixIcon:  _passPrefix(),
           suffixIcon:  _passSuffix(),
         ),

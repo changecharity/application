@@ -32,11 +32,11 @@ final lightTheme = _lightTheme();
 ThemeData _lightTheme() {
   final ThemeData base = ThemeData.light();
   return base.copyWith(
-    accentColor: Colors.black,
+    accentColor: Colors.lightBlue[200],
     primaryColor: Colors.lightBlueAccent[400],
     scaffoldBackgroundColor: Colors.grey[100],
     cardColor: Colors.blueGrey[200],
-    textSelectionColor: Colors.lightBlueAccent[400],
+    textSelectionColor: Colors.lightBlueAccent[100],
     errorColor: Colors.redAccent,
     inputDecorationTheme: InputDecorationTheme(
       hasFloatingPlaceholder: false,
@@ -102,14 +102,14 @@ TextTheme _lightTextTheme(TextTheme base) {
     ),
     caption: base.caption.copyWith(
       fontWeight: FontWeight.w400,
-      fontSize: 14.0,
+      fontSize: 12.0,
     ),
     body2: base.body2.copyWith(
       fontWeight: FontWeight.w500,
       fontSize: 16.0,
     ),
   ).apply(
-    fontFamily: 'JosefinSans',
+    fontFamily: 'Montserrat',
     displayColor: Colors.black,
     bodyColor: Colors.black,
   );

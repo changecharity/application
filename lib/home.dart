@@ -60,7 +60,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
         margin: EdgeInsets.fromLTRB(40,0,40,30),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(25)),
-          color: Colors.orange[400],
+          color: Colors.white,
           boxShadow: [BoxShadow(
             color: Colors.grey[500],
             blurRadius: 20.0,
@@ -115,7 +115,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
           endIndent: 50,
         );
       },
-      itemCount: 10,
+      itemCount: 8,
       itemBuilder: (context, i) {
         return Container(
           margin: EdgeInsets.fromLTRB(10,10,0,10),
@@ -127,7 +127,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
                 height: 50,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.green,
+                  color: Colors.green[100*i+100],
                 ),
               ),
             ],
