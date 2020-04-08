@@ -13,6 +13,7 @@ class Search extends StatefulWidget{
 class _SearchState extends State <Search> {
   TextEditingController searchController;
   var _organizations = [[],[],[]];
+  var _testL = [1,2,3,4,5,6];
   Widget _searchBar() {
     return Container(
       margin: EdgeInsets.only(top: 30),
@@ -57,7 +58,7 @@ class _SearchState extends State <Search> {
     );
   }
 
-  Widget _transactionHistoryContainer() {
+  Widget _searchedOrganizations() {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Container(
@@ -71,6 +72,22 @@ class _SearchState extends State <Search> {
       ),
     );
   }
+
+  Widget _testContainer() {
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 0),
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height/1.4,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+        ),
+        child: _testList(),
+      ),
+    );
+  }
+
 
   Widget _scrollingList(){
     return ListView.builder(
@@ -105,6 +122,47 @@ class _SearchState extends State <Search> {
     );
   }
 
+  Widget _testList() {
+    return ListWheelScrollView(
+      children: _slvChildren(),
+      itemExtent: 15,
+      magnification: 1.2,
+      useMagnifier: false,
+    );
+  }
+
+  List<Widget> _slvChildren() {
+    if (_organizations.length == 0){
+      return List<Widget>.generate(
+        10,
+        (i) => Text('dope'),
+      );
+    }
+    else{
+      return List<Widget>.generate(
+        _organizations.length,
+            (i) => GestureDetector(
+          onTap: () {
+            Navigator.push(context, MaterialPageRoute(builder: (_) {
+              print('dope');
+              return DetailScreen(_organizations[0][i], _organizations[1][i], _organizations[2][i], context);
+            }));
+          },
+          child: Container(
+            margin: EdgeInsets.symmetric(vertical: 10),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(15)),
+              color: Colors.green[100*(i+1)],
+            ),
+            width: 230,
+            height: 300,
+            child: Image.network(_organizations[1][i], fit: BoxFit.fill),
+          ),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -122,7 +180,8 @@ class _SearchState extends State <Search> {
             child: Column(
               children: <Widget>[
                 _searchBar(),
-                _transactionHistoryContainer(),
+//                _searchedOrganizations(),
+                _testContainer(),
                 _submit(),
               ],
             ),
