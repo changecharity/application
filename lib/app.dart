@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'home.dart';
 import 'login.dart';
+import 'signup.dart';
 
 class Change extends StatefulWidget{
   @override
@@ -19,7 +20,7 @@ class _ChangeState extends State<Change>{
     ));
     return MaterialApp(
       title: 'Change',
-      home: Login(),
+      home: Home(),
       theme: lightTheme,
       debugShowCheckedModeBanner: false,
     );

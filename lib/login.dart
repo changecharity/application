@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
+import 'signup.dart';
 
 
 class Login extends StatefulWidget{
@@ -12,7 +13,6 @@ class _LoginState extends State<Login> with TickerProviderStateMixin{
   Animation<Offset> animation;
   Animation<Offset> animationB;
   AnimationController controller;
-  AnimationController controllerB;
 
   double drawTime = 0.0;
   double drawDuration = 2.0;
@@ -21,7 +21,6 @@ class _LoginState extends State<Login> with TickerProviderStateMixin{
     super.initState();
 
     controller = AnimationController(vsync: this, duration: Duration(seconds: drawDuration.toInt()));
-    controllerB = AnimationController(vsync: this, duration: Duration(seconds: drawDuration.toInt()));
 
     animation = Tween<Offset>(
       begin: Offset(-1.0, 1.0),
@@ -34,14 +33,12 @@ class _LoginState extends State<Login> with TickerProviderStateMixin{
       begin: Offset(1.0, 0.0),
       end: Offset(0.0, 0.0),
     ).animate(CurvedAnimation(
+//      todo: replace with controller b
       parent: controller,
       curve: Curves.fastLinearToSlowEaseIn,
     ));
     Future<void>.delayed(Duration(milliseconds: 1000), () {
       controller.forward();
-    });
-    Future<void>.delayed(Duration(milliseconds: 500), () {
-      controllerB.forward();
     });
   }
 
@@ -179,7 +176,12 @@ class _LoginState extends State<Login> with TickerProviderStateMixin{
           ),
           Container(
             child: RaisedButton(
-              onPressed: (){},
+              onPressed: (){
+                Navigator.push(
+                  context,
+                    MaterialPageRoute(builder: (context)=> SignUp())
+                );
+              },
               padding: EdgeInsets.symmetric(vertical: 0,horizontal: 0),
               elevation: 10,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(60))),
@@ -217,13 +219,21 @@ class _LoginState extends State<Login> with TickerProviderStateMixin{
               ),
             ),
           ),
-          Container(
-            margin: EdgeInsets.only(left: 5),
-            child: Text(
-              'Create',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+          GestureDetector(
+            onTap: (){
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context)=> SignUp())
+              );
+            },
+            child: Container(
+              margin: EdgeInsets.only(left: 5),
+              child: Text(
+                'Sign Up',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
@@ -239,7 +249,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin{
         child: SlideTransition(
           position: animationB,
           child: CustomPaint(
-            painter: BobRoss(drawTime, drawDuration),
+            painter: BobRoss(),
             child: Container(
               height: MediaQuery.of(context).size.height,
               child: SlideTransition(
@@ -272,10 +282,6 @@ class _LoginState extends State<Login> with TickerProviderStateMixin{
 }
 
 class BobRoss extends CustomPainter {
-  final double drawTime;
-  final double drawDuration;
-  BobRoss(this.drawTime, this.drawDuration);
-
   @override
   void paint(Canvas canvas, Size size) {
     var paintA = Paint()
