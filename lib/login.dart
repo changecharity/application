@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
 import 'signup.dart';
+import 'paintings.dart';
+import 'home.dart';
 
 
 class Login extends StatefulWidget{
@@ -33,11 +35,10 @@ class _LoginState extends State<Login> with TickerProviderStateMixin{
       begin: Offset(1.0, 0.0),
       end: Offset(0.0, 0.0),
     ).animate(CurvedAnimation(
-//      todo: replace with controller b
       parent: controller,
       curve: Curves.fastLinearToSlowEaseIn,
     ));
-    Future<void>.delayed(Duration(milliseconds: 1000), () {
+    Future<void>.delayed(Duration(milliseconds: 500), () {
       controller.forward();
     });
   }
@@ -177,9 +178,9 @@ class _LoginState extends State<Login> with TickerProviderStateMixin{
           Container(
             child: RaisedButton(
               onPressed: (){
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
-                    MaterialPageRoute(builder: (context)=> SignUp())
+                    MaterialPageRoute(builder: (context)=> Home())
                 );
               },
               padding: EdgeInsets.symmetric(vertical: 0,horizontal: 0),
@@ -249,7 +250,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin{
         child: SlideTransition(
           position: animationB,
           child: CustomPaint(
-            painter: BobRoss(),
+            painter: LoginPaint(),
             child: Container(
               height: MediaQuery.of(context).size.height,
               child: SlideTransition(
@@ -279,47 +280,4 @@ class _LoginState extends State<Login> with TickerProviderStateMixin{
     controller.dispose();
     super.dispose();
   }
-}
-
-class BobRoss extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    var paintA = Paint()
-    ..color = Colors.lightBlue[200]
-    ..style = PaintingStyle.fill;
-    var paintB = Paint()
-      ..color = Colors.lightBlue[400].withOpacity(0.8)
-      ..style = PaintingStyle.fill;
-
-    var pathA = Path();
-    pathA.moveTo(size.width, -70);
-    pathA.lineTo(size.width*0.75, -75);
-    pathA.quadraticBezierTo(
-        size.width * 0.37, size.height * 0.1,
-        size.width*0.63, size.height* 0.13);
-    pathA.quadraticBezierTo(
-        size.width * 0.83, size.height * 0.15,
-        size.width*0.8, size.height* 0.25);
-    pathA.quadraticBezierTo(
-        size.width * 0.8, size.height * 0.35,
-        size.width, size.height* 0.26);
-    canvas.drawPath(pathA, paintA);
-
-    var pathB = Path();
-    pathB.moveTo(size.width, -70);
-    pathB.lineTo(size.width*0.6, -70);
-    pathB.quadraticBezierTo(
-        size.width * 0.53, size.height * 0.1,
-        size.width*0.7, size.height* 0.1);
-    pathB.quadraticBezierTo(
-        size.width * 0.9, size.height * 0.11,
-        size.width*0.82, size.height* 0.2);
-    pathB.quadraticBezierTo(
-        size.width * 0.67, size.height * 0.33,
-        size.width, size.height* 0.25);
-    canvas.drawPath(pathB, paintB);
-  }
-
-  @override
-  bool shouldRepaint(BobRoss oldDelegate) => false;
 }

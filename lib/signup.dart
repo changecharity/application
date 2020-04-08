@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
 import 'package:plaid/plaid.dart';
+import 'paintings.dart';
+import 'home.dart';
 
 class SignUp extends StatefulWidget{
   @override
@@ -28,14 +30,14 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin{
       end: Offset(0.0, 0.0),
     ).animate(CurvedAnimation(
       parent: controller,
-      curve: Curves.elasticInOut,
+      curve: Curves.easeInOutCubic,
     ));
     animationB = Tween<Offset>(
       begin: Offset(2.0, 0.0),
       end: Offset(0.0, 0.0),
     ).animate(CurvedAnimation(
       parent: controller,
-      curve: Curves.elasticInOut,
+      curve: Curves.easeInOutCubic,
     ));
     Future<void>.delayed(Duration(milliseconds: 0), () {
       controller.forward();
@@ -236,8 +238,10 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin{
       onTap: () {
         if (plaidToken == null || plaidToken == ''){
           showPlaidView();
-          setState(() {
-            plaidToken = '';
+          Future.delayed(const Duration(milliseconds: 500), () {
+            setState(() {
+              plaidToken = '';
+            });
           });
         }
       },
@@ -315,10 +319,10 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin{
           Container(
             child: RaisedButton(
               onPressed: (){
-//                Navigator.push(
-//                    context,
-//                    MaterialPageRoute(builder: (context)=> SignUp())
-//                );
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context)=> Home())
+                );
               },
               padding: EdgeInsets.symmetric(vertical: 0,horizontal: 0),
               elevation: 10,
@@ -349,7 +353,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin{
         child: SlideTransition(
           position: animation,
           child: CustomPaint(
-            painter: BobRoss(),
+            painter: SignUpPaint(),
             child: Container(
               height: MediaQuery.of(context).size.height,
               child: SlideTransition(
@@ -420,45 +424,4 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin{
       print(result.token);
     }, stripeToken: false);
   }
-}
-
-class BobRoss extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    var paintA = Paint()
-      ..color = Colors.lightBlue[200]
-      ..style = PaintingStyle.fill;
-    var paintB = Paint()
-      ..color = Colors.lightBlue[400].withOpacity(0.8)
-      ..style = PaintingStyle.fill;
-
-    var pathA = Path();
-      pathA.moveTo(-100, size.height * 0.35);
-    pathA.quadraticBezierTo(
-        size.width*0.5, size.height * 0.32,
-        size.width*0.38, size.height* 0.42);
-    pathA.quadraticBezierTo(
-        size.width * 0.12, size.height * 0.6,
-        size.width*0.35, size.height* 0.7);
-    pathA.quadraticBezierTo(
-        size.width * 0.6, size.height * 0.78,
-        -100, size.height*0.85);
-    canvas.drawPath(pathA, paintA);
-
-    var pathB = Path();
-    pathB.moveTo(-100, size.height * 0.3);
-    pathB.quadraticBezierTo(
-        size.width*0.39, size.height * 0.25,
-        size.width*0.25, size.height* 0.42);
-    pathB.quadraticBezierTo(
-        size.width*0.05, size.height * 0.6,
-        size.width*0.3, size.height* 0.62);
-    pathB.quadraticBezierTo(
-        size.width*0.52, size.height * 0.65,
-        -100, size.height* 0.75);
-    canvas.drawPath(pathB, paintB);
-  }
-
-  @override
-  bool shouldRepaint(BobRoss oldDelegate) => false;
 }

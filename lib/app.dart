@@ -14,13 +14,13 @@ class _ChangeState extends State<Change>{
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      systemNavigationBarColor: Colors.white,
+      systemNavigationBarColor: Colors.grey[100],
       statusBarColor: Colors.black12,
       statusBarIconBrightness: Brightness.dark,
     ));
     return MaterialApp(
       title: 'Change',
-      home: Home(),
+      home: Login(),
       theme: lightTheme,
       debugShowCheckedModeBanner: false,
     );
