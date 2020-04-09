@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
@@ -23,7 +25,6 @@ class _LoginState extends State<Login> with TickerProviderStateMixin{
   double drawDuration = 2.0;
   double loadDuration = 1;
   bool loading = false;
-
 
   void initState() {
     super.initState();
@@ -52,12 +53,16 @@ class _LoginState extends State<Login> with TickerProviderStateMixin{
 
     Future<void>.delayed(Duration(milliseconds: 500), () {
       controller.forward();
+      print(MediaQuery.of(context).viewInsets.bottom);
     });
   }
 
   Widget _helloContainer() {
     return Container(
-      margin: EdgeInsets.only(top: 140),
+      margin: EdgeInsets.only(top:
+      MediaQuery.of(context).viewInsets.bottom == 0 ? 140 :
+      MediaQuery.of(context).viewInsets.bottom < 119 ? MediaQuery.of(context).viewInsets.bottom : 40
+      ),
       alignment: Alignment.center,
       child: Text(
         'Hello',
@@ -117,7 +122,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin{
 
   Widget _passInput() {
     return Container(
-      margin: EdgeInsets.only(right: 20, left: 20, top: 30),
+      margin: EdgeInsets.only(right: 20, left: 20, top: 30, bottom: 0),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.all(Radius.circular(30)),
@@ -212,7 +217,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin{
         child: RaisedButton(
           onPressed: (){
             setState(() {
-              loading = !loading;
+               loading = !loading;
             });
 //            Navigator.pushReplacement(
 //                context,
@@ -289,18 +294,16 @@ class _LoginState extends State<Login> with TickerProviderStateMixin{
               height: MediaQuery.of(context).size.height,
               child: SlideTransition(
                 position: animation,
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: <Widget>[
-                      _helloContainer(),
-                     _messageContainer(),
-                      _emailInput(),
-                      _passInput(),
-                      _forgotPass(),
-                      Align(alignment:Alignment.centerRight ,child: _signinContainer()),
-                      _createText(),
-                    ],
-                  ),
+                child: Column(
+                  children: <Widget>[
+                    _helloContainer(),
+                    _messageContainer(),
+                    _emailInput(),
+                    _passInput(),
+                    _forgotPass(),
+                    Align(alignment:Alignment.centerRight ,child: _signinContainer()),
+                    _createText(),
+                  ],
                 ),
               ),
             ),
