@@ -61,7 +61,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin{
 
   Widget _signUpText() {
     return Container(
-      margin: EdgeInsets.only(top: 60),
+      margin: EdgeInsets.only(top: MediaQuery.of(context).viewInsets.bottom > 345 ? 30 : 60),
       alignment: Alignment.center,
       child: Text(
         'Sign Up',

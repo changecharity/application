@@ -66,14 +66,16 @@ ThemeData _lightTheme() {
       ),
       errorBorder: OutlineInputBorder(
         borderSide: BorderSide(
+          style: BorderStyle.none,
           color: Colors.red,
-          width: 2,
+          width: 0,
         ),
       ),
       focusedErrorBorder: OutlineInputBorder(
         borderSide: BorderSide(
+          style: BorderStyle.none,
           color: Colors.red[600],
-          width: 2,
+          width: 0,
         ),
       ),
     ),

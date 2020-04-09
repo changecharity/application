@@ -20,6 +20,10 @@ class _LoginState extends State<Login> with TickerProviderStateMixin{
   AnimationController controller;
   AnimationController controllerC;
 
+  TextEditingController emailController;
+  TextEditingController passController;
+  String _emailErr = '';
+  String _passErr = '';
 
   double drawTime = 0.0;
   double drawDuration = 2.0;
@@ -61,7 +65,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin{
     return Container(
       margin: EdgeInsets.only(top:
       MediaQuery.of(context).viewInsets.bottom == 0 ? 140 :
-      MediaQuery.of(context).viewInsets.bottom < 119 ? MediaQuery.of(context).viewInsets.bottom : 40
+      MediaQuery.of(context).viewInsets.bottom < 100 ? MediaQuery.of(context).viewInsets.bottom : 0
       ),
       alignment: Alignment.center,
       child: Text(
@@ -100,6 +104,12 @@ class _LoginState extends State<Login> with TickerProviderStateMixin{
         ),],
       ),
       child: TextField(
+        controller: emailController,
+        onChanged: (s){
+          setState(() {
+            _emailErr = '';
+          });
+        },
         decoration: InputDecoration(
           labelText: "Email",
           hasFloatingPlaceholder: false,
@@ -120,9 +130,26 @@ class _LoginState extends State<Login> with TickerProviderStateMixin{
     );
   }
 
+  Widget _emailErrCont(){
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        margin: EdgeInsets.only(left: 82, top:2, bottom:3,),
+        height: 25,
+        child: Text(
+          _emailErr,
+          style: TextStyle(
+            color: Colors.red,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _passInput() {
     return Container(
-      margin: EdgeInsets.only(right: 20, left: 20, top: 30, bottom: 0),
+      margin: EdgeInsets.only(right: 20, left: 20, top: 0, bottom: 0),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.all(Radius.circular(30)),
@@ -134,6 +161,12 @@ class _LoginState extends State<Login> with TickerProviderStateMixin{
       ),
       child: TextField(
         obscureText: true,
+        controller: passController,
+        onChanged: (s){
+          setState(() {
+            _passErr = '';
+          });
+        },
         decoration: InputDecoration(
           labelText: "Password",
           hasFloatingPlaceholder: false,
@@ -166,10 +199,26 @@ class _LoginState extends State<Login> with TickerProviderStateMixin{
     );
   }
 
+  Widget _passErrCont(){
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        margin: EdgeInsets.only(left: 82, top:2, bottom:3,),
+        child: Text(
+          _passErr,
+          style: TextStyle(
+            color: Colors.red,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _forgotPass() {
     return Container(
       alignment: Alignment.centerRight,
-      margin: EdgeInsets.only(right: 35, top: 20),
+      margin: EdgeInsets.only(right: 35, top: 0),
       child: Text(
         'Forgot your password?',
         style: TextStyle(
@@ -181,25 +230,28 @@ class _LoginState extends State<Login> with TickerProviderStateMixin{
   }
 
   Widget _signinContainer() {
-    return Container(
+    return Align(
       alignment: Alignment.centerRight,
-      margin: EdgeInsets.only(right: 20, top: 50),
-      width: 250,
-      height: 50,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 10),
-            child: Text(
-              'Sign In',
-              style: TextStyle(
-                fontSize: 35,
+      child: Container(
+        alignment: Alignment.centerRight,
+        margin: EdgeInsets.only(right: 20, top: 40),
+        width: 250,
+        height: 50,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 10),
+              child: Text(
+                'Sign In',
+                style: TextStyle(
+                  fontSize: 35,
+                ),
               ),
             ),
-          ),
-          _signinButton(),
-        ],
+            _signinButton(),
+          ],
+        ),
       ),
     );
   }
@@ -216,9 +268,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin{
       return Container(
         child: RaisedButton(
           onPressed: (){
-            setState(() {
-               loading = !loading;
-            });
+            _submit();
 //            Navigator.pushReplacement(
 //                context,
 //                MaterialPageRoute(builder: (context)=> Home())
@@ -299,9 +349,11 @@ class _LoginState extends State<Login> with TickerProviderStateMixin{
                     _helloContainer(),
                     _messageContainer(),
                     _emailInput(),
+                    _emailErrCont(),
                     _passInput(),
+                    _passErrCont(),
                     _forgotPass(),
-                    Align(alignment:Alignment.centerRight ,child: _signinContainer()),
+                    _signinContainer(),
                     _createText(),
                   ],
                 ),
@@ -317,4 +369,18 @@ class _LoginState extends State<Login> with TickerProviderStateMixin{
     controller.dispose();
     super.dispose();
   }
+
+  _submit(){
+    setState(() {
+      loading = !loading;
+    });
+    Future<void>.delayed(Duration(milliseconds: 1000), () {
+      setState(() {
+        _emailErr = "This field can't be blank";
+        _passErr = "This field can't be blank";
+        loading = !loading;
+      });
+    });
+  }
+
 }
