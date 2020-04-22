@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 import 'home.dart';
 import 'login.dart';
 import 'signup.dart';
+import 'search.dart';
+
 
 // Avi sPira was here 
 
@@ -22,7 +24,7 @@ class _ChangeState extends State<Change>{
     ));
     return MaterialApp(
       title: 'Change',
-      home: Login(),
+      home: Search(),
       theme: lightTheme,
       debugShowCheckedModeBanner: false,
     );
