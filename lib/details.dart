@@ -1,15 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:io';
-import 'dart:convert';
 
 class DetailScreen extends StatelessWidget {
   final tag;
-  final url;
   final description;
   final context;
-  DetailScreen(this.tag, this.url, this.description, this.context);
+  final bckgrndcolor;
+  DetailScreen(this.tag, this.bckgrndcolor, this.description, this.context);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,6 +25,7 @@ class DetailScreen extends StatelessWidget {
                       margin: EdgeInsets.only(top: 20),
                       borderOnForeground: true,
                       elevation: 5,
+                      color: bckgrndcolor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(25)),
                       ),
@@ -36,7 +34,6 @@ class DetailScreen extends StatelessWidget {
                         child: Container(
                           width: MediaQuery.of(context).size.width/1.1,
                           height: MediaQuery.of(context).size.height/3,
-                          child: Image.network(url, fit: BoxFit.fill),
                         ),
                       ),
                     ),
@@ -66,7 +63,7 @@ class DetailScreen extends StatelessWidget {
                 color: Colors.purple[300],
                 onPressed: (){
                   print(tag);
-                  _selectOrg();
+                  Navigator.pop(context);
                 },
               ),
             ],
@@ -74,22 +71,5 @@ class DetailScreen extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  _selectOrg() async {
-    var content ='{"Id":$tag, "Email":"cool"}';
-    var response = await http.post(_address(), body: content);
-//    var responseDecode = json.decode(response.body);
-    print(response.body);
-    if (response.body == "dope") {
-      Navigator.popUntil(context, ModalRoute.withName(Navigator.defaultRouteName));
-    }
-  }
-
-  String _address() {
-    if (Platform.isAndroid)
-      return 'http://10.0.2.2:8080/api/selectedorg';
-    else
-      return 'http://localhost:8080/api/selectedorg';
   }
 }

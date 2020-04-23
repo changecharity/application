@@ -14,8 +14,7 @@ class Search extends StatefulWidget {
 
 class _SearchState extends State<Search> {
   TextEditingController searchController;
-  var _organizations = [6, 5, 7];
-  var _testL = [1, 2, 3, 4, 5, 6];
+  var _orgNames = ["emek beracha", "jsn", "meira", "torah anytime", "some org", "orgg", "i hope", "this works"];
 
   Widget _searchBar() {
     return Container(
@@ -164,34 +163,37 @@ Widget _scrollingList() {
 //  }
   Widget _organizationList() {
     return ListView.builder(
-        scrollDirection: Axis.vertical,
-        itemCount: 1,
-        itemBuilder: (BuildContext context, int index) {
-          return Container(
-            height: MediaQuery.of(context).size.height * .20,
-            margin: EdgeInsets.only(bottom: 50),
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: 20,
-              itemBuilder: (BuildContext context, int index) {
-                return GestureDetector(
-                    onTap:(){
+      scrollDirection: Axis.vertical,
+      itemCount: 3,
+      itemBuilder: (BuildContext context, int rowindex) {
+        return Container(
+          height: MediaQuery.of(context).size.height * .20,
+          margin: EdgeInsets.only(bottom: 50),
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+//         changed this to reflect a length of an array
+            itemCount: _orgNames.length,
+            itemBuilder: (BuildContext context, int orgindex) {
+              return GestureDetector(
+                  onTap:(){
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Organization()),
+                    MaterialPageRoute(builder: (context) => DetailScreen('${rowindex}org$orgindex', Colors.orange[100*orgindex+100], _orgNames[orgindex], context)),
                   );
                 },
                 child: Hero(
-                        tag: 'org$index',
-                        child:OrgCard()
-                    ));
-              }
-                )
-
-            );
-          }
-          );
-
+                  // its important to pass the identical tag to the hero widget so it can animate
+                  // the hero widget basically takes its content and expands it into a new page
+                  tag: '${rowindex}org$orgindex',
+//                  im passing in a color, and the org name
+                  child:OrgCard(Colors.orange[100*orgindex+100], _orgNames[orgindex])
+                ),
+              );
+            }
+          ),
+        );
+      }
+    );
   }
 
 
