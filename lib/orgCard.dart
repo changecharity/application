@@ -20,21 +20,25 @@ class OrgCard extends StatelessWidget {
 
 Widget _organizationCard() {
   return Container(
+    padding:EdgeInsets.only(bottom:15),
+    child:Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.grey,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey[400],
+              offset: Offset(7.0, 7.0),
+              blurRadius: 5.0,
+            )
+          ],
+        ),
+        width: 140,
+        margin: EdgeInsets.only(left: 0, right: 15),
+        child: _orgName()
+    )
     //height: 130,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: Colors.grey,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey[400],
-            offset: Offset(10.0, 10.0),
-            blurRadius: 5.0,
-          )
-        ],
-      ),
-      width: 140,
-      margin: EdgeInsets.only(left: 0, right: 15),
-      child: _orgName()
+
   );
 }
 
