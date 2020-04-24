@@ -7,6 +7,7 @@ import 'details.dart';
 import './organization.dart';
 import './orgCard.dart';
 import './catTitle.dart';
+import './searchResults.dart';
 
 class Search extends StatefulWidget {
   @override
@@ -28,16 +29,21 @@ class _SearchState extends State<Search> {
   var _orgImages = [
     "https://images.shulcloud.com/1450/logo/1550604879.img",
     "http://www.jsn.info/uploads/1/9/1/2/19123279/published/1393271267.png?1513880506",
-    "https://www.partnersintorah.org/wp-content/uploads/2017/12/partners-in-torah-white-logomark.png",
     "https://www.meiraacademy.org/uploads/1/9/1/2/19123279/download_orig.png",
     "https://www.torahanytime.com/static/images/logo.png",
+    "https://www.boneiolam.org/images/bonei_olam_logo.jpg",
     "http://www.firstnonprofit.org/wp-content/uploads/2019/07/Olami-logo.jpg",
     "https://www.partnersintorah.org/wp-content/uploads/2017/12/partners-in-torah-white-logomark.png",
-    "hhttps://upload.wikimedia.org/wikipedia/en/a/a4/Zaka01.png"
+    "https://upload.wikimedia.org/wikipedia/en/a/a4/Zaka01.png"
   ];
-  var _orgCategories = [
-    "Featured", "Recommended", "Jewish Categories"
-  ];
+  var _orgCategories = ["Featured", "Recommended", "Jewish Categories"];
+  var _isVisible = true;
+
+  void showContainer(){
+    setState((){
+      _isVisible=!_isVisible;
+    });
+  }
 
   Widget _searchBar() {
     return Container(
@@ -45,6 +51,7 @@ class _SearchState extends State<Search> {
       width: MediaQuery.of(context).size.width / 1.15,
       height: MediaQuery.of(context).size.height / 14,
       child: TextField(
+        onTap: showContainer,
         style: TextStyle(
           fontSize: 18,
         ),
@@ -99,19 +106,20 @@ class _SearchState extends State<Search> {
   }
 
   Widget _organizationContainer() {
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: Container(
-          margin: EdgeInsets.only(left: 10, bottom: 20),
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height / 1.4,
-          child: _organizationList()
-          // child: _testList(),
-          ),
-    );
+    return Visibility(
+        visible: _isVisible,
+        replacement: SearchResults(),
+        child: Align(
+          alignment: Alignment.bottomCenter,
+          child: Container(
+              margin: EdgeInsets.only(left: 10, bottom: 20, top:20),
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height / 1.4,
+              child: _organizationList()
+              // child: _testList(),
+              ),
+        ));
   }
-
-
 
 /*
 Widget _scrollingList() {
