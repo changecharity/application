@@ -104,7 +104,7 @@ class _SearchState extends State<Search> {
       child: Container(
           margin: EdgeInsets.only(left: 10, bottom: 20),
           width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height / 1.55,
+          height: MediaQuery.of(context).size.height / 1.4,
           child: _organizationList()
           // child: _testList(),
           ),
