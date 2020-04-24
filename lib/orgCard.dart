@@ -24,12 +24,14 @@ class OrgCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.only(bottom: 15),
       child: Container(
-          width: 140,
+          width: 180,
+          height: 130,
           decoration: BoxDecoration(
+            color: Colors.grey,
             borderRadius: BorderRadius.circular(15),
             image: DecorationImage(
               image: NetworkImage(imageString),
-              fit: BoxFit.cover,
+              //fit: BoxFit.cover,
             ),
            // color: Colors.blueGrey,
             boxShadow: [
@@ -52,14 +54,14 @@ class OrgCard extends StatelessWidget {
 //          corners even if the parent does. You did the right thing with adding a border, but
 //          it was a tiny bit too small so it didnt look fluid
       child: Container(
-        width: 140,
+        width: 180,
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.only(
             bottomLeft: Radius.circular(15),
             bottomRight: Radius.circular(15),
           ),
-          color: Colors.grey,
+          color: Colors.white.withOpacity(.7),
         ),
         child: Text(
 //            this reflects the name of the org

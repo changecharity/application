@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 
 class DetailScreen extends StatelessWidget {
   final tag;
-  final description;
   final imageString;
+  final description;
   final context;
 
   DetailScreen(this.tag, this.imageString, this.description,  this.context);

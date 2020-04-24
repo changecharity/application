@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'details.dart';
 import './organization.dart';
 import './orgCard.dart';
+import './catTitle.dart';
 
 class Search extends StatefulWidget {
   @override
@@ -26,18 +27,16 @@ class _SearchState extends State<Search> {
   ];
   var _orgImages = [
     "https://images.shulcloud.com/1450/logo/1550604879.img",
-
-        "https://www.partnersintorah.org/wp-content/uploads/2017/12/partners-in-torah-white-logomark.png",
-
-        "https://www.partnersintorah.org/wp-content/uploads/2017/12/partners-in-torah-white-logomark.png",
-
-        "https://www.partnersintorah.org/wp-content/uploads/2017/12/partners-in-torah-white-logomark.png",
-
-        "https://www.partnersintorah.org/wp-content/uploads/2017/12/partners-in-torah-white-logomark.png",
-
-        "https://www.partnersintorah.org/wp-content/uploads/2017/12/partners-in-torah-white-logomark.png",
-
-        "https://www.partnersintorah.org/wp-content/uploads/2017/12/partners-in-torah-white-logomark.png"
+    "http://www.jsn.info/uploads/1/9/1/2/19123279/published/1393271267.png?1513880506",
+    "https://www.partnersintorah.org/wp-content/uploads/2017/12/partners-in-torah-white-logomark.png",
+    "https://www.meiraacademy.org/uploads/1/9/1/2/19123279/download_orig.png",
+    "https://www.torahanytime.com/static/images/logo.png",
+    "http://www.firstnonprofit.org/wp-content/uploads/2019/07/Olami-logo.jpg",
+    "https://www.partnersintorah.org/wp-content/uploads/2017/12/partners-in-torah-white-logomark.png",
+    "hhttps://upload.wikimedia.org/wikipedia/en/a/a4/Zaka01.png"
+  ];
+  var _orgCategories = [
+    "Featured", "Recommended", "Jewish Categories"
   ];
 
   Widget _searchBar() {
@@ -103,14 +102,16 @@ class _SearchState extends State<Search> {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Container(
-          margin: EdgeInsets.only(left: 10, top: 20, bottom: 10),
+          margin: EdgeInsets.only(left: 10, bottom: 20),
           width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height / 1.4,
+          height: MediaQuery.of(context).size.height / 1.55,
           child: _organizationList()
           // child: _testList(),
           ),
     );
   }
+
+
 
 /*
 Widget _scrollingList() {
@@ -190,33 +191,42 @@ Widget _scrollingList() {
         itemBuilder: (BuildContext context, int rowindex) {
           return Container(
             height: MediaQuery.of(context).size.height * .20,
-            margin: EdgeInsets.only(bottom: 50),
-            child: ListView.builder(
-                scrollDirection: Axis.horizontal,
+            margin: EdgeInsets.only(top: 60),
+            child: Stack(
+              overflow: Overflow.visible,
+              children: <Widget>[
+                ListView.builder(
+                    scrollDirection: Axis.horizontal,
 //         changed this to reflect a length of an array
-                itemCount: _orgNames.length,
-                itemBuilder: (BuildContext context, int orgindex) {
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => DetailScreen(
-                                '${rowindex}org$orgindex',
-                                _orgImages[orgindex],
-                                _orgNames[orgindex],
-                                context)),
-                      );
-                    },
-                    child: Hero(
-                        // its important to pass the identical tag to the hero widget so it can animate
-                        // the hero widget basically takes its content and expands it into a new page
-                        tag: '${rowindex}org$orgindex',
+                    itemCount: _orgNames.length,
+                    itemBuilder: (BuildContext context, int orgindex) {
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => DetailScreen(
+                                    '${rowindex}org$orgindex',
+                                    _orgImages[orgindex],
+                                    _orgNames[orgindex],
+                                    context)),
+                          );
+                        },
+                        child: Hero(
+                            // its important to pass the identical tag to the hero widget so it can animate
+                            // the hero widget basically takes its content and expands it into a new page
+                            tag: '${rowindex}org$orgindex',
 //                  im passing in a color, and the org name
-                        child:
-                            OrgCard(_orgImages[orgindex], _orgNames[orgindex])),
-                  );
-                }),
+                            child: OrgCard(
+                                _orgImages[orgindex], _orgNames[orgindex])),
+                      );
+                    }),
+                Positioned(
+                  top: -40,
+                  child: CatTitle(_orgCategories[rowindex]),
+                )
+              ],
+            ),
           );
         });
   }
