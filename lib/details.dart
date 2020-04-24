@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 class DetailScreen extends StatelessWidget {
   final tag;
   final description;
+  final imageString;
   final context;
-  final bckgrndcolor;
-  DetailScreen(this.tag, this.bckgrndcolor, this.description, this.context);
+
+  DetailScreen(this.tag, this.imageString, this.description,  this.context);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,17 +26,26 @@ class DetailScreen extends StatelessWidget {
                       margin: EdgeInsets.only(top: 20),
                       borderOnForeground: true,
                       elevation: 5,
-                      color: bckgrndcolor,
+
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(25)),
                       ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.all(Radius.circular(25)),
-                        child: Container(
-                          width: MediaQuery.of(context).size.width/1.1,
-                          height: MediaQuery.of(context).size.height/3,
+                      child:Container(
+                        decoration:BoxDecoration(
+                          image:DecorationImage(
+                            image:NetworkImage(imageString),
+                          )
                         ),
-                      ),
+
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.all(Radius.circular(25)),
+                          child: Container(
+                            width: MediaQuery.of(context).size.width/1.1,
+                            height: MediaQuery.of(context).size.height/3,
+                          ),
+                        ),
+                      )
+
                     ),
                   ),
                 ),

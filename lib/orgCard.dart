@@ -1,75 +1,76 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io';
 import 'dart:convert';
 import 'details.dart';
-import'./organization.dart';
+import './organization.dart';
 
 class OrgCard extends StatelessWidget {
 //  this is how you pass in information to different classes
-  final backgrndcolor;
+  final imageString;
   final name;
-  OrgCard(this.backgrndcolor, this.name);
+
+  OrgCard(this.imageString, this.name);
 
   @override
   Widget build(BuildContext context) {
     return _organizationCard();
   }
+
 //  keep the widgets inside the class
 
   Widget _organizationCard() {
     return Container(
-        padding:EdgeInsets.only(bottom:15),
-        child:Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              color: backgrndcolor,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey[400],
-                  offset: Offset(7.0, 7.0),
-                  blurRadius: 5.0,
-                )
-              ],
+      padding: EdgeInsets.only(bottom: 15),
+      child: Container(
+          width: 140,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            image: DecorationImage(
+              image: NetworkImage(imageString),
+              fit: BoxFit.cover,
             ),
-            width: 140,
-            margin: EdgeInsets.only(left: 0, right: 15),
-            child: _orgName()
-        ),
+           // color: Colors.blueGrey,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey[400],
+                offset: Offset(7.0, 7.0),
+                blurRadius: 5.0,
+              )
+            ],
+          ),
+          margin: EdgeInsets.only(left: 0, right: 15),
+          child: _orgName()),
     );
   }
 
-  Widget _orgName(){
+  Widget _orgName() {
     return Align(
-        alignment: Alignment.bottomCenter,
+      alignment: Alignment.bottomCenter,
 //          the issue was the transparent overlay container doesnt automatically have rounded
 //          corners even if the parent does. You did the right thing with adding a border, but
 //          it was a tiny bit too small so it didnt look fluid
-        child: Container(
-          width: 140,
-          padding: EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(15),
-                bottomRight: Radius.circular(15),
-            ),
-            color: Colors.grey[100].withOpacity(0.2),
+      child: Container(
+        width: 140,
+        padding: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(15),
+            bottomRight: Radius.circular(15),
           ),
-          child:Text(
+          color: Colors.grey,
+        ),
+        child: Text(
 //            this reflects the name of the org
-            '$name',
+          '$name',
           style: TextStyle(
             color: Colors.blue,
             fontWeight: FontWeight.bold,
             fontSize: 14,
           ),
-          ),
+        ),
       ),
     );
   }
 }
-
-
-

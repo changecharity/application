@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:io';
 import 'dart:convert';
 import 'details.dart';
-import'./organization.dart';
+import './organization.dart';
 import './orgCard.dart';
 
 class Search extends StatefulWidget {
@@ -14,7 +14,31 @@ class Search extends StatefulWidget {
 
 class _SearchState extends State<Search> {
   TextEditingController searchController;
-  var _orgNames = ["emek beracha", "jsn", "meira", "torah anytime", "some org", "orgg", "i hope", "this works"];
+  var _orgNames = [
+    "emek beracha",
+    "jsn",
+    "meira",
+    "torah anytime",
+    "bonei olam",
+    "olami",
+    "partners in torah",
+    "zaka"
+  ];
+  var _orgImages = [
+    "https://images.shulcloud.com/1450/logo/1550604879.img",
+
+        "https://www.partnersintorah.org/wp-content/uploads/2017/12/partners-in-torah-white-logomark.png",
+
+        "https://www.partnersintorah.org/wp-content/uploads/2017/12/partners-in-torah-white-logomark.png",
+
+        "https://www.partnersintorah.org/wp-content/uploads/2017/12/partners-in-torah-white-logomark.png",
+
+        "https://www.partnersintorah.org/wp-content/uploads/2017/12/partners-in-torah-white-logomark.png",
+
+        "https://www.partnersintorah.org/wp-content/uploads/2017/12/partners-in-torah-white-logomark.png",
+
+        "https://www.partnersintorah.org/wp-content/uploads/2017/12/partners-in-torah-white-logomark.png"
+  ];
 
   Widget _searchBar() {
     return Container(
@@ -50,14 +74,12 @@ class _SearchState extends State<Search> {
   Widget _submit() {
     return RaisedButton(
       elevation: 10,
-        onPressed: () {
+      onPressed: () {
 //         Navigator.push(
 ////            context,
 ////            MaterialPageRoute(builder: (context) => Organization()),
 ////          );
-
-        },
-
+      },
     );
   }
 
@@ -163,40 +185,41 @@ Widget _scrollingList() {
 //  }
   Widget _organizationList() {
     return ListView.builder(
-      scrollDirection: Axis.vertical,
-      itemCount: 3,
-      itemBuilder: (BuildContext context, int rowindex) {
-        return Container(
-          height: MediaQuery.of(context).size.height * .20,
-          margin: EdgeInsets.only(bottom: 50),
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
+        scrollDirection: Axis.vertical,
+        itemCount: 3,
+        itemBuilder: (BuildContext context, int rowindex) {
+          return Container(
+            height: MediaQuery.of(context).size.height * .20,
+            margin: EdgeInsets.only(bottom: 50),
+            child: ListView.builder(
+                scrollDirection: Axis.horizontal,
 //         changed this to reflect a length of an array
-            itemCount: _orgNames.length,
-            itemBuilder: (BuildContext context, int orgindex) {
-              return GestureDetector(
-                  onTap:(){
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => DetailScreen('${rowindex}org$orgindex', Colors.orange[100*orgindex+100], _orgNames[orgindex], context)),
-                  );
-                },
-                child: Hero(
-                  // its important to pass the identical tag to the hero widget so it can animate
-                  // the hero widget basically takes its content and expands it into a new page
-                  tag: '${rowindex}org$orgindex',
+                itemCount: _orgNames.length,
+                itemBuilder: (BuildContext context, int orgindex) {
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => DetailScreen(
+                                '${rowindex}org$orgindex',
+                                _orgImages[orgindex],
+                                _orgNames[orgindex],
+                                context)),
+                      );
+                    },
+                    child: Hero(
+                        // its important to pass the identical tag to the hero widget so it can animate
+                        // the hero widget basically takes its content and expands it into a new page
+                        tag: '${rowindex}org$orgindex',
 //                  im passing in a color, and the org name
-                  child:OrgCard(Colors.orange[100*orgindex+100], _orgNames[orgindex])
-                ),
-              );
-            }
-          ),
-        );
-      }
-    );
+                        child:
+                            OrgCard(_orgImages[orgindex], _orgNames[orgindex])),
+                  );
+                }),
+          );
+        });
   }
-
-
 
   @override
   Widget build(BuildContext context) {
