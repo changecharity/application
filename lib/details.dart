@@ -30,18 +30,22 @@ class DetailScreen extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(25)),
                       ),
-                      child:Container(
-                        decoration:BoxDecoration(
-                          image:DecorationImage(
-                            image:NetworkImage(imageString),
-                          )
-                        ),
+                      child:ClipRRect(
+                        borderRadius: BorderRadius.all(Radius.circular(25)),
+                        child: Container(
+                          decoration:BoxDecoration(
+                            image:DecorationImage(
+                              image:NetworkImage(imageString),
+                              fit: BoxFit.cover,
+                            )
+                          ),
 
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.all(Radius.circular(25)),
-                          child: Container(
-                            width: MediaQuery.of(context).size.width/1.1,
-                            height: MediaQuery.of(context).size.height/3,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.all(Radius.circular(25)),
+                            child: Container(
+                              width: MediaQuery.of(context).size.width/1.1,
+                              height: MediaQuery.of(context).size.height/3,
+                            ),
                           ),
                         ),
                       )

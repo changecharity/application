@@ -31,14 +31,13 @@ class OrgCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(15),
             image: DecorationImage(
               image: NetworkImage(imageString),
-              //fit: BoxFit.cover,
+              fit: BoxFit.cover,
             ),
-           // color: Colors.blueGrey,
             boxShadow: [
               BoxShadow(
-                color: Colors.grey[400],
-                offset: Offset(7.0, 7.0),
-                blurRadius: 5.0,
+                color: Colors.grey[350],
+                offset: Offset(1.0, 1.0),
+                blurRadius: 10.0,
               )
             ],
           ),
@@ -50,9 +49,6 @@ class OrgCard extends StatelessWidget {
   Widget _orgName() {
     return Align(
       alignment: Alignment.bottomCenter,
-//          the issue was the transparent overlay container doesnt automatically have rounded
-//          corners even if the parent does. You did the right thing with adding a border, but
-//          it was a tiny bit too small so it didnt look fluid
       child: Container(
         width: 180,
         padding: EdgeInsets.all(10),

@@ -1,13 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:io';
-import 'dart:convert';
 import 'details.dart';
-import './organization.dart';
 import './orgCard.dart';
 import './catTitle.dart';
 import './searchResults.dart';
+import 'paintings.dart';
 
 class Search extends StatefulWidget {
   @override
@@ -109,16 +106,13 @@ class _SearchState extends State<Search> {
     return Visibility(
         visible: _isVisible,
         replacement: SearchResults(),
-        child: Align(
-          alignment: Alignment.bottomCenter,
-          child: Container(
-              margin: EdgeInsets.only(left: 10, bottom: 20, top:20),
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height / 1.4,
-              child: _organizationList()
-              // child: _testList(),
-              ),
-        ));
+        child: Container(
+            margin: EdgeInsets.only(left: 10, bottom: 20, top:20),
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height / 1.4,
+            child: _organizationList()
+            // child: _testList(),
+            ));
   }
 
 /*
@@ -243,17 +237,19 @@ Widget _scrollingList() {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            child: Column(
-              children: <Widget>[
-                _searchBar(),
+        child: CustomPaint(
+          painter: SearchPaint(),
+          child: SingleChildScrollView(
+            child: Container(
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              child: Column(
+                children: <Widget>[
+                  _searchBar(),
 //                _searchedOrganizations(),
-                _organizationContainer(),
-                _submit(),
-              ],
+                  Expanded(child: _organizationContainer()),
+                ],
+              ),
             ),
           ),
         ),

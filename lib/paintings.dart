@@ -129,3 +129,46 @@ class SignUpPaint extends CustomPainter {
   @override
   bool shouldRepaint(SignUpPaint oldDelegate) => false;
 }
+
+class SearchPaint extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    var paintA = Paint()
+      ..color = Colors.lightBlue[200]
+      ..style = PaintingStyle.fill;
+    var paintB = Paint()
+      ..color = Colors.lightBlue[400].withOpacity(0.8)
+      ..style = PaintingStyle.fill;
+
+    var pathA = Path();
+    pathA.moveTo(size.width + 100, size.height * 0.8);
+    pathA.quadraticBezierTo(
+        size.width*0.7, size.height * 0.72,
+        size.width*0.68, size.height* 0.85);
+    pathA.quadraticBezierTo(
+        size.width*0.68, size.height * 0.93,
+        size.width*0.52, size.height* 0.93);
+    pathA.quadraticBezierTo(
+        size.width*0.43, size.height * 0.93,
+        size.width*0.4, size.height);
+    pathA.lineTo(size.width + 100, size.height + 100);
+    canvas.drawPath(pathA, paintA);
+
+    var pathB = Path();
+    pathB.moveTo(size.width + 100, size.height * 0.88);
+    pathB.quadraticBezierTo(
+        size.width*0.89, size.height * 0.6,
+        size.width*0.82, size.height* 0.8);
+    pathB.quadraticBezierTo(
+        size.width*0.8, size.height * 0.88,
+        size.width*0.58, size.height* 0.91);
+    pathB.quadraticBezierTo(
+        size.width*0.49, size.height * 0.93,
+        size.width*0.48, size.height);
+    pathB.lineTo(size.width + 100, size.height + 100);
+    canvas.drawPath(pathB, paintB);
+  }
+
+  @override
+  bool shouldRepaint(SearchPaint oldDelegate) => false;
+}
