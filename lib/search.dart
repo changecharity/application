@@ -3,16 +3,21 @@ import 'package:flutter/material.dart';
 import 'details.dart';
 import './orgCard.dart';
 import './catTitle.dart';
-import './searchResults.dart';
 import 'paintings.dart';
 
-class Search extends StatefulWidget {
+class Search extends StatefulWidget{
   @override
   _SearchState createState() => _SearchState();
 }
 
-class _SearchState extends State<Search> {
+class _SearchState extends State<Search> with TickerProviderStateMixin {
+  AnimationController _searchAnController;
+  AnimationController _browseAnController;
+  Animation<Offset> _searchAn;
+  Animation<Offset> _browseAn;
   TextEditingController searchController;
+  bool _bodyState = false;
+  bool _shouldSwitch = true;
   var _orgNames = [
     "emek beracha",
     "jsn",
@@ -42,6 +47,31 @@ class _SearchState extends State<Search> {
     });
   }
 
+  void initState() {
+    super.initState();
+    _searchAnController = AnimationController(vsync: this, duration: Duration(milliseconds: 800));
+    _browseAnController = AnimationController(vsync: this, duration: Duration(milliseconds: 900));
+
+    _searchAn = Tween<Offset>(
+      begin: Offset(0.0, 1.5),
+      end: Offset(0.0, 0.0),
+    ).animate(CurvedAnimation(
+      parent: _searchAnController,
+      curve: Curves.easeInOutCubic,
+    ));
+
+    _browseAn = Tween<Offset>(
+      begin: Offset(1.5, 0.0),
+      end: Offset(0.0, 0.0),
+    ).animate(CurvedAnimation(
+      parent: _browseAnController,
+      curve: Curves.easeInOutCubic,
+    ));
+    Future<void>.delayed(Duration(milliseconds: 500), () {
+      _browseAnController.forward();
+    });  }
+
+
   Widget _searchBar() {
     return Container(
       margin: EdgeInsets.only(top: 30),
@@ -53,6 +83,24 @@ class _SearchState extends State<Search> {
           fontSize: 18,
         ),
         controller: searchController,
+        onChanged: (s) {
+            if (_bodyState){
+              _searchAnController.animateBack(0, curve: Curves.linear, duration: Duration(milliseconds: 500));
+              Future<void>.delayed(Duration(milliseconds: 500), () {
+                _browseAnController.forward();
+              });
+            } else {
+              _browseAnController.animateBack(0, curve: Curves.linear, duration: Duration(milliseconds: 500));
+              Future<void>.delayed(Duration(milliseconds: 500), () {
+                _searchAnController.forward();
+              });
+            }
+            Future<void>.delayed(Duration(milliseconds: 500), () {
+              setState(() {
+                _bodyState = !_bodyState;
+              });
+            });
+        },
         decoration: InputDecoration(
           prefixIcon: _searchIcon(),
           labelText: 'Search For Organizations',
@@ -74,118 +122,31 @@ class _SearchState extends State<Search> {
     );
   }
 
-  Widget _submit() {
-    return RaisedButton(
-      elevation: 10,
-      onPressed: () {
-//         Navigator.push(
-////            context,
-////            MaterialPageRoute(builder: (context) => Organization()),
-////          );
+  Widget _searchOrganizations() {
+    return ListView.builder(
+      scrollDirection: Axis.vertical,
+      itemCount: 10,
+      itemBuilder: (context, i){
+        return Row(
+          children: <Widget>[
+            Container(
+              margin: EdgeInsets.all(30),
+              width: 150,
+              height: 100,
+              color: Colors.green,
+            ),
+            Container(
+              margin: EdgeInsets.all(10),
+              width: 150,
+              height: 100,
+              color: Colors.green,
+            ),
+          ],
+        );
       },
     );
   }
 
-  Widget _searchedOrganizations() {
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: Container(
-        margin: EdgeInsets.symmetric(vertical: 40),
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height / 3.5,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-        ),
-        //child: _scrollingList(),
-      ),
-    );
-  }
-
-  Widget _organizationContainer() {
-    return Visibility(
-        visible: _isVisible,
-        replacement: SearchResults(),
-        child: Container(
-            margin: EdgeInsets.only(left: 10, bottom: 20, top:20),
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height / 1.4,
-            child: _organizationList()
-            // child: _testList(),
-            ));
-  }
-
-/*
-Widget _scrollingList() {
-    return ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemBuilder: (BuildContext context, int i) {
-          return Card(
-            borderOnForeground: true,
-            elevation: 5,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(25)),
-            ),
-        child: GestureDetector(
-           onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) {
-               return DetailScreen(_organizations[0][i], _organizations[1][i], _organizations[2][i], context);
-             }));},
-            child: ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(25)),
-              child: Container(
-                width: 300,
-               child: Hero(
-                  tag: '${_organizations[0][i]}',
-                  child: Image.network(_organizations[1][i], fit: BoxFit.fill),
-               ),
-              ),
-            ),
-/         ),
-  );
-});
-}*/
-
-//  Widget _testList() {
-//    return ListWheelScrollView(
-//      //children: _slvChildren(),
-//      itemExtent: 15,
-//      magnification: 1.2,
-//      useMagnifier: false,
-//    );
-//  }
-
-//  List<Widget> _slvChildren() {
-//    if (_organizations.length == 0){
-//      return List<Widget>.generate(
-//        10,
-//        (i) => Text('dope'),
-//      );
-//    }
-//    else{
-//      return List<Widget>.generate(
-//        _organizations.length,
-//            (i) => GestureDetector(
-//          onTap: () {
-//            Navigator.push(context, MaterialPageRoute(builder: (_) {
-//              print('dope');
-//              return DetailScreen(_organizations[0][i], _organizations[1][i], _organizations[2][i], context);
-//            }));
-//          },
-//          child: Container(
-//            margin: EdgeInsets.symmetric(vertical: 10),
-//            decoration: BoxDecoration(
-//              borderRadius: BorderRadius.all(Radius.circular(15)),
-//              color: Colors.green[100*(i+1)],
-//            ),
-//            width: 230,
-//            height: 300,
-//            child: Image.network(_organizations[1][i], fit: BoxFit.fill),
-//          ),
-//        ),
-//      );
-//    }
-//  }
   Widget _organizationList() {
     return ListView.builder(
         scrollDirection: Axis.vertical,
@@ -207,11 +168,13 @@ Widget _scrollingList() {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => DetailScreen(
-                                    '${rowindex}org$orgindex',
-                                    _orgImages[orgindex],
-                                    _orgNames[orgindex],
-                                    context)),
+                              builder: (context) => DetailScreen(
+                                '${rowindex}org$orgindex',
+                                _orgImages[orgindex],
+                                _orgNames[orgindex],
+                                context,
+                              ),
+                            ),
                           );
                         },
                         child: Hero(
@@ -225,35 +188,61 @@ Widget _scrollingList() {
                     }),
                 Positioned(
                   top: -40,
+                  left: 10,
                   child: CatTitle(_orgCategories[rowindex]),
                 )
               ],
             ),
           );
-        });
+        }
+      );
+  }
+
+  Widget _mainBody() {
+    return Expanded(
+      child: Container(
+        child: _mainBodyContent(),
+      ),
+    );
+  }
+
+  Widget _mainBodyContent() {
+    if (_bodyState) {
+      return SlideTransition(
+        position: _searchAn,
+        child: _searchOrganizations(),
+      );
+    }
+    return SlideTransition(
+      position: _browseAn,
+      child: _organizationList(),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
+    return Material(
+      child: SafeArea(
         child: CustomPaint(
           painter: SearchPaint(),
-          child: SingleChildScrollView(
-            child: Container(
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              child: Column(
-                children: <Widget>[
-                  _searchBar(),
-//                _searchedOrganizations(),
-                  Expanded(child: _organizationContainer()),
-                ],
-              ),
+          child: Container(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              children: <Widget>[
+                _searchBar(),
+                _mainBody(),
+              ],
             ),
           ),
         ),
       ),
     );
+  }
+  @override
+  void dispose() {
+    _searchAnController.dispose();
+    _browseAnController.dispose();
+    super.dispose();
   }
 }

@@ -22,6 +22,7 @@ class OrgCard extends StatelessWidget {
 
   Widget _organizationCard() {
     return Container(
+      margin: EdgeInsets.only(left: 10),
       padding: EdgeInsets.only(bottom: 15),
       child: Container(
           width: 180,
@@ -41,7 +42,6 @@ class OrgCard extends StatelessWidget {
               )
             ],
           ),
-          margin: EdgeInsets.only(left: 0, right: 15),
           child: _orgName()),
     );
   }
