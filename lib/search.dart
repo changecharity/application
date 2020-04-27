@@ -4,6 +4,7 @@ import 'details.dart';
 import './orgCard.dart';
 import './catTitle.dart';
 import 'paintings.dart';
+import './orgCard.dart';
 
 class Search extends StatefulWidget{
   @override
@@ -18,7 +19,7 @@ class _SearchState extends State<Search> with TickerProviderStateMixin {
   TextEditingController searchController;
   bool _bodyState = false;
   bool _shouldSwitch = true;
-  var _orgNames = [
+  static var _orgNames = [
     "emek beracha",
     "jsn",
     "meira",
@@ -28,7 +29,7 @@ class _SearchState extends State<Search> with TickerProviderStateMixin {
     "partners in torah",
     "zaka"
   ];
-  var _orgImages = [
+  static var _orgImages = [
     "https://images.shulcloud.com/1450/logo/1550604879.img",
     "http://www.jsn.info/uploads/1/9/1/2/19123279/published/1393271267.png?1513880506",
     "https://www.meiraacademy.org/uploads/1/9/1/2/19123279/download_orig.png",
@@ -38,9 +39,10 @@ class _SearchState extends State<Search> with TickerProviderStateMixin {
     "https://www.partnersintorah.org/wp-content/uploads/2017/12/partners-in-torah-white-logomark.png",
     "https://upload.wikimedia.org/wikipedia/en/a/a4/Zaka01.png"
   ];
+  //var _searchedImages = _orgImages.contains(_searchedNames);
+  //var _searchedNames =_orgNames.contains(searchController.text);
   var _orgCategories = ["Featured", "Recommended", "Jewish Categories"];
   var _isVisible = true;
-
   void showContainer(){
     setState((){
       _isVisible=!_isVisible;
@@ -71,7 +73,6 @@ class _SearchState extends State<Search> with TickerProviderStateMixin {
       _browseAnController.forward();
     });  }
 
-
   Widget _searchBar() {
     return Container(
       margin: EdgeInsets.only(top: 30),
@@ -100,6 +101,7 @@ class _SearchState extends State<Search> with TickerProviderStateMixin {
                 _bodyState = !_bodyState;
               });
             });
+
         },
         decoration: InputDecoration(
           prefixIcon: _searchIcon(),
@@ -124,23 +126,22 @@ class _SearchState extends State<Search> with TickerProviderStateMixin {
 
   Widget _searchOrganizations() {
     return ListView.builder(
+
       scrollDirection: Axis.vertical,
       itemCount: 10,
       itemBuilder: (context, i){
         return Row(
+
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Container(
-              margin: EdgeInsets.all(30),
-              width: 150,
-              height: 100,
-              color: Colors.green,
+              child:OrgCard(_orgImages[0], _orgNames[0]),
             ),
             Container(
-              margin: EdgeInsets.all(10),
-              width: 150,
-              height: 100,
-              color: Colors.green,
+              margin: EdgeInsets.only(right:10),
+              child:OrgCard(_orgImages[0], _orgNames[0]),
             ),
+
           ],
         );
       },
@@ -188,7 +189,7 @@ class _SearchState extends State<Search> with TickerProviderStateMixin {
                     }),
                 Positioned(
                   top: -40,
-                  left: 10,
+                  left: 20,
                   child: CatTitle(_orgCategories[rowindex]),
                 )
               ],
