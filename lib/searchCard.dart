@@ -42,26 +42,22 @@ class SearchCard extends StatelessWidget {
               Text('$slogan',
                   style: TextStyle(
                       color: Colors.grey[700], fontStyle: FontStyle.italic)),
-              Container(
-                  margin: EdgeInsets.only(top: 7),
-                  child: Row(
-                    children: <Widget>[
-                      Text('Category Name',
-                          style:
-                              TextStyle(color: Colors.grey[500], fontSize: 12)),
-                      Container(
-                        margin: EdgeInsets.only(left: 10),
-                        child: Icon(
-                          Icons.monetization_on,
-                          color: Colors.grey[500],
-                          size: 14.0,
-                        ),
-                      ),
-                      Text('50k donors',
-                          style:
-                              TextStyle(color: Colors.grey[500], fontSize: 12))
-                    ],
-                  ))
+              Row(
+                children: <Widget>[
+                  Text('Category Name',
+                      style: TextStyle(color: Colors.grey[500], fontSize: 12)),
+                  Container(
+                    margin: EdgeInsets.only(left: 10),
+                    child: Icon(
+                      Icons.monetization_on,
+                      color: Colors.grey[500],
+                      size: 14.0,
+                    ),
+                  ),
+                  Text('50k donors',
+                      style: TextStyle(color: Colors.grey[500], fontSize: 12))
+                ],
+              )
             ],
           ),
         ),
