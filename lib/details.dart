@@ -26,7 +26,6 @@ class DetailScreen extends StatelessWidget {
                       margin: EdgeInsets.only(top: 20),
                       borderOnForeground: true,
                       elevation: 5,
-
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(25)),
                       ),

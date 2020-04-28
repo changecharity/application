@@ -7,13 +7,12 @@ import 'signup.dart';
 import 'paintings.dart';
 import 'home.dart';
 
-
-class Login extends StatefulWidget{
+class Login extends StatefulWidget {
   @override
-  _LoginState createState () => _LoginState();
+  _LoginState createState() => _LoginState();
 }
 
-class _LoginState extends State<Login> with TickerProviderStateMixin{
+class _LoginState extends State<Login> with TickerProviderStateMixin {
   Animation<Offset> animation;
   Animation<Offset> animationB;
   Animation<Color> animationC;
@@ -33,8 +32,10 @@ class _LoginState extends State<Login> with TickerProviderStateMixin{
   void initState() {
     super.initState();
 
-    controller = AnimationController(vsync: this, duration: Duration(seconds: drawDuration.toInt()));
-    controllerC = AnimationController(vsync: this, duration: Duration(seconds: loadDuration.toInt()));
+    controller = AnimationController(
+        vsync: this, duration: Duration(seconds: drawDuration.toInt()));
+    controllerC = AnimationController(
+        vsync: this, duration: Duration(seconds: loadDuration.toInt()));
 
     animation = Tween<Offset>(
       begin: Offset(-1.0, 1.0),
@@ -51,7 +52,8 @@ class _LoginState extends State<Login> with TickerProviderStateMixin{
       curve: Curves.fastLinearToSlowEaseIn,
     ));
 
-    animationC = controllerC.drive(ColorTween(begin: Colors.lightBlue[200], end: Colors.lightBlue[600]));
+    animationC = controllerC.drive(
+        ColorTween(begin: Colors.lightBlue[200], end: Colors.lightBlue[600]));
 
     controllerC.repeat();
 
@@ -63,10 +65,12 @@ class _LoginState extends State<Login> with TickerProviderStateMixin{
 
   Widget _helloContainer() {
     return Container(
-      margin: EdgeInsets.only(top:
-      MediaQuery.of(context).viewInsets.bottom == 0 ? 140 :
-      MediaQuery.of(context).viewInsets.bottom < 100 ? MediaQuery.of(context).viewInsets.bottom : 0
-      ),
+      margin: EdgeInsets.only(
+          top: MediaQuery.of(context).viewInsets.bottom == 0
+              ? 140
+              : MediaQuery.of(context).viewInsets.bottom < 100
+                  ? MediaQuery.of(context).viewInsets.bottom
+                  : 0),
       alignment: Alignment.center,
       child: Text(
         'Hello',
@@ -97,15 +101,17 @@ class _LoginState extends State<Login> with TickerProviderStateMixin{
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.all(Radius.circular(30)),
-        boxShadow: [BoxShadow(
-          color: Colors.grey[350],
-          blurRadius: 20.0,
-          offset: Offset.fromDirection(0.9),
-        ),],
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey[350],
+            blurRadius: 20.0,
+            offset: Offset.fromDirection(0.9),
+          ),
+        ],
       ),
       child: TextField(
         controller: emailController,
-        onChanged: (s){
+        onChanged: (s) {
           setState(() {
             _emailErr = '';
           });
@@ -113,7 +119,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin{
         decoration: InputDecoration(
           labelText: "Email",
           hasFloatingPlaceholder: false,
-          prefixIcon:  _emailPrefix(),
+          prefixIcon: _emailPrefix(),
         ),
       ),
     );
@@ -130,11 +136,15 @@ class _LoginState extends State<Login> with TickerProviderStateMixin{
     );
   }
 
-  Widget _emailErrCont(){
+  Widget _emailErrCont() {
     return Align(
       alignment: Alignment.centerLeft,
       child: Container(
-        margin: EdgeInsets.only(left: 82, top:2, bottom:3,),
+        margin: EdgeInsets.only(
+          left: 82,
+          top: 2,
+          bottom: 3,
+        ),
         height: 25,
         child: Text(
           _emailErr,
@@ -153,16 +163,18 @@ class _LoginState extends State<Login> with TickerProviderStateMixin{
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.all(Radius.circular(30)),
-        boxShadow: [BoxShadow(
-          color: Colors.grey[350],
-          blurRadius: 20.0,
-          offset: Offset.fromDirection(0.9),
-        ),],
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey[350],
+            blurRadius: 20.0,
+            offset: Offset.fromDirection(0.9),
+          ),
+        ],
       ),
       child: TextField(
         obscureText: true,
         controller: passController,
-        onChanged: (s){
+        onChanged: (s) {
           setState(() {
             _passErr = '';
           });
@@ -170,8 +182,8 @@ class _LoginState extends State<Login> with TickerProviderStateMixin{
         decoration: InputDecoration(
           labelText: "Password",
           hasFloatingPlaceholder: false,
-          prefixIcon:  _passPrefix(),
-          suffixIcon:  _passSuffix(),
+          prefixIcon: _passPrefix(),
+          suffixIcon: _passSuffix(),
         ),
       ),
     );
@@ -199,11 +211,15 @@ class _LoginState extends State<Login> with TickerProviderStateMixin{
     );
   }
 
-  Widget _passErrCont(){
+  Widget _passErrCont() {
     return Align(
       alignment: Alignment.centerLeft,
       child: Container(
-        margin: EdgeInsets.only(left: 82, top:2, bottom:3,),
+        margin: EdgeInsets.only(
+          left: 82,
+          top: 2,
+          bottom: 3,
+        ),
         child: Text(
           _passErr,
           style: TextStyle(
@@ -257,9 +273,9 @@ class _LoginState extends State<Login> with TickerProviderStateMixin{
   }
 
   Widget _signinButton() {
-    if(loading){
+    if (loading) {
       return Container(
-        margin: EdgeInsets.fromLTRB(32,0,32,0),
+        margin: EdgeInsets.fromLTRB(32, 0, 32, 0),
         child: CircularProgressIndicator(
           valueColor: animationC,
         ),
@@ -267,27 +283,32 @@ class _LoginState extends State<Login> with TickerProviderStateMixin{
     } else {
       return Container(
         child: RaisedButton(
-          onPressed: (){
+          onPressed: () {
             _submit();
 //            Navigator.pushReplacement(
 //                context,
 //                MaterialPageRoute(builder: (context)=> Home())
 //            );
           },
-          padding: EdgeInsets.symmetric(vertical: 0,horizontal: 0),
+          padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
           elevation: 10,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(60))),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(60))),
           child: Ink(
             width: 100,
             height: 50,
             decoration: BoxDecoration(
-                gradient: LinearGradient(colors: [Colors.lightBlue[400], Colors.lightBlue[300]],
+                gradient: LinearGradient(
+                  colors: [Colors.lightBlue[400], Colors.lightBlue[300]],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                 ),
-                borderRadius: BorderRadius.circular(30.0)
+                borderRadius: BorderRadius.circular(30.0)),
+            child: Icon(
+              Icons.arrow_forward,
+              color: Colors.white,
+              size: 30,
             ),
-            child: Icon(Icons.arrow_forward, color: Colors.white,size: 30,),
           ),
         ),
       );
@@ -310,11 +331,9 @@ class _LoginState extends State<Login> with TickerProviderStateMixin{
             ),
           ),
           GestureDetector(
-            onTap: (){
+            onTap: () {
               Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context)=> SignUp())
-              );
+                  context, MaterialPageRoute(builder: (context) => SignUp()));
             },
             child: Container(
               margin: EdgeInsets.only(left: 5),
@@ -364,13 +383,14 @@ class _LoginState extends State<Login> with TickerProviderStateMixin{
       ),
     );
   }
+
   @override
   void dispose() {
     controller.dispose();
     super.dispose();
   }
 
-  _submit(){
+  _submit() {
     setState(() {
       loading = !loading;
     });
@@ -382,5 +402,4 @@ class _LoginState extends State<Login> with TickerProviderStateMixin{
       });
     });
   }
-
 }

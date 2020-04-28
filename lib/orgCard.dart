@@ -15,42 +15,53 @@ class OrgCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _organizationCard();
+    return _organizationCard(context);
   }
 
 //  keep the widgets inside the class
 
-  Widget _organizationCard() {
+  Widget _organizationCard(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(left: 20),
       padding: EdgeInsets.only(bottom: 15),
-      child: Container(
-          width: 180,
-          height: 130,
-          decoration: BoxDecoration(
-            color: Colors.grey,
-            borderRadius: BorderRadius.circular(15),
-            image: DecorationImage(
-              image: NetworkImage(imageString),
-              fit: BoxFit.cover,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey[350],
-                offset: Offset(1.0, 1.0),
-                blurRadius: 10.0,
-              )
+      width: MediaQuery
+          .of(context)
+          .size
+          .width * .42,
+      //height: MediaQuery.of(context).size.height*1,
+      child: Card(
+        elevation: 10,
+        color: Colors.grey,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        child: ClipRRect(
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+          child: Stack(
+            alignment: AlignmentDirectional.bottomCenter,
+            children: <Widget>[
+              Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage(imageString),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              _orgName(context),
             ],
           ),
-          child: _orgName()),
+        ),
+
+      ),
     );
   }
 
-  Widget _orgName() {
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: Container(
-        width: 180,
+  Widget _orgName(BuildContext context) {
+    return
+      Container(
+        width: MediaQuery
+            .of(context)
+            .size
+            .width * .42,
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.only(
@@ -68,7 +79,6 @@ class OrgCard extends StatelessWidget {
             fontSize: 14,
           ),
         ),
-      ),
     );
   }
 }

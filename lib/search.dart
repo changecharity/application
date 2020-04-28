@@ -5,8 +5,9 @@ import './orgCard.dart';
 import './catTitle.dart';
 import 'paintings.dart';
 import './orgCard.dart';
+import './searchCard.dart';
 
-class Search extends StatefulWidget{
+class Search extends StatefulWidget {
   @override
   _SearchState createState() => _SearchState();
 }
@@ -19,7 +20,7 @@ class _SearchState extends State<Search> with TickerProviderStateMixin {
   TextEditingController searchController;
   bool _bodyState = false;
   bool _shouldSwitch = true;
-  static var _orgNames = [
+  var _orgNames = [
     "emek beracha",
     "jsn",
     "meira",
@@ -29,7 +30,7 @@ class _SearchState extends State<Search> with TickerProviderStateMixin {
     "partners in torah",
     "zaka"
   ];
-  static var _orgImages = [
+  var _orgImages = [
     "https://images.shulcloud.com/1450/logo/1550604879.img",
     "http://www.jsn.info/uploads/1/9/1/2/19123279/published/1393271267.png?1513880506",
     "https://www.meiraacademy.org/uploads/1/9/1/2/19123279/download_orig.png",
@@ -39,23 +40,37 @@ class _SearchState extends State<Search> with TickerProviderStateMixin {
     "https://www.partnersintorah.org/wp-content/uploads/2017/12/partners-in-torah-white-logomark.png",
     "https://upload.wikimedia.org/wikipedia/en/a/a4/Zaka01.png"
   ];
+  var _orgSlogans = [
+    "An Orthodox shul for everyone",
+    "Raising the level of Jewish Literacy",
+    "Empowering young Jewish Women",
+    "More than 7,500,000 hours of Torah a year is being learned through TorahAnytime",
+    "Creating Families. Building Eternity.",
+    "Inspiring Jewish Greatness",
+    "Jewish Journeys, custom made...",
+    "Being ready for whatever tomorrow brings"
+  ];
+
   //var _searchedImages = _orgImages.contains(_searchedNames);
   //var _searchedNames =_orgNames.contains(searchController.text);
   var _orgCategories = ["Featured", "Recommended", "Jewish Categories"];
   var _isVisible = true;
-  void showContainer(){
-    setState((){
-      _isVisible=!_isVisible;
+
+  void showContainer() {
+    setState(() {
+      _isVisible = !_isVisible;
     });
   }
 
   void initState() {
     super.initState();
-    _searchAnController = AnimationController(vsync: this, duration: Duration(milliseconds: 800));
-    _browseAnController = AnimationController(vsync: this, duration: Duration(milliseconds: 900));
+    _searchAnController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 800));
+    _browseAnController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 900));
 
     _searchAn = Tween<Offset>(
-      begin: Offset(0.0, 1.5),
+      begin: Offset(0, 1.5),
       end: Offset(0.0, 0.0),
     ).animate(CurvedAnimation(
       parent: _searchAnController,
@@ -71,13 +86,26 @@ class _SearchState extends State<Search> with TickerProviderStateMixin {
     ));
     Future<void>.delayed(Duration(milliseconds: 500), () {
       _browseAnController.forward();
-    });  }
+    });
+  }
 
   Widget _searchBar() {
     return Container(
       margin: EdgeInsets.only(top: 30),
       width: MediaQuery.of(context).size.width / 1.15,
       height: MediaQuery.of(context).size.height / 14,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.all(Radius.circular(30)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey[350],
+            blurRadius: 20.0,
+            offset: Offset.fromDirection(0.9),
+          ),
+        ],
+      ),
+
       child: TextField(
         onTap: showContainer,
         style: TextStyle(
@@ -85,65 +113,54 @@ class _SearchState extends State<Search> with TickerProviderStateMixin {
         ),
         controller: searchController,
         onChanged: (s) {
-            if (_bodyState){
-              _searchAnController.animateBack(0, curve: Curves.linear, duration: Duration(milliseconds: 500));
-              Future<void>.delayed(Duration(milliseconds: 500), () {
-                _browseAnController.forward();
-              });
-            } else {
-              _browseAnController.animateBack(0, curve: Curves.linear, duration: Duration(milliseconds: 500));
-              Future<void>.delayed(Duration(milliseconds: 500), () {
-                _searchAnController.forward();
-              });
-            }
+          if (_bodyState) {
+            _searchAnController.animateBack(0,
+                curve: Curves.linear, duration: Duration(milliseconds: 500));
             Future<void>.delayed(Duration(milliseconds: 500), () {
-              setState(() {
-                _bodyState = !_bodyState;
-              });
+              _browseAnController.forward();
             });
-
+          } else {
+            _browseAnController.animateBack(0,
+                curve: Curves.linear, duration: Duration(milliseconds: 500));
+            Future<void>.delayed(Duration(milliseconds: 500), () {
+              _searchAnController.forward();
+            });
+          }
+          Future<void>.delayed(Duration(milliseconds: 500), () {
+            setState(() {
+              _bodyState = !_bodyState;
+            });
+          });
         },
         decoration: InputDecoration(
           prefixIcon: _searchIcon(),
           labelText: 'Search For Organizations',
+          hasFloatingPlaceholder: false,
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(10),
-            ),
-          ),
+              borderRadius: BorderRadius.all(
+                Radius.circular(30),
+              ),
+              borderSide: BorderSide(color: Colors.white)),
         ),
-        //onSubmitted: (s) => _getOrganizations(),
       ),
+
+      //onSubmitted: (s) => _getOrganizations(),
     );
   }
 
   Widget _searchIcon() {
     return Icon(
       Icons.search,
-      color: Colors.grey[400],
+      color: Colors.black,
     );
   }
 
   Widget _searchOrganizations() {
     return ListView.builder(
-
       scrollDirection: Axis.vertical,
       itemCount: 10,
-      itemBuilder: (context, i){
-        return Row(
-
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Container(
-              child:OrgCard(_orgImages[0], _orgNames[0]),
-            ),
-            Container(
-              margin: EdgeInsets.only(right:10),
-              child:OrgCard(_orgImages[0], _orgNames[0]),
-            ),
-
-          ],
-        );
+      itemBuilder: (context, i) {
+        return SearchCard(_orgImages[6], _orgNames[6], _orgSlogans[6]);
       },
     );
   }
@@ -195,8 +212,7 @@ class _SearchState extends State<Search> with TickerProviderStateMixin {
               ],
             ),
           );
-        }
-      );
+        });
   }
 
   Widget _mainBody() {
@@ -207,6 +223,7 @@ class _SearchState extends State<Search> with TickerProviderStateMixin {
     );
   }
 
+////review this
   Widget _mainBodyContent() {
     if (_bodyState) {
       return SlideTransition(
@@ -240,6 +257,7 @@ class _SearchState extends State<Search> with TickerProviderStateMixin {
       ),
     );
   }
+
   @override
   void dispose() {
     _searchAnController.dispose();
