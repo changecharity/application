@@ -17,9 +17,11 @@ class _SearchState extends State<Search> with TickerProviderStateMixin {
   AnimationController _browseAnController;
   Animation<Offset> _searchAn;
   Animation<Offset> _browseAn;
+
   TextEditingController searchController;
   bool _bodyState = false;
   bool _shouldSwitch = true;
+  bool _recentSearchOn=false;
   var _orgNames = [
     "emek beracha",
     "jsn",
@@ -123,7 +125,12 @@ class _SearchState extends State<Search> with TickerProviderStateMixin {
           fontSize: 18,
         ),
         controller: searchController,
-        onChanged: (s) {},
+        onChanged: (text) {
+          setState(() {
+            _recentSearchOn=!_recentSearchOn;
+          });
+          print(text);
+        },
         decoration: InputDecoration(
           prefixIcon: _switchSearchBack(),
           labelText: 'Search For Organizations',
@@ -260,6 +267,14 @@ class _SearchState extends State<Search> with TickerProviderStateMixin {
         });
   }
 
+  Widget _recentSearchList(){
+    return Expanded(
+    child:Container(
+      color:Colors.grey
+    )
+    );
+  }
+
   Widget _mainBody() {
     return Expanded(
       child: Container(
@@ -275,11 +290,17 @@ class _SearchState extends State<Search> with TickerProviderStateMixin {
         position: _searchAn,
         child: _searchOrganizations(),
       );
+    } else if(_recentSearchOn){
+      return SlideTransition(
+        position: _searchAn,
+        child: _recentSearchList(),
+      );
+    } else if(!_recentSearchOn){
+      return SlideTransition(
+        position: _browseAn,
+        child: _organizationList(),
+      );
     }
-    return SlideTransition(
-      position: _browseAn,
-      child: _organizationList(),
-    );
   }
 
   @override

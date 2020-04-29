@@ -43,7 +43,7 @@ class SearchCard extends StatelessWidget {
                       )))),
           Container(
             margin: EdgeInsets.only(top: 25, left: 20),
-            padding: EdgeInsets.only(top: 2, bottom: 2),
+            padding: EdgeInsets.only(top: 1, bottom: 1),
             height: MediaQuery.of(context).size.height * .075,
             width: MediaQuery.of(context).size.width * .65,
             child: Column(
