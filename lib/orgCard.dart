@@ -30,7 +30,7 @@ class OrgCard extends StatelessWidget {
           .width * .42,
       //height: MediaQuery.of(context).size.height*1,
       child: Card(
-        elevation: 10,
+        elevation: 5,
         color: Colors.grey,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         child: ClipRRect(

@@ -54,12 +54,23 @@ class _SearchState extends State<Search> with TickerProviderStateMixin {
   //var _searchedImages = _orgImages.contains(_searchedNames);
   //var _searchedNames =_orgNames.contains(searchController.text);
   var _orgCategories = ["Featured", "Recommended", "Jewish Categories"];
-  var _isVisible = true;
 
   void showContainer() {
-    setState(() {
-      _isVisible = !_isVisible;
-    });
+    if(_shouldSwitch){
+      _browseAnController.animateBack(0,
+          curve: Curves.linear, duration: Duration(milliseconds: 500));
+      Future<void>.delayed(Duration(milliseconds: 500), () {
+        _searchAnController.forward();
+      });
+      Future<void>.delayed(Duration(milliseconds: 500), () {
+        setState(() {
+          _bodyState = !_bodyState;
+          _shouldSwitch = false;
+        });
+      });
+    } else {
+      FocusScope.of(context).unfocus();
+    }
   }
 
   void initState() {
@@ -113,45 +124,58 @@ class _SearchState extends State<Search> with TickerProviderStateMixin {
         ),
         controller: searchController,
         onChanged: (s) {
-          if (_bodyState) {
-            _searchAnController.animateBack(0,
-                curve: Curves.linear, duration: Duration(milliseconds: 500));
-            Future<void>.delayed(Duration(milliseconds: 500), () {
-              _browseAnController.forward();
-            });
-          } else {
-            _browseAnController.animateBack(0,
-                curve: Curves.linear, duration: Duration(milliseconds: 500));
-            Future<void>.delayed(Duration(milliseconds: 500), () {
-              _searchAnController.forward();
-            });
-          }
-          Future<void>.delayed(Duration(milliseconds: 500), () {
-            setState(() {
-              _bodyState = !_bodyState;
-            });
-          });
         },
         decoration: InputDecoration(
-          prefixIcon: _searchIcon(),
+          prefixIcon: _switchSearchBack(),
           labelText: 'Search For Organizations',
           hasFloatingPlaceholder: false,
           enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(30),
-              ),
-              borderSide: BorderSide(color: Colors.white)),
+            borderRadius: BorderRadius.all(
+              Radius.circular(30),
+            ),
+            borderSide: BorderSide(
+            style: BorderStyle.none,
+            ),
+          ),
         ),
       ),
-
       //onSubmitted: (s) => _getOrganizations(),
+    );
+  }
+
+  Widget _switchSearchBack() {
+    return AnimatedSwitcher(
+      duration: Duration(milliseconds: 300),
+      switchInCurve: Curves.linear,
+      switchOutCurve: Curves.linear,
+      child: _shouldSwitch ? _searchIcon() : _backIcon(),
     );
   }
 
   Widget _searchIcon() {
     return Icon(
       Icons.search,
+       color: Colors.black,
+    );
+  }
+
+  Widget _backIcon() {
+    return IconButton(
+      icon: Icon(Icons.arrow_back),
       color: Colors.black,
+      onPressed: (){
+        _searchAnController.animateBack(0,
+            curve: Curves.linear, duration: Duration(milliseconds: 500));
+        Future<void>.delayed(Duration(milliseconds: 500), () {
+          _browseAnController.forward();
+        });
+        Future<void>.delayed(Duration(milliseconds: 500), () {
+          setState(() {
+            _bodyState = !_bodyState;
+            _shouldSwitch = true;
+          });
+        });
+      },
     );
   }
 
