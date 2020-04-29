@@ -5,12 +5,12 @@ import 'package:plaid/plaid.dart';
 import 'paintings.dart';
 import 'home.dart';
 
-class SignUp extends StatefulWidget{
+class SignUp extends StatefulWidget {
   @override
   _SignUpState createState() => _SignUpState();
 }
 
-class _SignUpState extends State<SignUp> with TickerProviderStateMixin{
+class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
   Animation<Offset> animation;
   Animation<Offset> animationB;
   AnimationController controller;
@@ -23,7 +23,8 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin{
   void initState() {
     super.initState();
 
-    controller = AnimationController(vsync: this, duration: Duration(seconds: drawDuration.toInt()));
+    controller = AnimationController(
+        vsync: this, duration: Duration(seconds: drawDuration.toInt()));
 
     animation = Tween<Offset>(
       begin: Offset(-1.0, 0.0),
@@ -46,22 +47,23 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin{
   }
 
   Widget _backButton() {
-   return Container(
-     margin: EdgeInsets.only(top: 20, left: 10),
-     alignment: Alignment.centerLeft,
-     child: IconButton(
-       icon: Icon(Icons.arrow_back),
-       iconSize: 30,
-       onPressed: (){
-         Navigator.pop(context);
-       },
-     ),
-   );
+    return Container(
+      margin: EdgeInsets.only(top: 20, left: 10),
+      alignment: Alignment.centerLeft,
+      child: IconButton(
+        icon: Icon(Icons.arrow_back),
+        iconSize: 30,
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      ),
+    );
   }
 
   Widget _signUpText() {
     return Container(
-      margin: EdgeInsets.only(top: MediaQuery.of(context).viewInsets.bottom > 345 ? 30 : 60),
+      margin: EdgeInsets.only(
+          top: MediaQuery.of(context).viewInsets.bottom > 345 ? 30 : 60),
       alignment: Alignment.center,
       child: Text(
         'Sign Up',
@@ -78,17 +80,19 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin{
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.all(Radius.circular(30)),
-        boxShadow: [BoxShadow(
-          color: Colors.grey[350],
-          blurRadius: 20.0,
-          offset: Offset.fromDirection(0.9),
-        ),],
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey[350],
+            blurRadius: 20.0,
+            offset: Offset.fromDirection(0.9),
+          ),
+        ],
       ),
       child: TextField(
         decoration: InputDecoration(
           labelText: "Email",
           hasFloatingPlaceholder: false,
-          prefixIcon:  _emailPrefix(),
+          prefixIcon: _emailPrefix(),
         ),
       ),
     );
@@ -111,19 +115,21 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin{
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.all(Radius.circular(30)),
-        boxShadow: [BoxShadow(
-          color: Colors.grey[350],
-          blurRadius: 20.0,
-          offset: Offset.fromDirection(0.9),
-        ),],
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey[350],
+            blurRadius: 20.0,
+            offset: Offset.fromDirection(0.9),
+          ),
+        ],
       ),
       child: TextField(
         obscureText: true,
         decoration: InputDecoration(
           labelText: "Password",
           hasFloatingPlaceholder: false,
-          prefixIcon:  _passPrefix(),
-          suffixIcon:  _passSuffix(),
+          prefixIcon: _passPrefix(),
+          suffixIcon: _passSuffix(),
         ),
       ),
     );
@@ -166,19 +172,21 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin{
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.all(Radius.circular(30)),
-          boxShadow: [BoxShadow(
-            color: Colors.grey[350],
-            blurRadius: 20.0,
-            offset: Offset.fromDirection(0.9),
-          ),],
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey[350],
+              blurRadius: 20.0,
+              offset: Offset.fromDirection(0.9),
+            ),
+          ],
         ),
         child: _dobToggle(),
       ),
     );
   }
 
-  Widget _dobToggle(){
-    if(_clickedDob == null) {
+  Widget _dobToggle() {
+    if (_clickedDob == null) {
       return Row(
         children: <Widget>[
           _dobIcon(),
@@ -190,8 +198,8 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin{
             ),
           ),
         ],
-      );    }
-    else{
+      );
+    } else {
       return Row(
         children: <Widget>[
           _dobIcon(),
@@ -238,7 +246,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin{
   Widget _plaidButton() {
     return GestureDetector(
       onTap: () {
-        if (plaidToken == null || plaidToken == ''){
+        if (plaidToken == null || plaidToken == '') {
           showPlaidView();
           Future.delayed(const Duration(milliseconds: 500), () {
             setState(() {
@@ -254,11 +262,13 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin{
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.all(Radius.circular(30)),
-          boxShadow: [BoxShadow(
-            color: Colors.grey[350],
-            blurRadius: 20.0,
-            offset: Offset.fromDirection(0.9),
-          ),],
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey[350],
+              blurRadius: 20.0,
+              offset: Offset.fromDirection(0.9),
+            ),
+          ],
         ),
         child: Row(
           children: <Widget>[
@@ -281,15 +291,15 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin{
     );
   }
 
-  Widget  _plaidStatus() {
-    if(plaidToken != '' && plaidToken != null){
+  Widget _plaidStatus() {
+    if (plaidToken != '' && plaidToken != null) {
       return Text(
         'Connected',
         style: TextStyle(
           color: Colors.green,
         ),
       );
-    } else if(plaidToken == null) {
+    } else if (plaidToken == null) {
       return Text(
         'Link Your Bank Account',
       );
@@ -320,26 +330,29 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin{
           ),
           Container(
             child: RaisedButton(
-              onPressed: (){
+              onPressed: () {
                 Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context)=> Home())
-                );
+                    context, MaterialPageRoute(builder: (context) => Home()));
               },
-              padding: EdgeInsets.symmetric(vertical: 0,horizontal: 0),
+              padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
               elevation: 10,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(60))),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(60))),
               child: Ink(
                 width: 100,
                 height: 50,
                 decoration: BoxDecoration(
-                    gradient: LinearGradient(colors: [Colors.lightBlue[400], Colors.lightBlue[300]],
+                    gradient: LinearGradient(
+                      colors: [Colors.lightBlue[400], Colors.lightBlue[300]],
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                     ),
-                    borderRadius: BorderRadius.circular(30.0)
+                    borderRadius: BorderRadius.circular(30.0)),
+                child: Icon(
+                  Icons.arrow_forward,
+                  color: Colors.white,
+                  size: 30,
                 ),
-                child: Icon(Icons.arrow_forward, color: Colors.white,size: 30,),
               ),
             ),
           ),
@@ -380,6 +393,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin{
       ),
     );
   }
+
   @override
   void dispose() {
     controller.dispose();
@@ -388,11 +402,10 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin{
 
   Future<Null> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
-      context: context,
-      initialDate: selectedDate,
-      firstDate: DateTime(1940, 8),
-      lastDate: DateTime(2013)
-    );
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(1940, 8),
+        lastDate: DateTime(2013));
     if (picked != null && picked != selectedDate)
       setState(() {
         selectedDate = picked;
@@ -407,16 +420,15 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin{
         plaidBaseUrl: 'https://cdn.plaid.com/link/v2/stable/link.html',
         plaidEnvironment: plaidSandbox ? 'sandbox' : 'production',
         environmentPlaidPathAccessToken:
-        'https://sandbox.plaid.com/item/public_token/exchange',
+            'https://sandbox.plaid.com/item/public_token/exchange',
         environmentPlaidPathStripeToken:
-        'https://sandbox.plaid.com/processor/stripe/bank_account_token/create',
+            'https://sandbox.plaid.com/processor/stripe/bank_account_token/create',
         plaidClientId: '',
         secret: plaidSandbox ? '' : '',
         clientName: 'ClientName',
         webhook: 'https://www.chezky.com/dope',
         products: 'auth,income',
-        selectAccount: 'false'
-    );
+        selectAccount: 'false');
 
     FlutterPlaidApi flutterPlaidApi = FlutterPlaidApi(configuration);
     flutterPlaidApi.launch(context, (Result result) {

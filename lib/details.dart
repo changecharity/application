@@ -5,51 +5,50 @@ class DetailScreen extends StatelessWidget {
   final tag;
   final imageString;
   final description;
+  final slogan;
   final context;
 
-  DetailScreen(this.tag, this.imageString, this.description,  this.context);
+  DetailScreen(this.tag, this.imageString,  this.description,this.slogan, this.context);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
-            children: <Widget> [
+            children: <Widget>[
               Hero(
                 tag: tag,
                 child: Center(
                   child: GestureDetector(
-                    onVerticalDragDown:(d){
+                    onVerticalDragDown: (d) {
                       Navigator.pop(context);
                     },
                     child: Card(
-                      margin: EdgeInsets.only(top: 20),
-                      borderOnForeground: true,
-                      elevation: 5,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(25)),
-                      ),
-                      child:ClipRRect(
-                        borderRadius: BorderRadius.all(Radius.circular(25)),
-                        child: Container(
-                          decoration:BoxDecoration(
-                            image:DecorationImage(
-                              image:NetworkImage(imageString),
+                        margin: EdgeInsets.only(top: 20),
+                        borderOnForeground: true,
+                        elevation: 5,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(25)),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.all(Radius.circular(25)),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                              image: NetworkImage(imageString),
                               fit: BoxFit.cover,
-                            )
-                          ),
-
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.all(Radius.circular(25)),
-                            child: Container(
-                              width: MediaQuery.of(context).size.width/1.1,
-                              height: MediaQuery.of(context).size.height/3,
+                            )),
+                            child: ClipRRect(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(25)),
+                              child: Container(
+                                width: MediaQuery.of(context).size.width / 1.1,
+                                height: MediaQuery.of(context).size.height / 3,
+                              ),
                             ),
                           ),
-                        ),
-                      )
-
-                    ),
+                        )),
                   ),
                 ),
               ),
@@ -73,8 +72,8 @@ class DetailScreen extends StatelessWidget {
                     fontSize: 20,
                   ),
                 ),
-                color: Colors.purple[300],
-                onPressed: (){
+                color: Colors.lightBlueAccent,
+                onPressed: () {
                   print(tag);
                   Navigator.pop(context);
                 },

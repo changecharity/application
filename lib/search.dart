@@ -53,10 +53,10 @@ class _SearchState extends State<Search> with TickerProviderStateMixin {
 
   //var _searchedImages = _orgImages.contains(_searchedNames);
   //var _searchedNames =_orgNames.contains(searchController.text);
-  var _orgCategories = ["Featured", "Recommended", "Jewish Categories"];
+  var _orgCategories = ["Featured", "Recommended", "Jewish Organizations"];
 
   void showContainer() {
-    if(_shouldSwitch){
+    if (_shouldSwitch) {
       _browseAnController.animateBack(0,
           curve: Curves.linear, duration: Duration(milliseconds: 500));
       Future<void>.delayed(Duration(milliseconds: 500), () {
@@ -123,8 +123,7 @@ class _SearchState extends State<Search> with TickerProviderStateMixin {
           fontSize: 18,
         ),
         controller: searchController,
-        onChanged: (s) {
-        },
+        onChanged: (s) {},
         decoration: InputDecoration(
           prefixIcon: _switchSearchBack(),
           labelText: 'Search For Organizations',
@@ -134,7 +133,7 @@ class _SearchState extends State<Search> with TickerProviderStateMixin {
               Radius.circular(30),
             ),
             borderSide: BorderSide(
-            style: BorderStyle.none,
+              style: BorderStyle.none,
             ),
           ),
         ),
@@ -152,10 +151,11 @@ class _SearchState extends State<Search> with TickerProviderStateMixin {
     );
   }
 
+
   Widget _searchIcon() {
     return Icon(
       Icons.search,
-       color: Colors.black,
+      color: Colors.black,
     );
   }
 
@@ -163,7 +163,7 @@ class _SearchState extends State<Search> with TickerProviderStateMixin {
     return IconButton(
       icon: Icon(Icons.arrow_back),
       color: Colors.black,
-      onPressed: (){
+      onPressed: () {
         _searchAnController.animateBack(0,
             curve: Curves.linear, duration: Duration(milliseconds: 500));
         Future<void>.delayed(Duration(milliseconds: 500), () {
@@ -180,12 +180,32 @@ class _SearchState extends State<Search> with TickerProviderStateMixin {
   }
 
   Widget _searchOrganizations() {
-    return ListView.builder(
-      scrollDirection: Axis.vertical,
-      itemCount: 10,
-      itemBuilder: (context, i) {
-        return SearchCard(_orgImages[6], _orgNames[6], _orgSlogans[6]);
-      },
+    return Container(
+      child: ListView.builder(
+        scrollDirection: Axis.vertical,
+        itemCount: 7,
+        itemBuilder: (context, orgindex) {
+          return GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DetailScreen(
+                    'org$orgindex',
+                    _orgImages[orgindex],
+                    _orgNames[orgindex],
+                    _orgSlogans[orgindex],
+                    context,
+                  ),
+                ),
+              );
+            },
+            child: Hero(
+                tag: 'org$orgindex',
+                child: SearchCard(_orgImages[orgindex], _orgNames[orgindex], _orgSlogans[orgindex])),
+          );
+        },
+      ),
     );
   }
 
@@ -214,6 +234,7 @@ class _SearchState extends State<Search> with TickerProviderStateMixin {
                                 '${rowindex}org$orgindex',
                                 _orgImages[orgindex],
                                 _orgNames[orgindex],
+                                _orgSlogans[orgindex],
                                 context,
                               ),
                             ),
@@ -264,6 +285,7 @@ class _SearchState extends State<Search> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Material(
+
       child: SafeArea(
         child: CustomPaint(
           painter: SearchPaint(),
