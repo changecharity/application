@@ -1,10 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-
-class CatTitle extends StatelessWidget{
-
+class CatTitle extends StatelessWidget {
   final catTitle;
+
   CatTitle(this.catTitle);
 
   @override
@@ -14,13 +13,17 @@ class CatTitle extends StatelessWidget{
   }
 
   Widget _categoryTitle() {
-
-    return Container(
-        padding: EdgeInsets.only(top:5, bottom:5, left:10, right:10),
-        decoration:BoxDecoration(
+    return Align(
+      alignment: AlignmentDirectional.topStart,
+      child: Container(
+        margin:EdgeInsets.only(left:20),
+        padding: EdgeInsets.only(top: 5, bottom: 5, left: 10, right: 10),
+        decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           color: Colors.grey[300],
         ),
-        child: Text(catTitle));
+        child: Text(catTitle),
+      ),
+    );
   }
 }

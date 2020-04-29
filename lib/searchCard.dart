@@ -22,13 +22,13 @@ class SearchCard extends StatelessWidget {
         children: <Widget>[
           Container(
               margin: EdgeInsets.only(top: 25, left: 20),
-              height: MediaQuery.of(context).size.height * .075,
-              width: MediaQuery.of(context).size.width * .2,
+              height: MediaQuery.of(context).size.height * .1,
+              width: MediaQuery.of(context).size.height * .1,
               child: Card(
-                  elevation: 0,
+                  elevation: 5,
                   color: Colors.grey,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
+                     borderRadius: BorderRadius.circular(10)),
                   child: ClipRRect(
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                       child: Container(
@@ -43,8 +43,8 @@ class SearchCard extends StatelessWidget {
                       )))),
           Container(
             margin: EdgeInsets.only(top: 25, left: 20),
-            padding: EdgeInsets.only(top: 1, bottom: 1),
-            height: MediaQuery.of(context).size.height * .075,
+            padding: EdgeInsets.only(top: 3, bottom: 3),
+            height: MediaQuery.of(context).size.height * .1,
             width: MediaQuery.of(context).size.width * .65,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

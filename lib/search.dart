@@ -21,7 +21,7 @@ class _SearchState extends State<Search> with TickerProviderStateMixin {
   TextEditingController searchController;
   bool _bodyState = false;
   bool _shouldSwitch = true;
-  bool _recentSearchOn=false;
+  bool _recentSearchOn = true;
   var _orgNames = [
     "emek beracha",
     "jsn",
@@ -55,7 +55,12 @@ class _SearchState extends State<Search> with TickerProviderStateMixin {
 
   //var _searchedImages = _orgImages.contains(_searchedNames);
   //var _searchedNames =_orgNames.contains(searchController.text);
-  var _orgCategories = ["Featured", "Recommended", "Jewish Organizations"];
+  var _orgCategories = [
+    "Featured",
+    "Recommended",
+    "Ads",
+    "Jewish Organizations"
+  ];
 
   void showContainer() {
     if (_shouldSwitch) {
@@ -125,9 +130,9 @@ class _SearchState extends State<Search> with TickerProviderStateMixin {
           fontSize: 18,
         ),
         controller: searchController,
-        onChanged: (text) {
+        onSubmitted: (text) {
           setState(() {
-            _recentSearchOn=!_recentSearchOn;
+            _recentSearchOn = !_recentSearchOn;
           });
           print(text);
         },
@@ -157,7 +162,6 @@ class _SearchState extends State<Search> with TickerProviderStateMixin {
       child: _shouldSwitch ? _searchIcon() : _backIcon(),
     );
   }
-
 
   Widget _searchIcon() {
     return Icon(
@@ -209,7 +213,8 @@ class _SearchState extends State<Search> with TickerProviderStateMixin {
             },
             child: Hero(
                 tag: 'org$orgindex',
-                child: SearchCard(_orgImages[orgindex], _orgNames[orgindex], _orgSlogans[orgindex])),
+                child: SearchCard(_orgImages[orgindex], _orgNames[orgindex],
+                    _orgSlogans[orgindex])),
           );
         },
       ),
@@ -219,60 +224,57 @@ class _SearchState extends State<Search> with TickerProviderStateMixin {
   Widget _organizationList() {
     return ListView.builder(
         scrollDirection: Axis.vertical,
-        itemCount: 3,
+        itemCount: _orgCategories.length,
         itemBuilder: (BuildContext context, int rowindex) {
           return Container(
-            height: MediaQuery.of(context).size.height * .20,
-            margin: EdgeInsets.only(top: 60),
-            child: Stack(
-              overflow: Overflow.visible,
+            height: MediaQuery.of(context).size.height * .3,
+
+            margin: EdgeInsets.only(top: 40),
+            child: Column(
               children: <Widget>[
-                ListView.builder(
-                    scrollDirection: Axis.horizontal,
-//         changed this to reflect a length of an array
-                    itemCount: _orgNames.length,
-                    itemBuilder: (BuildContext context, int orgindex) {
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DetailScreen(
-                                '${rowindex}org$orgindex',
-                                _orgImages[orgindex],
-                                _orgNames[orgindex],
-                                _orgSlogans[orgindex],
-                                context,
-                              ),
-                            ),
-                          );
-                        },
-                        child: Hero(
-                            // its important to pass the identical tag to the hero widget so it can animate
-                            // the hero widget basically takes its content and expands it into a new page
-                            tag: '${rowindex}org$orgindex',
-//                  im passing in a color, and the org name
-                            child: OrgCard(
-                                _orgImages[orgindex], _orgNames[orgindex])),
-                      );
-                    }),
-                Positioned(
-                  top: -40,
-                  left: 20,
+                Flexible(
+                  flex: 1,
                   child: CatTitle(_orgCategories[rowindex]),
-                )
+                ),
+                Flexible(
+                    flex: 4,
+                    child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+//         changed this to reflect a length of an array
+                        itemCount: _orgNames.length,
+                        itemBuilder: (BuildContext context, int orgindex) {
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => DetailScreen(
+                                    '${rowindex}org$orgindex',
+                                    _orgImages[orgindex],
+                                    _orgNames[orgindex],
+                                    _orgSlogans[orgindex],
+                                    context,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Hero(
+                                // its important to pass the identical tag to the hero widget so it can animate
+                                // the hero widget basically takes its content and expands it into a new page
+                                tag: '${rowindex}org$orgindex',
+//                  im passing in a color, and the org name
+                                child: OrgCard(
+                                    _orgImages[orgindex], _orgNames[orgindex])),
+                          );
+                        })),
               ],
             ),
           );
         });
   }
 
-  Widget _recentSearchList(){
-    return Expanded(
-    child:Container(
-      color:Colors.grey
-    )
-    );
+  Widget _recentSearchList() {
+    return Container(height: 100, width: 100, color: Colors.grey);
   }
 
   Widget _mainBody() {
@@ -288,25 +290,18 @@ class _SearchState extends State<Search> with TickerProviderStateMixin {
     if (_bodyState) {
       return SlideTransition(
         position: _searchAn,
-        child: _searchOrganizations(),
-      );
-    } else if(_recentSearchOn){
-      return SlideTransition(
-        position: _searchAn,
-        child: _recentSearchList(),
-      );
-    } else if(!_recentSearchOn){
-      return SlideTransition(
-        position: _browseAn,
-        child: _organizationList(),
+        child: _recentSearchOn ? _recentSearchList() : _searchOrganizations(),
       );
     }
+    return SlideTransition(
+      position: _browseAn,
+      child: _organizationList(),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Material(
-
       child: SafeArea(
         child: CustomPaint(
           painter: SearchPaint(),
