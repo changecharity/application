@@ -14,8 +14,8 @@ class DetailScreen extends StatelessWidget {
   final slogan;
   final context;
 
-  DetailScreen(
-      this.tag, this.imageString, this.description, this.slogan, this.context);
+  DetailScreen(this.tag, this.imageString, this.description, this.slogan,
+      this.context);
 
   @override
   Widget build(BuildContext context) {
@@ -35,8 +35,11 @@ class DetailScreen extends StatelessWidget {
 
   Widget _logoAndName(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: MediaQuery.of(context).size.height*0.05),
-        //color: Colors.blue[200],
+      margin: EdgeInsets.only(bottom: MediaQuery
+          .of(context)
+          .size
+          .height * 0.05),
+      //color: Colors.blue[200],
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
@@ -45,8 +48,14 @@ class DetailScreen extends StatelessWidget {
             child: Hero(
               tag: tag,
               child: SizedBox(
-                height: MediaQuery.of(context).size.width * .3,
-                width: MediaQuery.of(context).size.width * .3,
+                height: MediaQuery
+                    .of(context)
+                    .size
+                    .width * .3,
+                width: MediaQuery
+                    .of(context)
+                    .size
+                    .width * .3,
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
@@ -66,7 +75,10 @@ class DetailScreen extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: Container(
                 padding: EdgeInsets.only(left: 20, top: 5, bottom: 5),
-                height: MediaQuery.of(context).size.width * .3,
+                height: MediaQuery
+                    .of(context)
+                    .size
+                    .width * .3,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -88,26 +100,26 @@ class DetailScreen extends StatelessWidget {
                     ),
                     Container(
                         child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        IconButton(
-                            icon: _callIcon(),
-                            onPressed: () {
-                              _service.call(number);
-                            }),
-                        IconButton(
-                            icon: _textIcon(),
-                            onPressed: () {
-                              _service.sendSms(number);
-                            }),
-                        IconButton(
-                          icon: _emailIcon(),
-                          onPressed: () {
-                            _service.sendEmail(emailAddress);
-                          }
-                        ),
-                      ],
-                    )),
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            IconButton(
+                                icon: _callIcon(),
+                                onPressed: () {
+                                  _service.call(number);
+                                }),
+                            IconButton(
+                                icon: _textIcon(),
+                                onPressed: () {
+                                  _service.sendSms(number);
+                                }),
+                            IconButton(
+                                icon: _emailIcon(),
+                                onPressed: () {
+                                  _service.sendEmail(emailAddress);
+                                }
+                            ),
+                          ],
+                        )),
                   ],
                 ),
               ),
@@ -125,6 +137,7 @@ class DetailScreen extends StatelessWidget {
       color: Colors.grey,
     );
   }
+
   Widget _textIcon() {
     return Icon(
       Icons.sms,
@@ -132,6 +145,7 @@ class DetailScreen extends StatelessWidget {
       color: Colors.grey,
     );
   }
+
   Widget _emailIcon() {
     return Icon(
       Icons.email,
@@ -148,17 +162,17 @@ class DetailScreen extends StatelessWidget {
             fit: FlexFit.tight,
             flex: 1,
             child: Container(
-                decoration: BoxDecoration(
-                  border: Border(
-                    right: BorderSide(width: 1.0, color: Colors.grey),
-                  ),
+              decoration: BoxDecoration(
+                border: Border(
+                  right: BorderSide(width: 1.0, color: Colors.grey),
                 ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Icon(Icons.monetization_on, size: 24, color: Colors.grey),
-                    Text('50k Donors',
-                      style: TextStyle(
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Icon(Icons.monetization_on, size: 24, color: Colors.grey),
+                  Text('50k Donors',
+                    style: TextStyle(
                       color: Colors.black,
                       fontSize: 12,
                     ),
@@ -172,17 +186,17 @@ class DetailScreen extends StatelessWidget {
             fit: FlexFit.tight,
             child: Container(
                 child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                Icon(Icons.local_florist, size: 24, color: Colors.grey),
-                Text('Jewish',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 12,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Icon(Icons.local_florist, size: 24, color: Colors.grey),
+                    Text('Jewish',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 12,
+                      ),
                     ),
-                ),
-              ],
-            )),
+                  ],
+                )),
           ),
         ],
       ),
@@ -193,13 +207,16 @@ class DetailScreen extends StatelessWidget {
   Widget _donateButton(context) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 20),
-      width: MediaQuery.of(context).size.width * 1,
+      width: MediaQuery
+          .of(context)
+          .size
+          .width * 1,
       child: RaisedButton(
         onPressed: () {},
         color: Colors.blueAccent,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         child: Text(
-        'Donate',
+          'Donate',
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -216,12 +233,15 @@ class DetailScreen extends StatelessWidget {
       itemCount: 5,
       itemBuilder: (BuildContext context, int index) {
         return Container(
-          width: MediaQuery.of(context).size.width * .4,
+          width: MediaQuery
+              .of(context)
+              .size
+              .width * .4,
           child: Card(
             color: Colors.blue[int.parse('${index + 1}00')],
             margin: EdgeInsets.only(right: 20),
             shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           ),
         );
       },
@@ -230,34 +250,34 @@ class DetailScreen extends StatelessWidget {
 
   Widget _about() {
     return Container(
-        //color: Colors.blue[600],
-        padding: EdgeInsets.only(top: 40),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  'About $description:',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                  ),
+      //color: Colors.blue[600],
+      padding: EdgeInsets.only(top: 40),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'About $description:',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
                 ),
-              ],
-            ),
-            Text(
-              'The Jewish study network inspires people all across the bay area and is a fun place to visit...etc etc',
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.black54,
               ),
+            ],
+          ),
+          Text(
+            'The Jewish study network inspires people all across the bay area and is a fun place to visit...etc etc',
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.black54,
             ),
-          ],
-        ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -265,13 +285,19 @@ class DetailScreen extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
+          width: MediaQuery
+              .of(context)
+              .size
+              .width,
+          height: MediaQuery
+              .of(context)
+              .size
+              .height,
           margin: EdgeInsets.symmetric(horizontal: 20),
           child: GestureDetector(
-            onVerticalDragDown: (s){
+            onVerticalDragDown: (s) {
               print(s.localPosition.distance);
-              if(s.localPosition.distance < 300){
+              if (s.localPosition.distance < 300) {
                 Navigator.pop(context);
               }
             },
@@ -314,75 +340,4 @@ class DetailScreen extends StatelessWidget {
     );
   }
 
-/*Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              Hero(
-                tag: tag,
-                child: Center(
-                  child: GestureDetector(
-                    onVerticalDragDown: (d) {
-                      Navigator.pop(context);
-                    },
-                    child: Card(
-                        margin: EdgeInsets.only(top: 20),
-                        borderOnForeground: true,
-                        elevation: 5,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(25)),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.all(Radius.circular(25)),
-                          child: Container(
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                              image: NetworkImage(imageString),
-                              fit: BoxFit.cover,
-                            )),
-                            child: ClipRRect(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(25)),
-                              child: Container(
-                                width: MediaQuery.of(context).size.width / 1.1,
-                                height: MediaQuery.of(context).size.height / 3,
-                              ),
-                            ),
-                          ),
-                        )),
-                  ),
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 25, vertical: 40),
-                child: Text(
-                  '$description',
-                  textAlign: TextAlign.justify,
-                  style: TextStyle(
-                    fontSize: 27,
-                    letterSpacing: 1,
-                  ),
-                ),
-              ),
-              RaisedButton(
-                padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-                elevation: 8,
-                child: Text(
-                  'Select',
-                  style: TextStyle(
-                    fontSize: 20,
-                  ),
-                ),
-                color: Colors.lightBlueAccent,
-                onPressed: () {
-                  print(tag);
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
-    );*/
 }

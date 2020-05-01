@@ -6,6 +6,8 @@ import './catTitle.dart';
 import 'paintings.dart';
 import './orgCard.dart';
 import './searchCard.dart';
+import './searchBar.dart';
+import './searchedOrganizations.dart';
 
 class Search extends StatefulWidget {
   @override
@@ -107,7 +109,8 @@ class _SearchState extends State<Search> with TickerProviderStateMixin {
     });
   }
 
-  Widget _searchBar() {
+
+  /*Widget _searchBar() {
     return Container(
       margin: EdgeInsets.only(top: 30),
       width: MediaQuery.of(context).size.width / 1.15,
@@ -152,7 +155,7 @@ class _SearchState extends State<Search> with TickerProviderStateMixin {
       ),
       //onSubmitted: (s) => _getOrganizations(),
     );
-  }
+  }*/
 
   Widget _switchSearchBack() {
     return AnimatedSwitcher(
@@ -190,7 +193,8 @@ class _SearchState extends State<Search> with TickerProviderStateMixin {
     );
   }
 
-  Widget _searchOrganizations() {
+  //made separate class for this so can implement in searchBar as well
+  /*Widget _searchOrganizations() {
     return Container(
       child: ListView.builder(
         scrollDirection: Axis.vertical,
@@ -221,7 +225,7 @@ class _SearchState extends State<Search> with TickerProviderStateMixin {
         },
       ),
     );
-  }
+  }*/
 
   Widget _organizationList() {
     return ListView.builder(
@@ -291,7 +295,7 @@ class _SearchState extends State<Search> with TickerProviderStateMixin {
     if (_bodyState) {
       return SlideTransition(
         position: _searchAn,
-        child: _recentSearchOn ? _recentSearchList() : _searchOrganizations(),
+        child: _recentSearchOn ? _recentSearchList() : SearchedOrganizations(_orgNames, _orgImages, _orgSlogans),
       );
     }
     return SlideTransition(
@@ -311,7 +315,7 @@ class _SearchState extends State<Search> with TickerProviderStateMixin {
             width: MediaQuery.of(context).size.width,
             child: Column(
               children: <Widget>[
-                _searchBar(),
+               SearchBar2(),
                 _mainBody(),
               ],
             ),
