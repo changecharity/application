@@ -26,97 +26,96 @@ class DetailScreen extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        Hero(
-          tag: tag,
-          child: GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Icon(Icons.arrow_back, size: 24, color: Colors.black),
-          ),
+        IconButton(
+          icon: Icon(Icons.arrow_back, size: 24, color: Colors.black),
         ),
-        Icon(Icons.search, size: 24, color: Colors.black),
       ],
     );
   }
 
   Widget _logoAndName(BuildContext context) {
     return Container(
+      margin: EdgeInsets.only(bottom: MediaQuery.of(context).size.height*0.05),
         //color: Colors.blue[200],
-        child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        Flexible(
-          flex: 1,
-          child: SizedBox(
-            height: MediaQuery.of(context).size.width * .3,
-            width: MediaQuery.of(context).size.width * .3,
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                color: Colors.grey,
-                image: DecorationImage(
-                  image: NetworkImage(imageString),
-                  fit: BoxFit.cover,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Flexible(
+            flex: 1,
+            child: Hero(
+              tag: tag,
+              child: SizedBox(
+                height: MediaQuery.of(context).size.width * .3,
+                width: MediaQuery.of(context).size.width * .3,
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    color: Colors.grey,
+                    image: DecorationImage(
+                      image: NetworkImage(imageString),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-        Flexible(
-          flex: 2,
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: Container(
-              padding: EdgeInsets.only(left: 20, top: 5, bottom: 5),
-              height: MediaQuery.of(context).size.width * .3,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Text(
-                    '$description',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Container(
-                    child: Text(
-                      '"$slogan"',
+          Flexible(
+            flex: 2,
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Container(
+                padding: EdgeInsets.only(left: 20, top: 5, bottom: 5),
+                height: MediaQuery.of(context).size.width * .3,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Text(
+                      '$description',
                       style: TextStyle(
-                          color: Colors.black, fontStyle: FontStyle.italic),
+                        color: Colors.black,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  Container(
-                      child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      IconButton(
-                          icon: _callIcon(),
-                          onPressed: () {
-                            _service.call(number);
-                          }),
-                      IconButton(
-                          icon: _textIcon(),
-                          onPressed: () {
-                            _service.sendSms(number);
-                          }),
-                      IconButton(
+                    Container(
+                      child: Text(
+                        '"$slogan"',
+                        style: TextStyle(
+                            color: Colors.black, fontStyle: FontStyle.italic),
+                      ),
+                    ),
+                    Container(
+                        child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        IconButton(
+                            icon: _callIcon(),
+                            onPressed: () {
+                              _service.call(number);
+                            }),
+                        IconButton(
+                            icon: _textIcon(),
+                            onPressed: () {
+                              _service.sendSms(number);
+                            }),
+                        IconButton(
                           icon: _emailIcon(),
                           onPressed: () {
                             _service.sendEmail(emailAddress);
-                          }),
-                    ],
-                  )),
-                ],
+                          }
+                        ),
+                      ],
+                    )),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-      ],
-    ));
+        ],
+      ),
+    );
   }
 
   Widget _callIcon() {
@@ -150,19 +149,23 @@ class DetailScreen extends StatelessWidget {
             flex: 1,
             child: Container(
                 decoration: BoxDecoration(
-                    border: Border(
-                        right: BorderSide(width: 1.0, color: Colors.grey))),
+                  border: Border(
+                    right: BorderSide(width: 1.0, color: Colors.grey),
+                  ),
+                ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    Icon(Icons.monetization_on, size: 24, color: Colors.black),
+                    Icon(Icons.monetization_on, size: 24, color: Colors.grey),
                     Text('50k Donors',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 12,
-                        ))
-                  ],
-                )),
+                      style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
           Flexible(
             flex: 1,
@@ -171,12 +174,13 @@ class DetailScreen extends StatelessWidget {
                 child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                Icon(Icons.local_florist, size: 24, color: Colors.black),
+                Icon(Icons.local_florist, size: 24, color: Colors.grey),
                 Text('Jewish',
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 12,
-                    ))
+                    ),
+                ),
               ],
             )),
           ),
@@ -188,19 +192,22 @@ class DetailScreen extends StatelessWidget {
 
   Widget _donateButton(context) {
     return Container(
-        padding: EdgeInsets.symmetric(vertical: 10),
-        width: MediaQuery.of(context).size.width * 1,
-        child: RaisedButton(
-          onPressed: () {},
-          color: Colors.blueAccent,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          child: Text('Donate',
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white)),
-        ));
+      padding: EdgeInsets.symmetric(vertical: 20),
+      width: MediaQuery.of(context).size.width * 1,
+      child: RaisedButton(
+        onPressed: () {},
+        color: Colors.blueAccent,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        child: Text(
+        'Donate',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _media(BuildContext context) {
@@ -243,52 +250,64 @@ class DetailScreen extends StatelessWidget {
               ],
             ),
             Text(
-                'The Jewish study network inspires people all across the bay area and is a fun place to visit...etc etc',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.black54,
-                ))
+              'The Jewish study network inspires people all across the bay area and is a fun place to visit...etc etc',
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.black54,
+              ),
+            ),
           ],
-        ));
+        ),
+    );
   }
 
   Widget _detailsPage() {
     return Scaffold(
       body: SafeArea(
         child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
           margin: EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            children: <Widget>[
-              Flexible(
-                flex: 1,
-                fit: FlexFit.tight,
-                child: _header(),
-              ),
-              Flexible(
-                flex: 2,
-                fit: FlexFit.loose,
-                child: _logoAndName(context),
-              ),
-              Flexible(
-                flex: 1,
-                child: _categoryAndDonors(),
-              ),
-              Flexible(
-                flex: 1,
-                fit: FlexFit.loose,
-                child: _donateButton(context),
-              ),
-              Flexible(
-                flex: 3,
-                fit: FlexFit.tight,
-                child: _media(context),
-              ),
-              Flexible(
-                flex: 2,
-                fit: FlexFit.tight,
-                child: _about(),
-              ),
-            ],
+          child: GestureDetector(
+            onVerticalDragDown: (s){
+              print(s.localPosition.distance);
+              if(s.localPosition.distance < 300){
+                Navigator.pop(context);
+              }
+            },
+            child: Column(
+              children: <Widget>[
+                Flexible(
+                  flex: 1,
+                  fit: FlexFit.tight,
+                  child: _header(),
+                ),
+                Flexible(
+                  flex: 2,
+                  fit: FlexFit.loose,
+                  child: _logoAndName(context),
+                ),
+                Flexible(
+                  flex: 1,
+                  child: _categoryAndDonors(),
+                ),
+                Flexible(
+                  flex: 1,
+                  fit: FlexFit.loose,
+                  child: _donateButton(context),
+                ),
+                Flexible(
+                  flex: 3,
+                  fit: FlexFit.tight,
+                  child: _media(context),
+                ),
+                Flexible(
+                  flex: 2,
+                  fit: FlexFit.tight,
+                  child: _about(),
+                ),
+              ],
+            ),
           ),
         ),
       ),

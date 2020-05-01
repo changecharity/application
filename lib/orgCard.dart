@@ -10,15 +10,14 @@ class OrgCard extends StatelessWidget {
 //  this is how you pass in information to different classes
   final imageString;
   final name;
+  final tag;
 
-  OrgCard(this.imageString, this.name);
+  OrgCard(this.imageString, this.name, this.tag);
 
   @override
   Widget build(BuildContext context) {
     return _organizationCard(context);
   }
-
-//  keep the widgets inside the class
 
   Widget _organizationCard(BuildContext context) {
     return Container(
@@ -27,26 +26,32 @@ class OrgCard extends StatelessWidget {
         child: Column(
           children: <Widget>[
             SizedBox(height:MediaQuery.of(context).size.height * .2,
-              child:Card(
-              elevation: 5,
-              color: Colors.grey,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15)),
-              child: ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(15)),
-                child: Container(
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: NetworkImage(imageString),
-                      fit: BoxFit.cover,
+              child:Hero(
+                tag: tag,
+                child: Card(
+                elevation: 5,
+                color: Colors.grey,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(15)),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: NetworkImage(imageString),
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),),
-            _orgName(context),
-          ],
-        ));
+            ),
+          ),
+          _orgName(context),
+        ],
+      ),
+    );
   }
   Widget _orgName(BuildContext context) {
     return Container(
@@ -56,7 +61,7 @@ class OrgCard extends StatelessWidget {
 //            this reflects the name of the org
         '$name',
         style: TextStyle(
-          color: Colors.blue,
+          color: Colors.grey[600],
           fontWeight: FontWeight.bold,
           fontSize: 14,
         ),

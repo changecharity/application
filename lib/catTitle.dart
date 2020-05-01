@@ -8,7 +8,6 @@ class CatTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return _categoryTitle();
   }
 
@@ -20,7 +19,7 @@ class CatTitle extends StatelessWidget {
         padding: EdgeInsets.only(top: 5, bottom: 5, left: 10, right: 10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color: Colors.grey[300],
+          color: Colors.grey[300].withOpacity(0.7),
         ),
         child: Text(catTitle),
       ),

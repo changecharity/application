@@ -211,10 +211,12 @@ class _SearchState extends State<Search> with TickerProviderStateMixin {
                 ),
               );
             },
-            child: Hero(
-                tag: 'org$orgindex',
-                child: SearchCard(_orgImages[orgindex], _orgNames[orgindex],
-                    _orgSlogans[orgindex])),
+            child: SearchCard(
+                _orgImages[orgindex],
+                _orgNames[orgindex],
+                _orgSlogans[orgindex],
+                'org$orgindex',
+            ),
           );
         },
       ),
@@ -223,53 +225,53 @@ class _SearchState extends State<Search> with TickerProviderStateMixin {
 
   Widget _organizationList() {
     return ListView.builder(
-        scrollDirection: Axis.vertical,
-        itemCount: _orgCategories.length,
-        itemBuilder: (BuildContext context, int rowindex) {
-          return Container(
-            height: MediaQuery.of(context).size.height * .3,
-            margin: EdgeInsets.only(top:10),
-            child: Column(
-              children: <Widget>[
-                Flexible(
-                 flex:1,
-                  child: CatTitle(_orgCategories[rowindex]),
-                ),
-                Flexible(
-                   flex: 6,
-                    child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-//         changed this to reflect a length of an array
-                        itemCount: _orgNames.length,
-                        itemBuilder: (BuildContext context, int orgindex) {
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.push(
+      scrollDirection: Axis.vertical,
+      itemCount: _orgCategories.length,
+      itemBuilder: (BuildContext context, int rowindex) {
+        return Container(
+          height: MediaQuery.of(context).size.height * .3,
+          margin: rowindex == 0 ? EdgeInsets.only(top:20) : EdgeInsets.only(top:5),
+          child: Column(
+            children: <Widget>[
+              Flexible(
+               flex:1,
+                child: CatTitle(_orgCategories[rowindex]),
+              ),
+              Flexible(
+                flex: 6,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: _orgNames.length,
+                    itemBuilder: (BuildContext context, int orgindex) {
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DetailScreen(
+                                '${rowindex}org$orgindex',
+                                _orgImages[orgindex],
+                                _orgNames[orgindex],
+                                _orgSlogans[orgindex],
                                 context,
-                                MaterialPageRoute(
-                                  builder: (context) => DetailScreen(
-                                    '${rowindex}org$orgindex',
-                                    _orgImages[orgindex],
-                                    _orgNames[orgindex],
-                                    _orgSlogans[orgindex],
-                                    context,
-                                  ),
-                                ),
-                              );
-                            },
-                            child: Hero(
-                                // its important to pass the identical tag to the hero widget so it can animate
-                                // the hero widget basically takes its content and expands it into a new page
-                                tag: '${rowindex}org$orgindex',
-//                  im passing in a color, and the org name
-                                child: OrgCard(
-                                    _orgImages[orgindex], _orgNames[orgindex])),
+                              ),
+                            ),
                           );
-                        })),
+                        },
+                        child: OrgCard(
+                          _orgImages[orgindex],
+                          _orgNames[orgindex],
+                          '${rowindex}org$orgindex',
+                        ),
+                      );
+                    }
+                  ),
+                ),
               ],
             ),
           );
-        });
+        }
+      );
   }
 
   Widget _recentSearchList() {
