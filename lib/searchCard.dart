@@ -21,7 +21,7 @@ class SearchCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Container(
-              margin: EdgeInsets.only(top: 25, left: 20),
+              margin: EdgeInsets.only( left: 20),
               height: MediaQuery.of(context).size.height * .1,
               width: MediaQuery.of(context).size.height * .1,
               child: Card(
@@ -42,13 +42,13 @@ class SearchCard extends StatelessWidget {
                         ),
                       )))),
           Container(
-            margin: EdgeInsets.only(top: 25, left: 20),
+            margin: EdgeInsets.only(left: 20),
             padding: EdgeInsets.only(top: 3, bottom: 3),
             height: MediaQuery.of(context).size.height * .1,
             width: MediaQuery.of(context).size.width * .65,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
                 Text('$name'.toUpperCase(),
                     style:

@@ -23,14 +23,14 @@ class _SearchState extends State<Search> with TickerProviderStateMixin {
   bool _shouldSwitch = true;
   bool _recentSearchOn = true;
   var _orgNames = [
-    "emek beracha",
-    "jsn",
-    "meira",
-    "torah anytime",
-    "bonei olam",
-    "olami",
-    "partners in torah",
-    "zaka"
+    "Emek Beracha",
+    "Jewish Study Network",
+    "Meira Academy",
+    "Torah Anytime",
+    "Bonei Olam",
+    "Olami",
+    "Partners in Torah",
+    "Zaka"
   ];
   var _orgImages = [
     "https://images.shulcloud.com/1450/logo/1550604879.img",
@@ -194,7 +194,7 @@ class _SearchState extends State<Search> with TickerProviderStateMixin {
     return Container(
       child: ListView.builder(
         scrollDirection: Axis.vertical,
-        itemCount: 7,
+        itemCount: _orgNames.length,
         itemBuilder: (context, orgindex) {
           return GestureDetector(
             onTap: () {
@@ -228,16 +228,15 @@ class _SearchState extends State<Search> with TickerProviderStateMixin {
         itemBuilder: (BuildContext context, int rowindex) {
           return Container(
             height: MediaQuery.of(context).size.height * .3,
-
-            margin: EdgeInsets.only(top: 40),
+            margin: EdgeInsets.only(top:10),
             child: Column(
               children: <Widget>[
                 Flexible(
-                  flex: 1,
+                 flex:1,
                   child: CatTitle(_orgCategories[rowindex]),
                 ),
                 Flexible(
-                    flex: 4,
+                   flex: 6,
                     child: ListView.builder(
                         scrollDirection: Axis.horizontal,
 //         changed this to reflect a length of an array

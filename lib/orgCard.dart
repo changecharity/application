@@ -22,11 +22,12 @@ class OrgCard extends StatelessWidget {
 
   Widget _organizationCard(BuildContext context) {
     return Container(
-        margin: EdgeInsets.only(left: 20),
         width: MediaQuery.of(context).size.height * .2,
+        margin:EdgeInsets.only(left:20),
         child: Column(
           children: <Widget>[
-            SizedBox(height:MediaQuery.of(context).size.height * .2, child:Card(
+            SizedBox(height:MediaQuery.of(context).size.height * .2,
+              child:Card(
               elevation: 5,
               color: Colors.grey,
               shape: RoundedRectangleBorder(
@@ -49,8 +50,8 @@ class OrgCard extends StatelessWidget {
   }
   Widget _orgName(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.height * 2,
-      margin:EdgeInsets.only(left:10, top: 10),
+      width: MediaQuery.of(context).size.height * .2,
+      margin:EdgeInsets.only(left:10, top: 3),
       child: Text(
 //            this reflects the name of the org
         '$name',
