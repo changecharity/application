@@ -15,13 +15,12 @@ class CatTitle extends StatelessWidget {
     return Align(
       alignment: AlignmentDirectional.topStart,
       child: Container(
-        margin:EdgeInsets.only(left:20),
-        padding: EdgeInsets.only(top: 5, bottom: 5, left: 10, right: 10),
+        padding: EdgeInsets.only(top: 3, bottom: 3, left: 10, right: 10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           color: Colors.grey[300].withOpacity(0.7),
         ),
-        child: Text(catTitle),
+        child: Text(catTitle, style: TextStyle(fontSize:12)),
       ),
     );
   }

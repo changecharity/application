@@ -4,8 +4,8 @@ import 'package:flutter/services.dart';
 import 'home.dart';
 import 'login.dart';
 import 'signup.dart';
-import 'search.dart';
-import 'search2.dart';
+import 'SearchPage/search.dart';
+import 'SearchPage/search2.dart';
 
 // Avi sPira was here 
 

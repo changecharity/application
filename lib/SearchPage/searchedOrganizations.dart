@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import './searchCard.dart';
-import './details.dart';
+import 'searchCard.dart';
+import 'details.dart';
 
 class SearchedOrganizations extends StatelessWidget {
   final namesList;

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:plaid/plaid.dart';
-import 'search.dart';
+import 'SearchPage/search.dart';
 import 'dart:convert';
 
 class Home extends StatefulWidget{

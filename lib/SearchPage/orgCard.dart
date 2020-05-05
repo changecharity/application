@@ -4,15 +4,15 @@ import 'package:http/http.dart' as http;
 import 'dart:io';
 import 'dart:convert';
 import 'details.dart';
-import './organization.dart';
+import 'organization.dart';
 
 class OrgCard extends StatelessWidget {
 //  this is how you pass in information to different classes
-  final imageString;
+  final image;
   final name;
   final tag;
 
-  OrgCard(this.imageString, this.name, this.tag);
+  OrgCard(this.image, this.name, this.tag);
 
   @override
   Widget build(BuildContext context) {
@@ -21,11 +21,12 @@ class OrgCard extends StatelessWidget {
 
   Widget _organizationCard(BuildContext context) {
     return Container(
-        width: MediaQuery.of(context).size.height * .2,
-        margin:EdgeInsets.only(left:20),
+        width: MediaQuery.of(context).size.width * .25,
+       // margin:EdgeInsets.only(left:20),
         child: Column(
           children: <Widget>[
-            SizedBox(height:MediaQuery.of(context).size.height * .2,
+            SizedBox(
+              height:MediaQuery.of(context).size.width * .25,
               child:Hero(
                 tag: tag,
                 child: Card(
@@ -39,7 +40,7 @@ class OrgCard extends StatelessWidget {
                   child: Container(
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: NetworkImage(imageString),
+                        image: image,
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -55,15 +56,15 @@ class OrgCard extends StatelessWidget {
   }
   Widget _orgName(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.height * .2,
-      margin:EdgeInsets.only(left:10, top: 3),
+      width: MediaQuery.of(context).size.width * .25,
+      margin:EdgeInsets.only(left:5, top: 3),
       child: Text(
 //            this reflects the name of the org
         '$name',
         style: TextStyle(
           color: Colors.grey[600],
           fontWeight: FontWeight.bold,
-          fontSize: 14,
+          fontSize: 12,
         ),
       ),
     );

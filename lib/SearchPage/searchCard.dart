@@ -2,12 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SearchCard extends StatelessWidget {
-  final imageString;
+  final image;
   final name;
   final slogan;
   final tag;
 
-  SearchCard(this.imageString, this.name, this.slogan, this.tag);
+  SearchCard(this.image, this.name, this.slogan, this.tag);
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +39,7 @@ class SearchCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                     color: Colors.grey,
                     image: DecorationImage(
-                      image: NetworkImage(imageString),
+                      image: image,
                       fit: BoxFit.cover,
                     ),
                    ),

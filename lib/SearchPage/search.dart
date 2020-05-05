@@ -1,13 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'details.dart';
-import './orgCard.dart';
-import './catTitle.dart';
-import 'paintings.dart';
-import './orgCard.dart';
-import './searchCard.dart';
-import './searchBar.dart';
-import './searchedOrganizations.dart';
+import 'orgCard.dart';
+import 'catTitle.dart';
+import '../paintings.dart';
+import 'orgCard.dart';
+import 'searchCard.dart';
+import 'searchButton.dart';
+import 'searchedOrganizations.dart';
 
 class Search extends StatefulWidget {
   @override
@@ -315,7 +315,7 @@ class _SearchState extends State<Search> with TickerProviderStateMixin {
             width: MediaQuery.of(context).size.width,
             child: Column(
               children: <Widget>[
-               SearchBar2(),
+               SearchButton(),
                 _mainBody(),
               ],
             ),

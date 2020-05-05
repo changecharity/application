@@ -1,53 +1,38 @@
 import 'package:flutter/material.dart';
-import './search.dart';
-import './searchedOrganizations.dart';
+import 'search.dart';
+import 'searchedOrganizations.dart';
 
-class SearchBar2 extends StatelessWidget {
+class SearchButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return _searchBar(context);
+    return _searchButton(context);
   }
 
-  Widget _searchBar(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(top: 30),
-      width: MediaQuery.of(context).size.width / 1.15,
-      height: MediaQuery.of(context).size.height / 14,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.all(Radius.circular(30)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey[350],
-            blurRadius: 20.0,
-            offset: Offset.fromDirection(0.9),
-          ),
-        ],
-      ),
-      child: TextField(
-        style: TextStyle(
-          fontSize: 18,
-        ),
-        decoration: InputDecoration(
-          suffixIcon: IconButton(
-            icon: Icon(Icons.search),
-          ),
-          labelText: 'Search Organizations',
-          hasFloatingPlaceholder: false,
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(30),
-            ),
-            borderSide: BorderSide(
-              style: BorderStyle.none,
-            ),
-          ),
-        ),
-        onTap: () {
-          showSearch(context: context, delegate: DataSearch());
-        },
-      ),
-    );
+
+  Widget _searchButton(BuildContext context){
+      return Material(
+          color: Colors.transparent,
+          child: Center(
+              child: Container(
+                  decoration: BoxDecoration(
+                    color: Color.fromRGBO(0, 174, 229,1),
+                    borderRadius: BorderRadius.circular(50),
+                    boxShadow: [BoxShadow(color:Colors.grey, offset:Offset(5.0,5.0), blurRadius:10.0)]
+                  ),
+                  child: IconButton(
+                    padding:EdgeInsets.all(18),
+                      color: Colors.white,
+                      icon: Icon(Icons.search),
+                      iconSize:25,
+                      tooltip: 'Search',
+                      onPressed: () {
+                        showSearch(context:context, delegate:DataSearch());
+                      }
+                    )
+              )
+          )
+      );
+
   }
 }
 
@@ -63,14 +48,14 @@ class DataSearch extends SearchDelegate<String> {
     "Zaka"
   ];
   final organizationImages=[
-    "https://images.shulcloud.com/1450/logo/1550604879.img",
-    "http://www.jsn.info/uploads/1/9/1/2/19123279/published/1393271267.png?1513880506",
-    "https://www.meiraacademy.org/uploads/1/9/1/2/19123279/download_orig.png",
-    "https://www.torahanytime.com/static/images/logo.png",
-    "https://www.boneiolam.org/images/bonei_olam_logo.jpg",
-    "http://www.firstnonprofit.org/wp-content/uploads/2019/07/Olami-logo.jpg",
-    "https://www.partnersintorah.org/wp-content/uploads/2017/12/partners-in-torah-white-logomark.png",
-    "https://upload.wikimedia.org/wikipedia/en/a/a4/Zaka01.png"
+    NetworkImage("https://images.shulcloud.com/1450/logo/1550604879.img"),
+    NetworkImage("http://www.jsn.info/uploads/1/9/1/2/19123279/published/1393271267.png?1513880506"),
+    NetworkImage("https://www.meiraacademy.org/uploads/1/9/1/2/19123279/download_orig.png"),
+    NetworkImage( "https://www.torahanytime.com/static/images/logo.png"),
+    NetworkImage("https://www.boneiolam.org/images/bonei_olam_logo.jpg"),
+    NetworkImage("http://www.firstnonprofit.org/wp-content/uploads/2019/07/Olami-logo.jpg"),
+    NetworkImage("https://www.partnersintorah.org/wp-content/uploads/2017/12/partners-in-torah-white-logomark.png"),
+    NetworkImage("https://upload.wikimedia.org/wikipedia/en/a/a4/Zaka01.png")
   ];
   final organizationSlogans=[
     "An Orthodox shul for everyone",

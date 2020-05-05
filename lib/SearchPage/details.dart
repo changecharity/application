@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '././Services/calls_and_messages_service.dart';
-import "././Services/service_locator.dart";
+import '../Services/calls_and_messages_service.dart';
+import '../Services/service_locator.dart';
 
 class DetailScreen extends StatelessWidget {
   final CallsAndMessagesService _service = locator<CallsAndMessagesService>();
@@ -9,12 +9,12 @@ class DetailScreen extends StatelessWidget {
   final emailAddress = 'batyashaps1@gmail.com';
 
   final tag;
-  final imageString;
+  final image;
   final description;
   final slogan;
   final context;
 
-  DetailScreen(this.tag, this.imageString, this.description, this.slogan,
+  DetailScreen(this.tag, this.image, this.description, this.slogan,
       this.context);
 
   @override
@@ -61,7 +61,7 @@ class DetailScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(15),
                     color: Colors.grey,
                     image: DecorationImage(
-                      image: NetworkImage(imageString),
+                      image: image,
                       fit: BoxFit.cover,
                     ),
                   ),
