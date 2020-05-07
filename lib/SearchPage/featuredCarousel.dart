@@ -4,6 +4,10 @@ import 'package:carousel_slider/carousel_slider.dart';
 
 class FeaturedCarousel extends StatelessWidget{
 
+ final CarouselController orgNameController=CarouselController(
+
+ );
+
   final _orgImages = [
     NetworkImage("https://images.shulcloud.com/1450/logo/1550604879.img"),
     NetworkImage("http://www.jsn.info/uploads/1/9/1/2/19123279/published/1393271267.png?1513880506"),

@@ -32,7 +32,6 @@ class SearchButton extends StatelessWidget {
               )
           )
       );
-
   }
 }
 

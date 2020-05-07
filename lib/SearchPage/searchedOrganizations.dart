@@ -19,6 +19,7 @@ class SearchedOrganizations extends StatelessWidget {
 
   Widget _searchedOrganizations() {
     return Container(
+      color:Colors.grey[100],
       child: ListView.builder(
         scrollDirection: Axis.vertical,
         itemCount: namesList.length,

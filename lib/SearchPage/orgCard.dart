@@ -21,31 +21,32 @@ class OrgCard extends StatelessWidget {
 
   Widget _organizationCard(BuildContext context) {
     return Container(
-        width: MediaQuery.of(context).size.width * .25,
-       // margin:EdgeInsets.only(left:20),
+        width: MediaQuery.of(context).size.width * .3,
+        //margin:EdgeInsets.only(top:40),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             SizedBox(
-              height:MediaQuery.of(context).size.width * .25,
+              height:MediaQuery.of(context).size.width * .3,
               child:Hero(
                 tag: tag,
                 child: Card(
-                elevation: 5,
-                color: Colors.grey,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.all(Radius.circular(15)),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: image,
-                        fit: BoxFit.cover,
+                  elevation: 5,
+                  color: Colors.grey,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: image,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                   ),
-                ),
               ),
             ),
           ),
