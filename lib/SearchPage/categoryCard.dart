@@ -24,7 +24,7 @@ class CategoryCard extends StatelessWidget{
                 size:30,
                 color:Colors.grey
               ),
-              Text('$name', style:TextStyle(fontFamily:'Montserrat', color:Color.fromRGBO(0, 174, 229, 1), fontWeight: FontWeight.bold))
+              Text('$name', style:TextStyle(fontFamily:'Montserrat', color:Color.fromRGBO(0, 174, 229, 1), fontWeight: FontWeight.bold, fontSize:10))
             ],
           )
         )

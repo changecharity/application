@@ -78,9 +78,10 @@ class _SearchState extends State<Search2> {
       alignment: Alignment.centerLeft,
       child: IconButton(
         icon: Icon(Icons.arrow_back),
+        color:Colors.grey,
         iconSize: 30,
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context)=>Login()));
+          Navigator.pop(context);
         },
       ),
     );
@@ -186,7 +187,7 @@ class _SearchState extends State<Search2> {
   Widget _mainBody() {
     return Container(
         child:Column(
-          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             _backButton(),
             CatTitle('Featured Organizations'),

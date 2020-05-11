@@ -6,6 +6,7 @@ import 'login.dart';
 import 'signup.dart';
 import 'SearchPage/search.dart';
 import 'SearchPage/search2.dart';
+import 'homePage.dart';
 
 // Avi sPira was here 
 
@@ -24,7 +25,7 @@ class _ChangeState extends State<Change>{
     ));
     return MaterialApp(
       title: 'Change',
-      home: Search2(),
+      home: HomePage(),
       theme: lightTheme,
       debugShowCheckedModeBanner: false,
     );

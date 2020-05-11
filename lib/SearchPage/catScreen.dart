@@ -36,6 +36,7 @@ class CategoryScreen extends StatelessWidget{
       alignment: Alignment.centerLeft,
       child: IconButton(
         icon: Icon(Icons.arrow_back),
+        color:Colors.grey,
         iconSize: 30,
         onPressed: () {
           Navigator.pop(context);
