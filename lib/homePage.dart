@@ -66,8 +66,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       curve:Curves.fastLinearToSlowEaseIn
     ));
 
-   _controller.forward();
-
+    _controller.forward();
   }
 
   Widget _accountIcon(){
@@ -82,11 +81,10 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         iconSize:32,
         color:Colors.grey,
         splashColor:Colors.grey,
-
-
       )
     );
   }
+
   Widget _currentInfo() {
     return Container(
       padding:EdgeInsets.all(15),

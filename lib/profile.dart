@@ -5,13 +5,44 @@ import 'SearchPage/search2.dart';
 
 
 class Profile extends StatefulWidget{
+
   @override
   _ProfileState createState()=>_ProfileState();
 }
 
-class _ProfileState extends State<Profile>{
+class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
+
+  AnimationController _controller;
+  Animation<Offset> _topDown;
+  Animation<Offset> _bottomUp;
 
   var maxChange=1.0;
+
+  void initState(){
+    super.initState();
+
+    _controller = AnimationController(vsync: this, duration: Duration(seconds:2));
+
+    _topDown = Tween<Offset>(
+      begin: Offset(0.0, -1.0),
+      end:Offset(0.0,0.0),
+    ).animate(CurvedAnimation(
+      parent:_controller,
+      curve:Curves.fastLinearToSlowEaseIn
+      )
+    );
+
+    _bottomUp = Tween<Offset>(
+      begin: Offset(0.0, 1.0),
+      end:Offset(0.0,0.0),
+    ).animate(CurvedAnimation(
+        parent:_controller,
+        curve:Curves.fastLinearToSlowEaseIn
+    )
+    );
+
+    _controller.forward();
+  }
 
   Widget _backButton() {
     return Container(
@@ -181,7 +212,7 @@ class _ProfileState extends State<Profile>{
         label:"\$$maxChange",
         divisions:100,
         activeColor: Colors.lightBlueAccent,
-        inactiveColor: Colors.grey,
+        inactiveColor: Colors.grey
       )
     );
   }
@@ -190,6 +221,11 @@ class _ProfileState extends State<Profile>{
     return Container();
   }
 
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -199,8 +235,8 @@ class _ProfileState extends State<Profile>{
         child:SingleChildScrollView(
           child:Column(
             children: <Widget>[
-              _accountContainer(),
-              _bankInfo(),
+              SlideTransition(position:_topDown, child:_accountContainer()),
+              SlideTransition(position:_bottomUp, child:_bankInfo()),
             ],
           )
         )
