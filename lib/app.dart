@@ -7,6 +7,7 @@ import 'signup.dart';
 import 'SearchPage/search.dart';
 import 'SearchPage/search2.dart';
 import 'homePage.dart';
+import 'profile.dart';
 
 // Avi sPira was here 
 

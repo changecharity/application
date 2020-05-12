@@ -2,10 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';  //for date format
-import 'package:intl/intl.dart';  //for date format
 import 'package:intl/date_symbol_data_local.dart';  //for date locale
 
-import './SearchPage/search2.dart';
+import 'profile.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -23,7 +22,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   var Transactions=[
     ["Target", 51.45, DateTime(2020, 5, 1)],
     ["Safeway", 120.25, DateTime(2020, 5, 2)],
-    ["Baskin Robbins", 5.45, DateTime(2020, 5, 2)],
+    ["Baskin Robbins", 5.46, DateTime(2020, 5, 2)],
     ["Target", 51.35, DateTime(2020, 5, 2)],
     ["Safeway", 120.45, DateTime(2020, 5, 2)],
     ["Baskin Robbins", 5.45, DateTime(2020, 5, 2)],
@@ -31,7 +30,6 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     ["Safeway", 120.45, DateTime(2020, 5, 2)],
     ["Baskin Robbins", 5.87, DateTime(2020, 5, 2)]
   ];
-  var total=0.0;
 
   String changeAmount(amountSpent){
     return (double.parse(amountSpent.toString()).truncate()+1-double.parse(amountSpent.toString())).toStringAsFixed(2);
@@ -69,6 +67,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     ));
 
    _controller.forward();
+
   }
 
   Widget _accountIcon(){
@@ -76,7 +75,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       margin: EdgeInsets.only(top: 20, left: 10),
       alignment: Alignment.centerLeft,
       child: IconButton(
-        onPressed: (){},
+        onPressed: (){
+          Navigator.push(context, MaterialPageRoute(builder:(context)=>Profile()));
+        },
         icon: Icon(Icons.perm_identity),
         iconSize:32,
         color:Colors.grey,
@@ -98,33 +99,12 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       ),
       child:Column(
         children: <Widget>[
-          RichText(
-            text:TextSpan(
-              style: TextStyle(color:Colors.grey, fontSize:10),
-              children: [
-                TextSpan(
-                  text:"Partners In Torah",
-                  style:TextStyle(color:Colors.lightBlueAccent[100], fontSize:18, fontWeight: FontWeight.bold),
-                ),
-                TextSpan(
-                  text:" ("
-                ),
-                TextSpan(
-                  text:"change",
-                  style:TextStyle(decoration:TextDecoration.underline),
-                  recognizer: TapGestureRecognizer()
-                    ..onTap=(){
-                    Navigator.push(context, MaterialPageRoute(builder:(context)=>Search2()));
-                  }
-                ),
-                TextSpan(
-                  text:")"
-                )
-              ],
-            )
+          Text(
+            'Partners in Torah',
+            style:TextStyle(color:Colors.lightBlueAccent[100], fontSize:18, fontWeight: FontWeight.bold),
           ),
           Container(
-            margin:EdgeInsets.only(top:10),
+            margin:EdgeInsets.only(top:20),
             height:100,
             width:100,
             decoration: BoxDecoration(
@@ -208,19 +188,20 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       itemCount:Transactions.length,
       itemBuilder: (context, i){
         return Container(
+          padding:EdgeInsets.symmetric(vertical:10),
           child:Row(
             children: <Widget>[
               Container(
                 height:50,
                 width:50,
                 decoration:BoxDecoration(
-                  border:Border.all(color:Colors.lightBlueAccent[100], width:3),
+                  border:Border.all(color:Colors.lightBlue[100*i+100], width:3),
                   shape:BoxShape.circle,
                 ),
                 child:Center(
                   child:Text(
                     '${Transactions[i][0].toString().substring(0,1)}',
-                    style:TextStyle(fontSize:20, fontWeight: FontWeight.bold, color:Colors.lightBlueAccent[100])
+                    style:TextStyle(fontSize:20, fontWeight: FontWeight.bold, color:Colors.lightBlue[100*i+100])
                   )
                 )
               ),
@@ -247,7 +228,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                       Container(
                         child: Text(
                           '+${changeAmount(Transactions[i][1])}',
-                          style: TextStyle(color:Colors.lightBlueAccent[100], fontSize: 20, fontWeight: FontWeight.bold),
+                          style: TextStyle(color:Colors.grey[700], fontSize: 20, fontWeight: FontWeight.bold),
                         )
                       )
                     ],
@@ -266,18 +247,20 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     // TODO: implement build
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            SlideTransition(position:_textAnimation, child:_accountIcon()),
-            SlideTransition(position: _currentAnimation, child: _currentInfo()),
-            Column(
+        child:SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                SlideTransition(position:_textAnimation, child:_transactionText()),
-                SlideTransition(position: _transactionAnimation, child: _transactionHistory()),
+                SlideTransition(position:_textAnimation, child:_accountIcon()),
+                SlideTransition(position: _currentAnimation, child: _currentInfo()),
+                Column(
+                  children: <Widget>[
+                    SlideTransition(position:_textAnimation, child:_transactionText()),
+                    SlideTransition(position: _transactionAnimation, child: _transactionHistory()),
+                  ],
+                ),
               ],
-            ),
-          ],
+            )
         )
       ),
       extendBody: true,
