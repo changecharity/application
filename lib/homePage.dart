@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';  //for date format
 import 'package:intl/date_symbol_data_local.dart';  //for date locale
 
 import 'profile.dart';
+import 'paintings.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -12,12 +13,14 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
+class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   AnimationController _controller;
+  AnimationController _paintController;
   Animation<Offset> _transactionAnimation;
   Animation<Offset> _currentAnimation;
   Animation<Offset>_textAnimation;
+  Animation<Offset>_paintAnimation;
 
   var Transactions=[
     ["Target", 51.45, DateTime(2020, 5, 1)],
@@ -40,7 +43,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     super.initState();
 
     _controller =
-        AnimationController(vsync: this, duration: Duration(seconds: 2));
+        AnimationController(vsync: this, duration: Duration(seconds: 3));
+    _paintController=
+      AnimationController(vsync:this, duration:Duration(milliseconds:1500));
 
     _transactionAnimation = Tween<Offset>(
       begin: Offset(0.0, 1.0),
@@ -59,14 +64,26 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     ));
 
     _currentAnimation = Tween<Offset>(
-      begin: Offset(0, -1.0),
+      begin: Offset(0, -1.5),
       end: Offset(0, 0),
     ).animate(CurvedAnimation(
       parent:_controller,
       curve:Curves.fastLinearToSlowEaseIn
     ));
 
-    _controller.forward();
+    _paintAnimation=Tween<Offset>(
+      begin:Offset(1, 0),
+      end:Offset(0,0),
+    ).animate(CurvedAnimation(
+      parent:_paintController,
+      curve:Curves.fastLinearToSlowEaseIn
+    ));
+
+    _paintController.forward();
+
+    Future<void>.delayed(Duration(milliseconds:1000),(){
+      _controller.forward();
+    });
   }
 
   Widget _accountIcon(){
@@ -246,19 +263,25 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     return Scaffold(
       body: SafeArea(
         child:SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                SlideTransition(position:_textAnimation, child:_accountIcon()),
-                SlideTransition(position: _currentAnimation, child: _currentInfo()),
-                Column(
-                  children: <Widget>[
-                    SlideTransition(position:_textAnimation, child:_transactionText()),
-                    SlideTransition(position: _transactionAnimation, child: _transactionHistory()),
-                  ],
-                ),
-              ],
+          child:SlideTransition(
+            position:_paintAnimation,
+            child:CustomPaint(
+              painter:Home2Paint(),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  SlideTransition(position:_textAnimation, child:_accountIcon()),
+                  SlideTransition(position: _currentAnimation, child: _currentInfo()),
+                  Column(
+                    children: <Widget>[
+                      SlideTransition(position:_textAnimation, child:_transactionText()),
+                      SlideTransition(position: _transactionAnimation, child: _transactionHistory()),
+                    ],
+                  ),
+                ],
+              )
             )
+          )
         )
       ),
       extendBody: true,
@@ -268,6 +291,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   @override
   void dispose() {
     _controller.dispose();
+    _paintController.dispose();
     super.dispose();
   }
 }

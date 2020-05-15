@@ -1,7 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:avataaar_image/avataaar_image.dart';
+
 import 'SearchPage/search2.dart';
+import 'homePage.dart';
+
+
 
 
 class Profile extends StatefulWidget{
@@ -16,7 +21,99 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
   Animation<Offset> _topDown;
   Animation<Offset> _bottomUp;
 
-  var maxChange=1.0;
+  var maxChange=.99;
+  var _avatars = [
+    Avataaar(
+      skin:Skin.light,
+      mouth:Mouth.twinkle,
+      style:Style.circle,
+      top:Top.shortHairShortFlat(hairColor: HairColor.Brown),
+      eyes:Eyes.defaultEyes,
+      clothes:Clothes.shirtCrewNeck(ClotheColor.White),
+    ),
+    Avataaar(
+      skin:Skin.pale,
+      mouth:Mouth.smile,
+      style:Style.circle,
+      top:Top.shortHairShortCurly(hairColor: HairColor.Blonde),
+      eyes:Eyes.happy,
+      clothes:Clothes.shirtCrewNeck(ClotheColor.White),
+    ),
+    Avataaar(
+      skin:Skin.pale,
+      mouth:Mouth.twinkle,
+      style:Style.circle,
+      top:Top.shortHairShortWaved(hairColor: HairColor.BrownDark, accessoriesType: AccessoriesType.Round),
+      eyes:Eyes.squint,
+      clothes:Clothes.shirtCrewNeck(ClotheColor.White),
+    ),
+    Avataaar(
+      skin:Skin.pale,
+      mouth:Mouth.smile,
+      style:Style.circle,
+      top:Top.shortHairShortRound(hairColor: HairColor.Auburn, facialHair:FacialHair.beardLight(facialHairColor:FacialHairColor.Auburn)),
+      eyes:Eyes.squint,
+      clothes:Clothes.shirtCrewNeck(ClotheColor.White),
+    ),
+    Avataaar(
+      skin:Skin.light,
+      mouth:Mouth.defaultMouth,
+      style:Style.circle,
+      top:Top.shortHairShortRound(hairColor: HairColor.Black, facialHair:FacialHair.beardMagestic(facialHairColor:FacialHairColor.Black)),
+      eyes:Eyes.squint,
+      clothes:Clothes.shirtCrewNeck(ClotheColor.White),
+    ),
+    Avataaar(
+      skin:Skin.light,
+      mouth:Mouth.twinkle,
+      style:Style.circle,
+      top:Top.longHairBob(hairColor: HairColor.Brown),
+      eyes:Eyes.defaultEyes,
+      clothes:Clothes.shirtCrewNeck(ClotheColor.White),
+    ),
+    Avataaar(
+      skin:Skin.pale,
+      mouth:Mouth.smile,
+      style:Style.circle,
+      top:Top.longHairStraight2(hairColor: HairColor.Blonde),
+      eyes:Eyes.happy,
+      clothes:Clothes.shirtCrewNeck(ClotheColor.White),
+    ),
+    Avataaar(
+      skin:Skin.pale,
+      mouth:Mouth.twinkle,
+      style:Style.circle,
+      top:Top.longHairStraight(hairColor: HairColor.BrownDark, accessoriesType: AccessoriesType.Round),
+      eyes:Eyes.squint,
+      clothes:Clothes.shirtCrewNeck(ClotheColor.White),
+    ),
+    Avataaar(
+      skin:Skin.pale,
+      mouth:Mouth.smile,
+      style:Style.circle,
+      top:Top.longHairCurly(hairColor: HairColor.Auburn),
+      eyes:Eyes.squint,
+      clothes:Clothes.shirtCrewNeck(ClotheColor.White),
+    ),
+    Avataaar(
+      skin:Skin.light,
+      mouth:Mouth.defaultMouth,
+      style:Style.circle,
+      top:Top.longHairNotTooLong(hairColor: HairColor.Black),
+      eyes:Eyes.squint,
+      clothes:Clothes.shirtCrewNeck(ClotheColor.White),
+    )
+  ];
+
+  Avataaar myAvatar;
+  int i=0;
+
+  void _nextAvatar(){
+    myAvatar=_avatars[i];
+    i++;
+
+  }
+
 
   void initState(){
     super.initState();
@@ -24,7 +121,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
     _controller = AnimationController(vsync: this, duration: Duration(seconds:2));
 
     _topDown = Tween<Offset>(
-      begin: Offset(0.0, -1.0),
+      begin: Offset(0.0, -1.5),
       end:Offset(0.0,0.0),
     ).animate(CurvedAnimation(
       parent:_controller,
@@ -42,6 +139,9 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
     );
 
     _controller.forward();
+    _nextAvatar();
+
+
   }
 
   Widget _backButton() {
@@ -53,7 +153,10 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
         color:Colors.grey,
         iconSize: 30,
         onPressed: () {
-          Navigator.pop(context);
+          _controller.animateBack(0, duration:Duration(milliseconds:500), curve:Curves.linear);
+          Future<void>.delayed(Duration(milliseconds:500),(){
+            Navigator.push(context, MaterialPageRoute(builder:(context)=>HomePage()));
+          });
         },
       ),
     );
@@ -82,11 +185,19 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
                     margin:EdgeInsets.only(bottom:10, top:20),
                     height:100,
                     width:100,
-                    decoration:BoxDecoration(
-                        color:Colors.lightBlueAccent,
-                        shape:BoxShape.circle,
-                        boxShadow: [BoxShadow(color:Colors.lightBlueAccent.withOpacity(.3), offset:Offset.fromDirection(-5, 7), blurRadius:5)]
+                    child:AvataaarImage(
+                      avatar:myAvatar,
+                      width:100,
                     )
+                ),
+                IconButton(
+                  icon:Icon(Icons.refresh),
+                  iconSize:24,
+                  onPressed:(){
+                    setState(() {
+                      _nextAvatar();
+                    });
+                  }
                 ),
                 Text(
                     'Username',
@@ -200,24 +311,31 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
 
   Widget _maxSlider(){
     return Container(
-      child:Slider(
-        value: maxChange,
-        onChanged:(newMax){
-          setState(() {
-            maxChange=newMax;
-          });
-        },
-        min:0,
-        max:1,
-        label:"\$$maxChange",
-        divisions:100,
-        activeColor: Colors.lightBlueAccent,
-        inactiveColor: Colors.grey
+      width:MediaQuery.of(context).size.width*.7,
+      child:Column(
+        children: <Widget>[
+          Slider(
+            value: maxChange,
+            onChanged:(newMax){
+              setState(() {
+                maxChange=newMax;
+              });
+            },
+            min:.5,
+            max:.99,
+            label:"\$${maxChange.toStringAsFixed(2)}",
+            divisions:49,
+            activeColor: Colors.lightBlueAccent,
+            inactiveColor: Colors.grey,
+          ),
+          Text("Max Change: \$${maxChange.toStringAsFixed(2)}")
+        ],
       )
+
     );
   }
 
-  Widget _footer(){
+  Widget _randomAvatar(){
     return Container();
   }
 

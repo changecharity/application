@@ -172,3 +172,48 @@ class SearchPaint extends CustomPainter {
   @override
   bool shouldRepaint(SearchPaint oldDelegate) => false;
 }
+
+class Home2Paint extends CustomPainter{
+  @override
+  void paint(Canvas canvas, Size size){
+    var paintA = Paint()
+      ..color=Colors.lightBlue[200]
+      ..style=PaintingStyle.fill;
+    var paintB=Paint()
+      ..color=Colors.lightBlue[400].withOpacity(.8)
+      ..style=PaintingStyle.fill;
+    var pathA = Path();
+    pathA.moveTo(size.width, size.height*.25);
+    pathA.lineTo(size.width, size.height*.65);
+    pathA.quadraticBezierTo(
+        size.width-200, size.height*.55,
+        size.width-100, size.height*.45);
+    pathA.quadraticBezierTo(
+      size.width, size.height*.35,
+      size.width-150, size.height*.3);
+    pathA.quadraticBezierTo(
+      size.width-250,size.height*.25,
+      size.width, size.height*.2);
+    var pathB = Path();
+    pathB.moveTo(size.width, size.height*.15);
+    pathB.lineTo(size.width, size.height*.7);
+    pathB.quadraticBezierTo(
+      size.width-200, size.height*.55,
+      size.width-100, size.height*.48);
+    pathB.quadraticBezierTo(
+        size.width+100, size.height*.35,
+        size.width-100, size.height*.35);
+    pathB.quadraticBezierTo(
+      size.width-350, size.height*.35,
+      size.width, size.height*.25);
+
+
+
+
+    canvas.drawPath(pathA, paintA);
+    canvas.drawPath(pathB, paintB);
+  }
+  @override
+  bool shouldRepaint(Home2Paint oldDelegate)=>false;
+
+}
