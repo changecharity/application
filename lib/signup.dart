@@ -2,8 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
 import 'package:plaid/plaid.dart';
+import 'package:http/http.dart' as http;
 import 'paintings.dart';
+import 'emailAuth.dart';
 import 'home.dart';
+
 
 class SignUp extends StatefulWidget {
   @override
@@ -332,7 +335,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
             child: RaisedButton(
               onPressed: () {
                 Navigator.pushReplacement(
-                    context, MaterialPageRoute(builder: (context) => Home()));
+                    context, MaterialPageRoute(builder: (context) => EmailAuth()));
               },
               padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
               elevation: 10,

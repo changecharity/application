@@ -31,6 +31,8 @@ dependencies:
   carousel_slider: ^2.0.0
   intl: ^0.16.1
   avataaar_image: ^1.0.0
+  pin_code_fields: ^3.0.0
+
 
 dev_dependencies:
   flutter_test:
