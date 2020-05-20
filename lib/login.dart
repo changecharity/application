@@ -154,7 +154,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
       alignment: Alignment.centerLeft,
       child: Container(
         margin: EdgeInsets.only(
-          left: 82,
+          left: 40,
           top: 2,
           bottom: 3,
         ),
@@ -240,7 +240,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
       alignment: Alignment.centerLeft,
       child: Container(
         margin: EdgeInsets.only(
-          left: 82,
+          left: 40,
           top: 2,
           bottom: 3,
         ),
@@ -455,17 +455,17 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
       return false;
     }else if(_passController.text.length<6) {
       setState(() {
-        _passErr = "Password must be longer than 6 characters";
+        _passErr = "Must be longer than 6 characters";
       });
       return false;
     }else if(!containsCap){
       setState(() {
-        _passErr="Password must contain at least one capital letter";
+        _passErr="Must contain at least one capital letter";
       });
       return false;
     } else if(!containsNumb){
       setState(() {
-        _passErr="Password must contain at least one number";
+        _passErr="Must contain at least one number";
       });
       return false;
     }
@@ -474,9 +474,6 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
   }
 
   _submit() async{
-//    setState(() {
-//      loading = !loading;
-//    });
 
     if(!_checkValidEmail()) {
       print(_emailErr);
@@ -485,6 +482,9 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
       print(_passErr);
       return;
     }
+    setState(() {
+      loading=!loading;
+    });
 
     var content = '{"email": "${_emailController.text}", "password":"${_passController.text}"}';
     var response = await http.post("https://changecharity.io/api/users/login", body:content);
@@ -493,7 +493,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
       case "rpc error: code = Unknown desc = Wrong Email":{
         setState((){
           _emailErr="Wrong Email";
-          print(_emailErr);
+          loading=!loading;
         });
         return ;
       }
@@ -501,7 +501,8 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
       case "rpc error: code = Unknown desc = Wrong Password":{
         setState((){
           _passErr="Wrong Password";
-          print(_passErr);
+          loading=!loading;
+
         });
         return;
       }
@@ -516,7 +517,5 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
     print(response.body);
 
   }
-
-    //loading = !loading;
   }
 
