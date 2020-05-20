@@ -4,9 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'signup.dart';
 import 'paintings.dart';
-import 'home.dart';
+import 'homePage.dart';
 
 
 class Login extends StatefulWidget {
@@ -21,14 +23,17 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
   AnimationController controller;
   AnimationController controllerC;
 
-  TextEditingController emailController;
-  TextEditingController passController;
+  final _emailController=TextEditingController();
+  final _passController = TextEditingController();
   String _emailErr = '';
   String _passErr = '';
+
 
   double drawTime = 0.0;
   double drawDuration = 2.0;
   double loadDuration = 1;
+
+  bool obscurePass=true;
   bool loading = false;
 
   void initState() {
@@ -112,11 +117,17 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
         ],
       ),
       child: TextField(
-        controller: emailController,
+        controller: _emailController,
         onChanged: (s) {
           setState(() {
             _emailErr = '';
           });
+        },
+        onEditingComplete: (){
+          if(_passController.text!= null || _passController.text != ""){
+            _submit();
+          }
+          FocusScope.of(context).unfocus();
         },
         decoration: InputDecoration(
           labelText: "Email",
@@ -174,12 +185,15 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
         ],
       ),
       child: TextField(
-        obscureText: true,
-        controller: passController,
+        obscureText: obscurePass,
+        controller: _passController,
         onChanged: (s) {
           setState(() {
             _passErr = '';
           });
+        },
+        onEditingComplete:(){
+          _submit();
         },
         decoration: InputDecoration(
           labelText: "Password",
@@ -205,10 +219,18 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
   Widget _passSuffix() {
     return Container(
       margin: EdgeInsets.only(left: 15, right: 25),
-      child: Icon(
-        Icons.remove_red_eye,
-        size: 20,
-        color: Colors.black,
+      child: IconButton(
+        onPressed:(){
+          setState(() {
+            obscurePass=!obscurePass;
+          });
+        },
+        icon:Icon(
+          obscurePass ? Icons.visibility : Icons.visibility_off,
+          size: 20,
+          color: Colors.black,
+        )
+
       ),
     );
   }
@@ -389,19 +411,112 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
   @override
   void dispose() {
     controller.dispose();
+    controllerC.dispose();
     super.dispose();
   }
 
-  _submit() {
-    setState(() {
-      loading = !loading;
-    });
-    Future<void>.delayed(Duration(milliseconds: 1000), () {
-      setState(() {
-        _emailErr = "This field can't be blank";
-        _passErr = "This field can't be blank";
-        loading = !loading;
-      });
-    });
+
+  void _saveLogin(val) async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('token', val);
+    Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>HomePage()));
   }
-}
+
+  bool _checkValidEmail(){
+
+    bool emailValid = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(_emailController.text);
+
+    if(_emailController.text==''||_emailController.text==null){
+      setState((){
+        _emailErr="This field can't be blank";
+
+      });
+      return false;
+    } else if(!emailValid){
+      setState((){
+        _emailErr="This is not a valid email address";
+      });
+      return false;
+    }
+    return true;
+
+  }
+
+  bool _checkValidPassword(){
+
+    bool containsCap = RegExp(r"[A-Z]").hasMatch(_passController.text);
+    var containsNumb=RegExp(r"\d").hasMatch(_passController.text);
+    //regex not working for this.have to fix:
+    var containsSpecialChar=RegExp(r"^\W").hasMatch(_passController.text);
+    if (_passController.text ==''|| _passController.text==null){
+      setState((){
+        _passErr="This field can't be blank";
+      });
+      return false;
+    }else if(_passController.text.length<6) {
+      setState(() {
+        _passErr = "Password must be longer than 6 characters";
+      });
+      return false;
+    }else if(!containsCap){
+      setState(() {
+        _passErr="Password must contain at least one capital letter";
+      });
+      return false;
+    } else if(!containsNumb){
+      setState(() {
+        _passErr="Password must contain at least one number";
+      });
+      return false;
+    }
+      return true;
+
+  }
+
+  _submit() async{
+//    setState(() {
+//      loading = !loading;
+//    });
+
+    if(!_checkValidEmail()) {
+      print(_emailErr);
+      return;
+    }else if(!_checkValidPassword()){
+      print(_passErr);
+      return;
+    }
+
+    var content = '{"email": "${_emailController.text}", "password":"${_passController.text}"}';
+    var response = await http.post("https://changecharity.io/api/users/login", body:content);
+
+    switch(response.body){
+      case "rpc error: code = Unknown desc = Wrong Email":{
+        setState((){
+          _emailErr="Wrong Email";
+          print(_emailErr);
+        });
+        return ;
+      }
+      break;
+      case "rpc error: code = Unknown desc = Wrong Password":{
+        setState((){
+          _passErr="Wrong Password";
+          print(_passErr);
+        });
+        return;
+      }
+      break;
+    }
+
+    if(response.body.startsWith("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9")){
+      _saveLogin(response.body);
+      print("successful");
+    }
+
+    print(response.body);
+
+  }
+
+    //loading = !loading;
+  }
+

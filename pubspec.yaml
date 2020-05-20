@@ -32,6 +32,8 @@ dependencies:
   intl: ^0.16.1
   avataaar_image: ^1.0.0
   pin_code_fields: ^3.0.0
+  shared_preferences: ^0.5.7+1
+
 
 
 dev_dependencies:

@@ -96,7 +96,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         },
         icon: Icon(Icons.perm_identity),
         iconSize:32,
-        color:Colors.grey,
+        color:Colors.black,
         splashColor:Colors.grey,
       )
     );
@@ -116,7 +116,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         children: <Widget>[
           Text(
             'Partners in Torah',
-            style:TextStyle(color:Colors.lightBlueAccent[100], fontSize:18, fontWeight: FontWeight.bold),
+            style:TextStyle(color:Colors.black, fontSize:18, fontWeight: FontWeight.bold),
           ),
           Container(
             margin:EdgeInsets.only(top:20),
@@ -136,11 +136,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 children: <Widget>[
                   Text(
                     '\$55.89',
-                    style:TextStyle(color:Colors.lightBlueAccent[100], fontWeight: FontWeight.bold, fontSize:16)
+                    style:TextStyle(color:Color.fromRGBO(0, 174, 229, 1), fontWeight: FontWeight.bold, fontSize:16)
                   ),
                   Text(
                     'Month to date',
-                    style:TextStyle(color:Colors.grey)
+                    style:TextStyle(color:Colors.black)
                   )
                 ],
               ),
@@ -148,11 +148,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 children: <Widget>[
                   Text(
                       '\$24.32',
-                      style:TextStyle(color:Colors.lightBlueAccent[100], fontWeight: FontWeight.bold, fontSize:16)
+                      style:TextStyle(color:Color.fromRGBO(0, 174, 229, 1), fontWeight: FontWeight.bold, fontSize:16)
                   ),
                   Text(
                       'Week to date',
-                      style:TextStyle(color:Colors.grey)
+                      style:TextStyle(color:Colors.black)
                   )
                 ],
               ),
@@ -194,7 +194,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     return ListView.separated(
       separatorBuilder: (context, i){
         return Divider(
-          color:Colors.grey,
+          color:Colors.black,
           //thickness:1.0,
           endIndent:10,
           indent:10,
@@ -211,12 +211,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 width:50,
                 decoration:BoxDecoration(
                   border:Border.all(color:Colors.lightBlue[100*i+100], width:3),
+                  color:Colors.lightBlue[100*i+100],
                   shape:BoxShape.circle,
                 ),
                 child:Center(
                   child:Text(
                     '${Transactions[i][0].toString().substring(0,1)}',
-                    style:TextStyle(fontSize:20, fontWeight: FontWeight.bold, color:Colors.lightBlue[100*i+100])
+                    style:TextStyle(fontSize:20, fontWeight: FontWeight.bold, color:Colors.white)
                   )
                 )
               ),
@@ -232,18 +233,18 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         children: <Widget>[
                           Text(
                             '${Transactions[i][0]}  \$${Transactions[i][1]}',
-                            style:TextStyle(fontSize: 16, color: Colors.grey[700], )
+                            style:TextStyle(fontSize: 16, color: Colors.black, )
                           ),
                           Text(
                             '${DateFormat.yMMMMd().format(Transactions[i][2])}',
-                            style:TextStyle(color: Colors.grey)
+                            style:TextStyle(color: Colors.grey[700])
                           )
                         ],
                       ),
                       Container(
                         child: Text(
                           '+${changeAmount(Transactions[i][1])}',
-                          style: TextStyle(color:Colors.grey[700], fontSize: 20, fontWeight: FontWeight.bold),
+                          style: TextStyle(color:Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
                         )
                       )
                     ],
