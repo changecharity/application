@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import './paintings.dart';
 
@@ -14,6 +16,8 @@ class _EmailAuthState extends State<EmailAuth> with SingleTickerProviderStateMix
   AnimationController _controller;
   Animation<Offset> _paintAn;
   Animation<Offset> _bodyAn;
+  final _pinController = TextEditingController();
+  String token;
 
   void initState(){
     super.initState();
@@ -36,7 +40,9 @@ class _EmailAuthState extends State<EmailAuth> with SingleTickerProviderStateMix
         parent:_controller
     ));
 
-      _controller.forward();
+    _controller.forward();
+
+    _getToken();
   }
 
   Widget _emailIcon(){
@@ -91,6 +97,7 @@ class _EmailAuthState extends State<EmailAuth> with SingleTickerProviderStateMix
           backgroundColor: Colors.transparent,
           textStyle:TextStyle(color:Color.fromRGBO(0,174,229,1), fontSize:30),
           textInputType: TextInputType.number,
+          controller: _pinController,
           //autoFocus: true,
           //errorAnimationController: errorController,
           //controller: textEditingController,
@@ -125,8 +132,7 @@ class _EmailAuthState extends State<EmailAuth> with SingleTickerProviderStateMix
           Container(
             child: RaisedButton(
               onPressed: () {
-                Navigator.pushReplacement(
-                    context, MaterialPageRoute(builder: (context) => EmailAuth()));
+                _verifyAccount();
               },
               padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
               elevation: 10,
@@ -216,5 +222,21 @@ class _EmailAuthState extends State<EmailAuth> with SingleTickerProviderStateMix
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  _getToken() async{
+    SharedPreferences prefs=await SharedPreferences.getInstance();
+    setState(() {
+      token=prefs.getString('token');
+    });
+    //get token, if null,  pushReplacement sign out with message.
+  }
+
+  _verifyAccount() async{
+
+    var content='{"user_token":"$token","key":"${_pinController.text}"}';
+    var response= await http.post("https://changecharity.io/api/users/updatesignup", body:content);
+    print (response.body);
+    //check or success or error
   }
 }

@@ -1,11 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
 import 'package:plaid/plaid.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'paintings.dart';
 import 'emailAuth.dart';
-import 'home.dart';
 
 
 class SignUp extends StatefulWidget {
@@ -16,18 +18,30 @@ class SignUp extends StatefulWidget {
 class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
   Animation<Offset> animation;
   Animation<Offset> animationB;
+  Animation<Color> loadingAn;
   AnimationController controller;
+  AnimationController loadingController;
   double drawTime = 0.0;
   double drawDuration = 1.8;
-  DateTime selectedDate = DateTime(2012);
-  bool _clickedDob;
+  //DateTime selectedDate = DateTime(2012);
+  //bool _clickedDob;
   String plaidToken;
+  String accountId;
+  final _passController= TextEditingController();
+  final _emailController= TextEditingController();
+  String _passErr='';
+  String _emailErr='';
+  String _plaidErr='';
+  bool obscurePass=true;
+  bool loading=false;
 
   void initState() {
     super.initState();
 
     controller = AnimationController(
         vsync: this, duration: Duration(seconds: drawDuration.toInt()));
+    loadingController= AnimationController(
+        vsync: this, duration: Duration(seconds: 1));
 
     animation = Tween<Offset>(
       begin: Offset(-1.0, 0.0),
@@ -43,6 +57,11 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
       parent: controller,
       curve: Curves.easeInOutCubic,
     ));
+    loadingAn = loadingController.drive(
+        ColorTween(begin: Colors.lightBlue[200], end: Colors.lightBlue[600]));
+
+    loadingController.repeat();
+
     Future<void>.delayed(Duration(milliseconds: 0), () {
       controller.forward();
       print(animation.value);
@@ -92,6 +111,12 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
         ],
       ),
       child: TextField(
+        controller:_emailController,
+        onChanged: (s){
+          setState(() {
+            _emailErr='';
+          });
+        },
         decoration: InputDecoration(
           labelText: "Email",
           hasFloatingPlaceholder: false,
@@ -111,10 +136,30 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
       ),
     );
   }
+  Widget _errCont(String error) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        margin: EdgeInsets.only(
+          left: 40,
+          top: 2,
+          bottom: 3,
+        ),
+        child: Text(
+           error,
+          style: TextStyle(
+            color: Colors.red,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+
 
   Widget _passInput() {
     return Container(
-      margin: EdgeInsets.only(right: 20, left: 20, top: 30),
+      margin: EdgeInsets.only(right: 20, left: 20),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.all(Radius.circular(30)),
@@ -127,7 +172,13 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
         ],
       ),
       child: TextField(
-        obscureText: true,
+        controller:_passController,
+        obscureText: obscurePass,
+        onChanged: (s){
+          setState(() {
+            _passErr='';
+          });
+        },
         decoration: InputDecoration(
           labelText: "Password",
           hasFloatingPlaceholder: false,
@@ -152,103 +203,29 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
   Widget _passSuffix() {
     return Container(
       margin: EdgeInsets.only(left: 15, right: 25),
-      child: Icon(
-        Icons.remove_red_eye,
-        size: 20,
-        color: Colors.black,
+      child: IconButton(
+        onPressed:(){
+          setState(() {
+            obscurePass=!obscurePass;
+          });
+        },
+        icon:Icon(
+          obscurePass?Icons.visibility:Icons.visibility_off,
+          size: 20,
+          color: Colors.black,
+        )
+
       ),
     );
   }
 
-  Widget _dobInput() {
-    return GestureDetector(
-      onTap: () {
-        _selectDate(context);
-        setState(() {
-          _clickedDob = true;
-        });
-      },
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        height: 60,
-        margin: EdgeInsets.only(right: 20, left: 20, top: 30),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(30)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey[350],
-              blurRadius: 20.0,
-              offset: Offset.fromDirection(0.9),
-            ),
-          ],
-        ),
-        child: _dobToggle(),
-      ),
-    );
-  }
-
-  Widget _dobToggle() {
-    if (_clickedDob == null) {
-      return Row(
-        children: <Widget>[
-          _dobIcon(),
-          Text(
-            'Date of Birth',
-            style: TextStyle(
-              color: Colors.grey[600],
-              fontSize: 15,
-            ),
-          ),
-        ],
-      );
-    } else {
-      return Row(
-        children: <Widget>[
-          _dobIcon(),
-          Text(
-            selectedDate.month.toString(),
-            style: TextStyle(
-              fontSize: 16,
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 10),
-            child: Text(
-              selectedDate.day.toString(),
-              style: TextStyle(
-                fontSize: 16,
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 10),
-            child: Text(
-              selectedDate.year.toString(),
-              style: TextStyle(
-                fontSize: 16,
-              ),
-            ),
-          ),
-        ],
-      );
-    }
-  }
-
-  _dobIcon() {
-    return Container(
-      margin: EdgeInsets.only(left: 25, right: 15),
-      child: Icon(
-        Icons.cake,
-        size: 20,
-        color: Colors.black,
-      ),
-    );
-  }
 
   Widget _plaidButton() {
     return GestureDetector(
       onTap: () {
+        setState(() {
+          _plaidErr='';
+        });
         if (plaidToken == null || plaidToken == '') {
           showPlaidView();
           Future.delayed(const Duration(milliseconds: 500), () {
@@ -261,7 +238,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
       child: Container(
         width: MediaQuery.of(context).size.width,
         height: 60,
-        margin: EdgeInsets.only(right: 20, left: 20, top: 30),
+        margin: EdgeInsets.only(right: 20, left: 20, ),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.all(Radius.circular(30)),
@@ -316,7 +293,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
     }
   }
 
-  Widget _signUpButton() {
+  Widget _signUpCont() {
     return Container(
       margin: EdgeInsets.only(right: 20, top: 50),
       child: Row(
@@ -331,35 +308,46 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
               ),
             ),
           ),
-          Container(
-            child: RaisedButton(
-              onPressed: () {
-                Navigator.pushReplacement(
-                    context, MaterialPageRoute(builder: (context) => EmailAuth()));
-              },
-              padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
-              elevation: 10,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(60))),
-              child: Ink(
-                width: 100,
-                height: 50,
-                decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Colors.lightBlue[400], Colors.lightBlue[300]],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                    ),
-                    borderRadius: BorderRadius.circular(30.0)),
-                child: Icon(
-                  Icons.arrow_forward,
-                  color: Colors.white,
-                  size: 30,
-                ),
-              ),
-            ),
-          ),
+          _signUpButton()
         ],
+      ),
+    );
+  }
+
+  Widget _signUpButton(){
+    if(loading){
+      return Container(
+          margin: EdgeInsets.fromLTRB(32, 0, 32, 0),
+          child:CircularProgressIndicator(
+          valueColor:loadingAn,
+        )
+      );
+    }
+    return Container(
+      child: RaisedButton(
+        onPressed: (){
+          _signUp();
+        },
+        padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
+        elevation: 10,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(60))),
+        child: Ink(
+          width: 100,
+          height: 50,
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Colors.lightBlue[400], Colors.lightBlue[300]],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
+              borderRadius: BorderRadius.circular(30.0)),
+          child: Icon(
+            Icons.arrow_forward,
+            color: Colors.white,
+            size: 30,
+          ),
+        ),
       ),
     );
   }
@@ -382,10 +370,12 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                       _backButton(),
                       _signUpText(),
                       _emailInput(),
+                      _errCont(_emailErr),
                       _passInput(),
-                      _dobInput(),
+                      _errCont(_passErr),
                       _plaidButton(),
-                      _signUpButton(),
+                      _errCont(_plaidErr),
+                      _signUpCont(),
                     ],
                   ),
                 ),
@@ -403,17 +393,17 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  Future<Null> _selectDate(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
-        context: context,
-        initialDate: selectedDate,
-        firstDate: DateTime(1940, 8),
-        lastDate: DateTime(2013));
-    if (picked != null && picked != selectedDate)
-      setState(() {
-        selectedDate = picked;
-      });
-  }
+//  Future<Null> _selectDate(BuildContext context) async {
+//    final DateTime picked = await showDatePicker(
+//        context: context,
+//        initialDate: selectedDate,
+//        firstDate: DateTime(1940, 8),
+//        lastDate: DateTime(2013));
+//    if (picked != null && picked != selectedDate)
+//      setState(() {
+//        selectedDate = picked;
+//      });
+//  }
 
   showPlaidView() {
     bool plaidSandbox = true;
@@ -429,7 +419,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
         plaidClientId: '',
         secret: plaidSandbox ? '' : '',
         clientName: 'ClientName',
-        webhook: 'https://www.chezky.com/dope',
+        webhook: 'https://changecharity.io/api/plaidwebhook',
         products: 'auth,income',
         selectAccount: 'false');
 
@@ -438,7 +428,112 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
       setState(() {
         plaidToken = result.token;
       });
+      var accounts=jsonDecode(result.response["accounts"]);
+      accountId=(accounts[0]["_id"]);
       print(result.token);
     }, stripeToken: false);
   }
+
+  void _saveSignUp(val) async{
+    SharedPreferences prefs=await SharedPreferences.getInstance();
+    prefs.setString('token', val);
+   if(prefs.getString('token')!=null&&prefs.getString('token')!=''){
+      Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>EmailAuth()));
+    }
+  }
+
+  bool _checkValidEmail() {
+
+    bool emailValid = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(_emailController.text);
+
+    if(_emailController.text==''||_emailController.text==null){
+      setState((){
+        _emailErr="This field can't be blank";
+      });
+      return false;
+    } else if(!emailValid){
+      setState((){
+        _emailErr="This is not a valid email address";
+      });
+      return false;
+    }
+    return true;
+
+  }
+
+  bool _checkValidPassword(){
+
+    bool containsCap = RegExp(r"[A-Z]").hasMatch(_passController.text);
+    var containsNumb=RegExp(r"\d").hasMatch(_passController.text);
+    //regex not working for this.have to fix:
+    var containsSpecialChar=RegExp(r"^\W").hasMatch(_passController.text);
+    if (_passController.text ==''|| _passController.text==null){
+      setState((){
+        _passErr="This field can't be blank";
+      });
+      return false;
+    }else if(_passController.text.length<6) {
+      setState(() {
+        _passErr = "Must be longer than 6 characters";
+      });
+      return false;
+    }else if(!containsCap){
+      setState(() {
+        _passErr="Must contain at least one capital letter";
+      });
+      return false;
+    } else if(!containsNumb){
+      setState(() {
+        _passErr="Must contain at least one number";
+      });
+      return false;
+    }
+    return true;
+
+  }
+
+  bool _checkValidPlaid(){
+    if(plaidToken==null|| plaidToken==''){
+      _plaidErr="You must link a bank";
+      return false;
+    }
+    return true;
+  }
+
+  _signUp()async{
+    if(!_checkValidEmail()){
+      setState(() {
+        return;
+      });
+    }else if(!_checkValidPassword()){
+      setState(() {
+        return;
+      });
+    } else if(!_checkValidPlaid()){
+      setState(() {
+        return;
+      });
+    }else{
+      setState(() {
+        loading=!loading;
+      });
+      var content='{"email":"${_emailController.text}","password":"${_passController.text}", "plaid_public_token":"$plaidToken", "plaid_account_id":"$accountId"}';
+      var response= await http.post("https://changecharity.io/api/users/signup", body:content);
+
+      print(response.body);
+
+      if(response.body=="rpc error: code = Unknown desc = email exists"){
+        setState(() {
+          _emailErr="Email Taken";
+          loading=!loading;
+        });
+        return;
+      } else if(response.body.startsWith("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9")&&plaidToken!=null&&plaidToken!=''){
+        _saveSignUp(response.body);
+        print("successful");
+      }
+
+    }
+  }
+
 }
