@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'home.dart';
 import 'login.dart';
 import 'signup.dart';
+import 'emailAuth.dart';
 import 'SearchPage/search.dart';
 import 'SearchPage/search2.dart';
 import 'homePage.dart';

@@ -29,6 +29,8 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
   String accountId;
   final _passController= TextEditingController();
   final _emailController= TextEditingController();
+  final emailFocusNode=FocusNode();
+  final passFocusNode=FocusNode();
   String _passErr='';
   String _emailErr='';
   String _plaidErr='';
@@ -122,6 +124,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
           hasFloatingPlaceholder: false,
           prefixIcon: _emailPrefix(),
         ),
+        focusNode: emailFocusNode,
       ),
     );
   }
@@ -185,6 +188,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
           prefixIcon: _passPrefix(),
           suffixIcon: _passSuffix(),
         ),
+        focusNode: passFocusNode,
       ),
     );
   }
@@ -224,6 +228,8 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
     return GestureDetector(
       onTap: () {
         setState(() {
+          emailFocusNode.unfocus();
+          passFocusNode.unfocus();
           _plaidErr='';
         });
         if (plaidToken == null || plaidToken == '') {
@@ -355,28 +361,34 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Material(
-      child: SafeArea(
-        child: SlideTransition(
-          position: animation,
-          child: CustomPaint(
-            painter: SignUpPaint(),
-            child: Container(
-              height: MediaQuery.of(context).size.height,
-              child: SlideTransition(
-                position: animationB,
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: <Widget>[
-                      _backButton(),
-                      _signUpText(),
-                      _emailInput(),
-                      _errCont(_emailErr),
-                      _passInput(),
-                      _errCont(_passErr),
-                      _plaidButton(),
-                      _errCont(_plaidErr),
-                      _signUpCont(),
-                    ],
+      child:GestureDetector(
+        onTap:(){
+          emailFocusNode.unfocus();
+          passFocusNode.unfocus();
+        },
+        child: SafeArea(
+          child: SlideTransition(
+            position: animation,
+            child: CustomPaint(
+              painter: SignUpPaint(),
+              child: Container(
+                height: MediaQuery.of(context).size.height,
+                child: SlideTransition(
+                  position: animationB,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: <Widget>[
+                        _backButton(),
+                        _signUpText(),
+                        _emailInput(),
+                        _errCont(_emailErr),
+                        _passInput(),
+                        _errCont(_passErr),
+                        _plaidButton(),
+                        _errCont(_plaidErr),
+                        _signUpCont(),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -438,7 +450,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
     SharedPreferences prefs=await SharedPreferences.getInstance();
     prefs.setString('token', val);
    if(prefs.getString('token')!=null&&prefs.getString('token')!=''){
-      Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>EmailAuth()));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>EmailAuth(_emailController.text)));
     }
   }
 

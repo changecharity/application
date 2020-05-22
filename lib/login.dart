@@ -25,6 +25,8 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
 
   final _emailController=TextEditingController();
   final _passController = TextEditingController();
+  final emailFocusNode=FocusNode();
+  final  passFocusNode =FocusNode();
   String _emailErr = '';
   String _passErr = '';
 
@@ -134,6 +136,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
           hasFloatingPlaceholder: false,
           prefixIcon: _emailPrefix(),
         ),
+        focusNode:emailFocusNode
       ),
     );
   }
@@ -201,6 +204,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
           prefixIcon: _passPrefix(),
           suffixIcon: _passSuffix(),
         ),
+        focusNode:passFocusNode
       ),
     );
   }
@@ -378,33 +382,39 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Material(
-      child: SafeArea(
-        child: SlideTransition(
-          position: animationB,
-          child: CustomPaint(
-            painter: LoginPaint(),
-            child: Container(
-              height: MediaQuery.of(context).size.height,
-              child: SlideTransition(
-                position: animation,
-                child: Column(
-                  children: <Widget>[
-                    _helloContainer(),
-                    _messageContainer(),
-                    _emailInput(),
-                    _emailErrCont(),
-                    _passInput(),
-                    _passErrCont(),
-                    _forgotPass(),
-                    _signinContainer(),
-                    _createText(),
-                  ],
+      child:GestureDetector(
+        onTap:(){
+          emailFocusNode.unfocus();
+          passFocusNode.unfocus();
+        },
+        child: SafeArea(
+          child: SlideTransition(
+            position: animationB,
+            child: CustomPaint(
+              painter: LoginPaint(),
+              child: Container(
+                height: MediaQuery.of(context).size.height,
+                child: SlideTransition(
+                  position: animation,
+                  child: Column(
+                    children: <Widget>[
+                      _helloContainer(),
+                      _messageContainer(),
+                      _emailInput(),
+                      _emailErrCont(),
+                      _passInput(),
+                      _passErrCont(),
+                      _forgotPass(),
+                      _signinContainer(),
+                      _createText(),
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
         ),
-      ),
+      )
     );
   }
 
@@ -518,5 +528,5 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
     print(response.body);
 
   }
-  }
+}
 
