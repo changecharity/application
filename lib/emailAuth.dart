@@ -7,6 +7,7 @@ import 'dart:convert';
 
 import './paintings.dart';
 import './homePage.dart';
+import './signUp.dart';
 
 class EmailAuth extends StatefulWidget{
 
@@ -64,6 +65,8 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin{
     _loadingController.repeat();
 
     _getToken();
+    _timePassed();
+
   }
 
   Widget _emailIcon(){
@@ -137,6 +140,7 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin{
       )
     );
   }
+
   Widget _resendCont(){
    return Container(
         margin:EdgeInsets.only(top:10),
@@ -323,15 +327,29 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin{
   @override
   void dispose() {
     _controller.dispose();
+    _loadingController.dispose();
     super.dispose();
+  }
+
+  _timePassed()async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var time = prefs.getString('time');
+    Future<void> .delayed(Duration(minutes:1),(){
+       if (DateTime.now().isAfter(DateTime.parse(time))){
+         Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>SignUp()));
+       }
+    });
   }
 
   _getToken() async{
     SharedPreferences prefs=await SharedPreferences.getInstance();
     setState(() {
       token=prefs.getString('token');
+      if (token==null ||token==""){
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>SignUp()));
+      }
     });
-    //get token, if null,  pushReplacement sign out with message.
+
   }
 
   _resend() async{
@@ -348,7 +366,7 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin{
     if(response.body=="rpc error: code = Unknown desc = unknown token"){
       setState(() {
         resendLoading=!resendLoading;
-        //bring back to sign up page
+        Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>SignUp()));
         _pinError="Invalid user. Please sign up";
       });
     }else if(response.body=="success:true"){
@@ -365,28 +383,52 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin{
     }
   }
 
+  bool _checkValidPin() {
+
+    bool containsLetter = RegExp(r"[A-Za-z]").hasMatch(_pinController.text);
+
+    if(_pinController.text.length<6){
+      setState(() {
+        _pinError="Code must be 6 digits long.";
+      });
+      return false;
+    }else if(containsLetter){
+      setState(() {
+        _pinError="Code must be only numbers";
+      });
+      return false;
+    }
+    return true;
+  }
+
   _verificationSuccessful() {
     Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>HomePage()));
   }
 
   _verifyAccount() async{
-    setState((){
-      loading=!loading;
-    });
-    var content='{"user_token":"$token","key":"${_pinController.text}"}';
-    var response= await http.post("https://changecharity.io/api/users/updatesignup", body:content);
-    print (response.body);
+
+    if(!_checkValidPin()){
+      setState(() {
+        return;
+      });
+    }else {
+      setState((){
+        loading=!loading;
+      });
+      var content='{"user_token":"$token","key":"${_pinController.text}"}';
+      var response= await http.post("https://changecharity.io/api/users/updatesignup", body:content);
+      print (response.body);
 
 
-    if(response.body=="rpc error: code = Unknown desc = key is incorrect"||response.body=="proto: (line 1:171): invalid value for int32 type: "){
+      if(response.body=="rpc error: code = Unknown desc = key is incorrect"||response.body=="proto: (line 1:171): invalid value for int32 type: "){
         setState(() {
           loading=!loading;
           _pinError = "Code is incorrect. Please try again.";
           return;
         });
-    }else if(response.body=="success"){
-      _verificationSuccessful();
+      }else if(response.body=="success"){
+        _verificationSuccessful();
+      }
     }
-
   }
 }

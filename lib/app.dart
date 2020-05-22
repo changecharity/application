@@ -27,7 +27,7 @@ class _ChangeState extends State<Change>{
     ));
     return MaterialApp(
       title: 'Change',
-      home: SignUp(),
+      home: EmailAuth('batyashaps@gmail.com'),
       theme: lightTheme,
       debugShowCheckedModeBanner: false,
     );

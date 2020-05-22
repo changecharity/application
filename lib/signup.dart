@@ -402,20 +402,10 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
   @override
   void dispose() {
     controller.dispose();
+    loadingController.dispose();
     super.dispose();
   }
 
-//  Future<Null> _selectDate(BuildContext context) async {
-//    final DateTime picked = await showDatePicker(
-//        context: context,
-//        initialDate: selectedDate,
-//        firstDate: DateTime(1940, 8),
-//        lastDate: DateTime(2013));
-//    if (picked != null && picked != selectedDate)
-//      setState(() {
-//        selectedDate = picked;
-//      });
-//  }
 
   showPlaidView() {
     bool plaidSandbox = true;
@@ -452,6 +442,13 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
    if(prefs.getString('token')!=null&&prefs.getString('token')!=''){
       Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>EmailAuth(_emailController.text)));
     }
+  }
+
+  void _setTime()async{
+    var timePlusThirty=DateTime.now().add(new Duration(seconds:1800));
+    SharedPreferences timePref =await SharedPreferences.getInstance();
+    timePref.setString('time', timePlusThirty.toString());
+    print(timePlusThirty.toString());
   }
 
   bool _checkValidEmail() {
@@ -542,6 +539,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
         return;
       } else if(response.body.startsWith("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9")&&plaidToken!=null&&plaidToken!=''){
         _saveSignUp(response.body);
+        _setTime();
         print("successful");
       }
 
