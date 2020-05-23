@@ -2,9 +2,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
+import 'SearchPage/search2.dart';
 import 'package:http/http.dart' as http;
 import 'package:plaid/plaid.dart';
-import 'SearchPage/search.dart';
 import 'dart:convert';
 
 class Home extends StatefulWidget{
@@ -281,7 +281,7 @@ class _HomeState extends State <Home> {
   }
   Route _searchRoute() {
     return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => Search(),
+      pageBuilder: (context, animation, secondaryAnimation) => Search2(),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         var begin = Offset(0.0, 1.0);
         var end = Offset.zero;

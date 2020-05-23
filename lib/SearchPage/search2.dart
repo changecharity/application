@@ -60,15 +60,15 @@ class _SearchState extends State<Search2> {
   ];
 
   var _orgCategories = [
-    "Shuls",
-    "Yeshivas",
     "Sick",
     "Poor",
-    "Shuls",
-    "Yeshivas",
+    "Education",
+    "Elderly",
+    "Children",
+    "Schools",
     "Sick",
     "Poor",
-    "Shuls"
+    "Elderly"
   ];
 
 

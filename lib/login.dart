@@ -499,11 +499,12 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
 
     var content = '{"email": "${_emailController.text}", "password":"${_passController.text}"}';
     var response = await http.post("https://changecharity.io/api/users/login", body:content);
+    print(response.body);
 
     switch(response.body){
       case "rpc error: code = Unknown desc = Wrong Email":{
         setState((){
-          _emailErr="Wrong Email";
+          _emailErr="An account with this email does not exist";
           loading=!loading;
         });
         return ;

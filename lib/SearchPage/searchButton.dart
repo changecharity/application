@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'search.dart';
 import 'searchedOrganizations.dart';
 
 class SearchButton extends StatelessWidget {

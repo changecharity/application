@@ -23,8 +23,6 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
   AnimationController loadingController;
   double drawTime = 0.0;
   double drawDuration = 1.8;
-  //DateTime selectedDate = DateTime(2012);
-  //bool _clickedDob;
   String plaidToken;
   String accountId;
   final _passController= TextEditingController();
@@ -40,6 +38,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
   void initState() {
     super.initState();
 
+    //set animations
     controller = AnimationController(
         vsync: this, duration: Duration(seconds: drawDuration.toInt()));
     loadingController= AnimationController(
@@ -70,6 +69,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
     });
   }
 
+  //back icon, takes back to login page
   Widget _backButton() {
     return Container(
       margin: EdgeInsets.only(top: 20, left: 10),
@@ -84,6 +84,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
     );
   }
 
+  //Sign Up
   Widget _signUpText() {
     return Container(
       margin: EdgeInsets.only(
@@ -98,6 +99,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
     );
   }
 
+  //email input
   Widget _emailInput() {
     return Container(
       margin: EdgeInsets.only(right: 20, left: 20, top: 60),
@@ -139,6 +141,8 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
       ),
     );
   }
+
+  //error container to use for email, pass, or plaid
   Widget _errCont(String error) {
     return Align(
       alignment: Alignment.centerLeft,
@@ -159,7 +163,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
     );
   }
 
-
+  //password input
   Widget _passInput() {
     return Container(
       margin: EdgeInsets.only(right: 20, left: 20),
@@ -204,6 +208,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
     );
   }
 
+  //visibility suffix
   Widget _passSuffix() {
     return Container(
       margin: EdgeInsets.only(left: 15, right: 25),
@@ -223,7 +228,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
     );
   }
 
-
+  //Plaid button-directs to plaid api
   Widget _plaidButton() {
     return GestureDetector(
       onTap: () {
@@ -277,6 +282,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
     );
   }
 
+  //Changes on account connection or disconnect
   Widget _plaidStatus() {
     if (plaidToken != '' && plaidToken != null) {
       return Text(
@@ -299,6 +305,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
     }
   }
 
+  //Sign up button. Switches to loading on load
   Widget _signUpCont() {
     return Container(
       margin: EdgeInsets.only(right: 20, top: 50),
@@ -358,6 +365,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
     );
   }
 
+  //page layout
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -406,7 +414,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
     super.dispose();
   }
 
-
+  //handles plaid view
   showPlaidView() {
     bool plaidSandbox = true;
 
@@ -436,6 +444,8 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
     }, stripeToken: false);
   }
 
+  //uses SharedPreferences to set token on sign up.
+  //If token available(sign up successful), pushes to verify page
   void _saveSignUp(val) async{
     SharedPreferences prefs=await SharedPreferences.getInstance();
     prefs.setString('token', val);
@@ -444,6 +454,8 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
     }
   }
 
+  //sets the time plus thirty minutes to store in shared preferences.
+  //On verify page, after 30 minutes, get redirected back to sign up. account is no longer valid.
   void _setTime()async{
     var timePlusThirty=DateTime.now().add(new Duration(seconds:1800));
     SharedPreferences timePref =await SharedPreferences.getInstance();
@@ -451,6 +463,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
     print(timePlusThirty.toString());
   }
 
+  //throws errors if email isn't valid
   bool _checkValidEmail() {
 
     bool emailValid = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(_emailController.text);
@@ -470,6 +483,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
 
   }
 
+  //throws errors if password isn't valid
   bool _checkValidPassword(){
 
     bool containsCap = RegExp(r"[A-Z]").hasMatch(_passController.text);
@@ -501,6 +515,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
 
   }
 
+  //throws error if plaid is not connected
   bool _checkValidPlaid(){
     if(plaidToken==null|| plaidToken==''){
       _plaidErr="You must link a bank";
@@ -509,6 +524,8 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
     return true;
   }
 
+  //called on click of sign up button. checks email, password, and plaid before making api call and signing up.
+  //if sign up is successful, api sends back token which gets stored in shared preferences
   _signUp()async{
     if(!_checkValidEmail()){
       setState(() {

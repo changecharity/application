@@ -1,11 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';  //for date format
 import 'package:intl/date_symbol_data_local.dart';  //for date locale
-
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 import 'profile.dart';
 import 'paintings.dart';
+import 'signup.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -21,6 +25,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   Animation<Offset> _currentAnimation;
   Animation<Offset>_textAnimation;
   Animation<Offset>_paintAnimation;
+  String token;
+  int offset=0;
 
   var Transactions=[
     ["Target", 51.45, DateTime(2020, 5, 1)],
@@ -48,7 +54,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       AnimationController(vsync:this, duration:Duration(milliseconds:1500));
 
     _transactionAnimation = Tween<Offset>(
-      begin: Offset(0.0, 1.0),
+      begin: Offset(0.0, 2.0),
       end: Offset(0.0, 0.0),
     ).animate(CurvedAnimation(
         parent: _controller,
@@ -81,9 +87,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
     _paintController.forward();
 
-    Future<void>.delayed(Duration(milliseconds:1000),(){
+    Future<void>.delayed(Duration(milliseconds:300),(){
       _controller.forward();
     });
+
+    _getToken();
+    _getTransactions();
   }
 
   Widget _accountIcon(){
@@ -294,5 +303,20 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     _controller.dispose();
     _paintController.dispose();
     super.dispose();
+  }
+
+  _getToken() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    token = prefs.getString('token');
+    if(token == null || token ==''){
+      Navigator.push(context, MaterialPageRoute(builder:(context)=>SignUp()));
+    }
+  }
+
+  _getTransactions() async{
+    var content='{"user_token":"$token", "offset":$offset}';
+    var response = await http.post("https://changecharity.io/api/users/gettransactions", body:content);
+    print(token);
+    print(response.body);
   }
 }

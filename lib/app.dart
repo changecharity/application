@@ -1,11 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'home.dart';
 import 'login.dart';
 import 'signup.dart';
 import 'emailAuth.dart';
-import 'SearchPage/search.dart';
 import 'SearchPage/search2.dart';
 import 'homePage.dart';
 import 'profile.dart';
@@ -27,7 +25,7 @@ class _ChangeState extends State<Change>{
     ));
     return MaterialApp(
       title: 'Change',
-      home: EmailAuth('batyashaps@gmail.com'),
+      home: Login(),
       theme: lightTheme,
       debugShowCheckedModeBanner: false,
     );

@@ -4,7 +4,6 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
-
 import './paintings.dart';
 import './homePage.dart';
 import './signUp.dart';
@@ -110,6 +109,7 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin{
               setState(() {
                 missingChar=!missingChar;
                 print('missing chars');
+                print(missingChar);
               });
             }
           },
@@ -154,10 +154,7 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin{
           onTap:(){
             _resend();
           },
-          child:Text(
-              resendText,
-              style:TextStyle(color:Color.fromRGBO(0, 174, 229, 1), fontSize:12)
-          )
+          child:_resendTxt()
       );
     }
     return Container(
@@ -334,17 +331,23 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin{
   _timePassed()async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var time = prefs.getString('time');
-    Future<void> .delayed(Duration(minutes:1),(){
-       if (DateTime.now().isAfter(DateTime.parse(time))){
-         Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>SignUp()));
-       }
-    });
+    if (DateTime.now().isAfter(DateTime.parse(time))){
+      Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>SignUp()));
+      print('time elapsed');
+      return;
+    }else{
+      Future<void> .delayed(Duration(minutes:1),(){
+        _timePassed();
+      });
+    }
+
   }
 
   _getToken() async{
     SharedPreferences prefs=await SharedPreferences.getInstance();
     setState(() {
       token=prefs.getString('token');
+      print(token);
       if (token==null ||token==""){
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>SignUp()));
       }
@@ -390,6 +393,7 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin{
     if(_pinController.text.length<6){
       setState(() {
         _pinError="Code must be 6 digits long.";
+        missingChar=!missingChar;
       });
       return false;
     }else if(containsLetter){

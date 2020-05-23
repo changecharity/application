@@ -40,7 +40,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
       clothes:Clothes.shirtCrewNeck(ClotheColor.White),
     ),
     Avataaar(
-      skin:Skin.pale,
+      skin:Skin.tanned,
       mouth:Mouth.twinkle,
       style:Style.circle,
       top:Top.shortHairShortWaved(hairColor: HairColor.BrownDark, accessoriesType: AccessoriesType.Round),
@@ -48,7 +48,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
       clothes:Clothes.shirtCrewNeck(ClotheColor.White),
     ),
     Avataaar(
-      skin:Skin.pale,
+      skin:Skin.brown,
       mouth:Mouth.smile,
       style:Style.circle,
       top:Top.shortHairShortRound(hairColor: HairColor.Auburn, facialHair:FacialHair.beardLight(facialHairColor:FacialHairColor.Auburn)),
@@ -64,7 +64,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
       clothes:Clothes.shirtCrewNeck(ClotheColor.White),
     ),
     Avataaar(
-      skin:Skin.light,
+      skin:Skin.black,
       mouth:Mouth.twinkle,
       style:Style.circle,
       top:Top.longHairBob(hairColor: HairColor.Brown),
@@ -80,7 +80,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
       clothes:Clothes.shirtCrewNeck(ClotheColor.White),
     ),
     Avataaar(
-      skin:Skin.pale,
+      skin:Skin.tanned,
       mouth:Mouth.twinkle,
       style:Style.circle,
       top:Top.longHairStraight(hairColor: HairColor.BrownDark, accessoriesType: AccessoriesType.Round),
@@ -88,7 +88,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
       clothes:Clothes.shirtCrewNeck(ClotheColor.White),
     ),
     Avataaar(
-      skin:Skin.pale,
+      skin:Skin.darkBrown,
       mouth:Mouth.smile,
       style:Style.circle,
       top:Top.longHairCurly(hairColor: HairColor.Auburn),
@@ -111,6 +111,10 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
   void _nextAvatar(){
     myAvatar=_avatars[i];
     i++;
+    if(i==10){
+      i=0;
+      return;
+    }
 
   }
 
@@ -150,7 +154,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
       alignment: Alignment.centerLeft,
       child: IconButton(
         icon: Icon(Icons.arrow_back),
-        color:Colors.grey,
+        color:Colors.black,
         iconSize: 30,
         onPressed: () {
           _controller.animateBack(0, duration:Duration(milliseconds:500), curve:Curves.linear);
@@ -179,7 +183,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
               children: <Widget>[
                 Text(
                     'My Profile',
-                    style:TextStyle(color:Colors.grey[700], fontWeight:FontWeight.w900, fontSize:24)
+                    style:TextStyle(color:Colors.black, fontWeight:FontWeight.bold, fontSize:24)
                 ),
                 Container(
                     margin:EdgeInsets.only(bottom:10, top:20),
@@ -204,7 +208,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
                     style:TextStyle(
                       fontSize:16,
                       fontWeight:FontWeight.bold,
-                      color:Colors.lightBlueAccent,
+                      color:Color.fromRGBO(0, 174, 229, 1),
                     )
                 ),
               ],
@@ -216,15 +220,15 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
               children: <Widget>[
                 Text(
                   'Current organization: ',
-                  style: TextStyle(color:Colors.grey)
+                  style: TextStyle(color:Colors.grey[700])
                 ),
                 RichText(
                   text:TextSpan(
-                    style: TextStyle(color:Colors.grey, fontSize:10),
+                    style: TextStyle(color:Colors.grey[700], fontSize:10),
                     children: [
                       TextSpan(
                         text:"Partners In Torah",
-                        style:TextStyle(color:Colors.grey, fontSize:18, fontWeight: FontWeight.bold),
+                        style:TextStyle(color:Colors.black, fontSize:18, fontWeight: FontWeight.bold),
                       ),
                       TextSpan(
                         text:" ("
@@ -273,7 +277,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
               height:20,
               width:MediaQuery.of(context).size.width*.7,
               decoration: BoxDecoration(
-                color:Colors.lightBlueAccent.withOpacity(.5),
+                color:Color.fromRGBO(0, 174, 229, 1).withOpacity(.5),
                 borderRadius: BorderRadius.vertical(top: Radius.circular(15))
               ),
             ),
@@ -282,7 +286,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
               alignment:Alignment.centerLeft,
               child:Text(
                 'Linked Account',
-                style:TextStyle(color:Colors.grey[700], fontSize:16, fontWeight: FontWeight.bold)
+                style:TextStyle(color:Colors.black, fontSize:16, fontWeight: FontWeight.bold)
               )
             ),
             Container(
@@ -294,11 +298,11 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
                 children: <Widget>[
                   Text(
                     'Chase Savings (...8859)',
-                    style:TextStyle(color:Colors.lightBlueAccent, fontSize:18)
+                    style:TextStyle(color:Color.fromRGBO(0, 174, 229, 1), fontSize:18)
                   ),
                   Text(
                     'Change Account',
-                    style:TextStyle(color:Colors.grey, fontSize:12)
+                    style:TextStyle(color:Colors.grey[700], fontSize:12)
                   )
                 ],
               )
@@ -325,7 +329,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
             max:.99,
             label:"\$${maxChange.toStringAsFixed(2)}",
             divisions:49,
-            activeColor: Colors.lightBlueAccent,
+            activeColor: Color.fromRGBO(0, 174, 229, 1),
             inactiveColor: Colors.grey,
           ),
           Text("Max Change: \$${maxChange.toStringAsFixed(2)}")
