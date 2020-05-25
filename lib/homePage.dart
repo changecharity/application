@@ -5,8 +5,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';  //for date format
 import 'package:intl/date_symbol_data_local.dart';  //for date locale
-import 'package:charcode/ascii.dart';
-import 'package:charcode/html_entity.dart';
+import 'package:money2/money2.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'profile.dart';
@@ -32,11 +31,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   String selectedOrg;
   String selectedOrgImg='https://wallpaperplay.com/walls/full/b/d/1/58065.jpg';
   int offset=0;
-  var monthTotal;
-  var weekTotal;
   var transactions;
-
-
+  Money monthTotal;
+  Money weekTotal;
+  Currency usdCurrency=Currency.create('USD', 2);
 
 
   void initState() {
@@ -148,7 +146,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               Column(
                 children: <Widget>[
                   Text(
-                    '\$$monthTotal',
+                    '$monthTotal',
                     style:TextStyle(color:Color.fromRGBO(0, 174, 229, 1), fontWeight: FontWeight.bold, fontSize:16)
                   ),
                   Text(
@@ -160,7 +158,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               Column(
                 children: <Widget>[
                   Text(
-                      '\$$weekTotal',
+                      '$weekTotal',
                       style:TextStyle(color:Color.fromRGBO(0, 174, 229, 1), fontWeight: FontWeight.bold, fontSize:16)
                   ),
                   Text(
@@ -278,7 +276,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       ),
                       Container(
                         child: Text(
-                          '+0.${transactions[i]["change"]}',
+                          '+${transactions[i]["change"]}\u{00A2}',
                           style: TextStyle(color:Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
                         )
                       )
@@ -298,7 +296,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     // TODO: implement build
     return Scaffold(
       body: SafeArea(
-        child:SingleChildScrollView(
+        //child:SingleChildScrollView(
           child:Container(
           height:MediaQuery.of(context).size.height,
             child:SlideTransition(
@@ -326,7 +324,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               )
             )
           )
-        )
+        //)
       ),
       extendBody: true,
     );
@@ -382,8 +380,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     var totalContent='{"user_token":"$token"}';
     var totalResponse = await http.post("https://changecharity.io/api/users/getuserstotals", body:totalContent);
     setState(() {
-      jsonDecode(totalResponse.body)["monthlyTotal"]==null?monthTotal=0:monthTotal=jsonDecode(totalResponse.body)["monthlyTotal"];
-      jsonDecode(totalResponse.body)["weeklyTotal"]==null?weekTotal=0:weekTotal=jsonDecode(totalResponse.body)["monthlyTotal"];
+      jsonDecode(totalResponse.body)["monthlyTotal"]==null?monthTotal=Money.fromInt(0, usdCurrency):monthTotal=Money.fromInt(int.parse(jsonDecode(totalResponse.body)["monthlyTotal"]), usdCurrency);
+      jsonDecode(totalResponse.body)["weeklyTotal"]==null?weekTotal=Money.fromInt(0, usdCurrency):weekTotal=Money.fromInt(int.parse(jsonDecode(totalResponse.body)["monthlyTotal"]), usdCurrency);
     });
     print(monthTotal);
     print(weekTotal);

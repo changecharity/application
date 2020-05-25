@@ -9,7 +9,6 @@ import 'searchCard.dart';
 import 'searchButton.dart';
 import 'searchedOrganizations.dart';
 import '../login.dart';
-import 'featuredCarousel.dart';
 import 'categoryCard.dart';
 import 'catScreen.dart';
 

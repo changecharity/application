@@ -126,10 +126,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
           });
         },
         onEditingComplete: (){
-          if(_passController.text!= null || _passController.text != ""){
-            _submit();
-          }
-          FocusScope.of(context).unfocus();
+            emailFocusNode.nextFocus();
         },
         decoration: InputDecoration(
           labelText: "Email",
@@ -196,6 +193,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
           });
         },
         onEditingComplete:(){
+          FocusScope.of(context).unfocus();
           _submit();
         },
         decoration: InputDecoration(
@@ -312,6 +310,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
       return Container(
         child: RaisedButton(
           onPressed: () {
+            FocusScope.of(context).unfocus();
             _submit();
 
           },
@@ -381,8 +380,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
     return Material(
       child:GestureDetector(
         onTap:(){
-          emailFocusNode.unfocus();
-          passFocusNode.unfocus();
+          FocusScope.of(context).unfocus();
         },
         child: SafeArea(
           child:SingleChildScrollView(

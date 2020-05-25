@@ -63,7 +63,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
 
     loadingController.repeat();
 
-    Future<void>.delayed(Duration(milliseconds: 0), () {
+    Future<void>.delayed(Duration(milliseconds:500), () {
       controller.forward();
       print(animation.value);
     });
@@ -120,6 +120,9 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
           setState(() {
             _emailErr='';
           });
+        },
+        onEditingComplete: (){
+          emailFocusNode.nextFocus();
         },
         decoration: InputDecoration(
           labelText: "Email",
@@ -186,6 +189,9 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
             _passErr='';
           });
         },
+        onEditingComplete: (){
+          FocusScope.of(context).unfocus();
+        },
         decoration: InputDecoration(
           labelText: "Password",
           hasFloatingPlaceholder: false,
@@ -233,8 +239,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
     return GestureDetector(
       onTap: () {
         setState(() {
-          emailFocusNode.unfocus();
-          passFocusNode.unfocus();
+          FocusScope.of(context).unfocus();
           _plaidErr='';
         });
         if (plaidToken == null || plaidToken == '') {
@@ -339,6 +344,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
     return Container(
       child: RaisedButton(
         onPressed: (){
+          FocusScope.of(context).unfocus();
           _signUp();
         },
         padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
@@ -371,8 +377,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
     return Material(
       child:GestureDetector(
         onTap:(){
-          emailFocusNode.unfocus();
-          passFocusNode.unfocus();
+          FocusScope.of(context).unfocus();
         },
         child: SafeArea(
           child: SlideTransition(

@@ -59,8 +59,10 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin{
     _loadingAn = _loadingController.drive(
         ColorTween(begin: Colors.lightBlue[200], end: Colors.lightBlue[600]));
 
+    Future<void>.delayed(Duration(milliseconds:500),(){
+      _controller.forward();
+    });
 
-    _controller.forward();
     _loadingController.repeat();
 
     _getToken();
@@ -234,6 +236,7 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin{
     return Container(
       child: RaisedButton(
         onPressed: () {
+          FocusScope.of(context).unfocus();
           _verifyAccount();
         },
         padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
