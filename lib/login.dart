@@ -313,10 +313,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
         child: RaisedButton(
           onPressed: () {
             _submit();
-//            Navigator.pushReplacement(
-//                context,
-//                MaterialPageRoute(builder: (context)=> Home())
-//            );
+
           },
           padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
           elevation: 10,
@@ -388,26 +385,28 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
           passFocusNode.unfocus();
         },
         child: SafeArea(
-          child: SlideTransition(
-            position: animationB,
-            child: CustomPaint(
-              painter: LoginPaint(),
-              child: Container(
-                height: MediaQuery.of(context).size.height,
-                child: SlideTransition(
-                  position: animation,
-                  child: Column(
-                    children: <Widget>[
-                      _helloContainer(),
-                      _messageContainer(),
-                      _emailInput(),
-                      _emailErrCont(),
-                      _passInput(),
-                      _passErrCont(),
-                      _forgotPass(),
-                      _signinContainer(),
-                      _createText(),
-                    ],
+          child:SingleChildScrollView(
+            child: SlideTransition(
+              position: animationB,
+              child: CustomPaint(
+                painter: LoginPaint(),
+                child: Container(
+                  height: MediaQuery.of(context).size.height,
+                  child: SlideTransition(
+                    position: animation,
+                    child: Column(
+                      children: <Widget>[
+                        _helloContainer(),
+                        _messageContainer(),
+                        _emailInput(),
+                        _emailErrCont(),
+                        _passInput(),
+                        _passErrCont(),
+                        _forgotPass(),
+                        _signinContainer(),
+                        _createText(),
+                      ],
+                    ),
                   ),
                 ),
               ),

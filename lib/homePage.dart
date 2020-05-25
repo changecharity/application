@@ -25,29 +25,24 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   Animation<Offset> _currentAnimation;
   Animation<Offset>_textAnimation;
   Animation<Offset>_paintAnimation;
+  ScrollController _scrollController;
   String token;
+  String selectedOrg;
+  String selectedOrgImg;
   int offset=0;
+  var monthTotal;
+  var weekTotal;
+  var transactions;
 
-  var Transactions=[
-    ["Target", 51.45, DateTime(2020, 5, 1)],
-    ["Safeway", 120.25, DateTime(2020, 5, 2)],
-    ["Baskin Robbins", 5.46, DateTime(2020, 5, 2)],
-    ["Target", 51.35, DateTime(2020, 5, 2)],
-    ["Safeway", 120.45, DateTime(2020, 5, 2)],
-    ["Baskin Robbins", 5.45, DateTime(2020, 5, 2)],
-    ["Target", 51.27, DateTime(2020, 5, 2)],
-    ["Safeway", 120.45, DateTime(2020, 5, 2)],
-    ["Baskin Robbins", 5.87, DateTime(2020, 5, 2)]
-  ];
-
-  String changeAmount(amountSpent){
-    return (double.parse(amountSpent.toString()).truncate()+1-double.parse(amountSpent.toString())).toStringAsFixed(2);
-  }
 
 
   void initState() {
     super.initState();
 
+    //handle getting info
+    _getInitInfo();
+
+    //handle animations
     _controller =
         AnimationController(vsync: this, duration: Duration(seconds: 3));
     _paintController=
@@ -91,8 +86,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       _controller.forward();
     });
 
-    _getToken();
-    _getTransactions();
+    //handle scroll controller
+    _scrollController=ScrollController();
+    _scrollController.addListener(_scrollListener);
+
+
   }
 
   Widget _accountIcon(){
@@ -124,7 +122,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       child:Column(
         children: <Widget>[
           Text(
-            'Partners in Torah',
+            '$selectedOrg',
             style:TextStyle(color:Colors.black, fontSize:18, fontWeight: FontWeight.bold),
           ),
           Container(
@@ -132,7 +130,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             height:100,
             width:100,
             decoration: BoxDecoration(
-              color:Colors.grey[300],
+              image:DecorationImage(
+                image: NetworkImage('$selectedOrgImg'),
+                fit: BoxFit.cover,
+              ),
               shape:BoxShape.circle,
             ),
           ),
@@ -144,7 +145,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               Column(
                 children: <Widget>[
                   Text(
-                    '\$55.89',
+                    '\$$monthTotal',
                     style:TextStyle(color:Color.fromRGBO(0, 174, 229, 1), fontWeight: FontWeight.bold, fontSize:16)
                   ),
                   Text(
@@ -156,7 +157,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               Column(
                 children: <Widget>[
                   Text(
-                      '\$24.32',
+                      '\$$weekTotal',
                       style:TextStyle(color:Color.fromRGBO(0, 174, 229, 1), fontWeight: FontWeight.bold, fontSize:16)
                   ),
                   Text(
@@ -200,16 +201,26 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   Widget _transactionsList(){
+    if(transactions==''|| transactions==null){
+     return Container(
+       width: MediaQuery.of(context).size.width,
+       height: MediaQuery.of(context).size.height * .45,
+       alignment: Alignment.center,
+       child:Text(
+           'You have no transactions at this time.'
+       )
+     );
+    }
     return ListView.separated(
+      controller: _scrollController,
       separatorBuilder: (context, i){
-        return Divider(
-          color:Colors.black,
-          //thickness:1.0,
-          endIndent:10,
-          indent:10,
+      return Divider(
+        color:Colors.black,
+        endIndent:10,
+        indent:10,
         );
       },
-      itemCount:Transactions.length,
+      itemCount:transactions.length,
       itemBuilder: (context, i){
         return Container(
           padding:EdgeInsets.symmetric(vertical:10),
@@ -219,13 +230,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 height:50,
                 width:50,
                 decoration:BoxDecoration(
-                  border:Border.all(color:Colors.lightBlue[100*i+100], width:3),
-                  color:Colors.lightBlue[100*i+100],
+                  border:Border.all(color:Color.fromRGBO(0, 174, 229, 1), width:3),
+                  color:Color.fromRGBO(0, 174, 229, 1),
                   shape:BoxShape.circle,
                 ),
                 child:Center(
                   child:Text(
-                    '${Transactions[i][0].toString().substring(0,1)}',
+                    '${transactions[i]["name"].toString().substring(0,1)}',
                     style:TextStyle(fontSize:20, fontWeight: FontWeight.bold, color:Colors.white)
                   )
                 )
@@ -240,19 +251,32 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text(
-                            '${Transactions[i][0]}  \$${Transactions[i][1]}',
-                            style:TextStyle(fontSize: 16, color: Colors.black, )
+                          Row(
+                            mainAxisAlignment:MainAxisAlignment.start,
+                            children: <Widget>[
+                              Container(
+                                //width: MediaQuery.of(context).size.width*.4,
+                                child:Text(
+                                  transactions[i]["name"].length<10?'${transactions[i]["name"]}':transactions[i]["amount"].toStringAsFixed(2).length>5?'${transactions[i]["name"].toString().substring(0,6)}...':'${transactions[i]["name"].toString().substring(0,10)}...',
+                                  style:TextStyle(fontSize: 16, color: Colors.black, ),
+                                  overflow: TextOverflow.ellipsis,
+                                )
+                              ),
+                              Text(
+                                  '  \$${(transactions[i]["amount"]).toStringAsFixed(2)}',
+                                  style:TextStyle(fontSize: 16, color: Colors.black, )
+                              ),
+                            ],
                           ),
                           Text(
-                            '${DateFormat.yMMMMd().format(Transactions[i][2])}',
+                            '${transactions[i]["dot"]}',
                             style:TextStyle(color: Colors.grey[700])
                           )
                         ],
                       ),
                       Container(
                         child: Text(
-                          '+${changeAmount(Transactions[i][1])}',
+                          '+0.${transactions[i]["change"]}',
                           style: TextStyle(color:Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
                         )
                       )
@@ -305,18 +329,65 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  _getToken() async{
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    token = prefs.getString('token');
-    if(token == null || token ==''){
-      Navigator.push(context, MaterialPageRoute(builder:(context)=>SignUp()));
+  _scrollListener(){
+    if (_scrollController.offset >= _scrollController.position.maxScrollExtent &&
+        !_scrollController.position.outOfRange) {
+      setState(() {
+        offset+=15;
+        _getMoreTransactions();
+      });
     }
   }
 
-  _getTransactions() async{
-    var content='{"user_token":"$token", "offset":$offset}';
-    var response = await http.post("https://changecharity.io/api/users/gettransactions", body:content);
-    print(token);
-    print(response.body);
+  _getMoreTransactions() async{
+    var transContent='{"user_token":"$token", "offset":$offset}';
+    var transactionResponse = await http.post("https://changecharity.io/api/users/gettransactions", body:transContent);
+    setState(() {
+      transactions+=jsonDecode(transactionResponse.body)["transactions"];
+    });
+    print(transactions);
+    print(transactions.length);
   }
+
+  _getInitInfo() async{
+    //get token and make sure it's not null
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    token = prefs.getString('token');
+    print(token);
+    if(token == null || token ==''){
+      Navigator.push(context, MaterialPageRoute(builder:(context)=>SignUp()));
+    }
+
+    //get transactions
+    var transContent='{"user_token":"$token", "offset":$offset}';
+    var transactionResponse = await http.post("https://changecharity.io/api/users/gettransactions", body:transContent);
+    setState(() {
+      transactions=jsonDecode(transactionResponse.body)["transactions"];
+    });
+    print(transactions);
+    print(transactions.length);
+
+
+    //get totals
+    var totalContent='{"user_token":"$token"}';
+    var totalResponse = await http.post("https://changecharity.io/api/users/getuserstotals", body:totalContent);
+    setState(() {
+      monthTotal=jsonDecode(totalResponse.body)["monthlyTotal"];
+      weekTotal=jsonDecode(totalResponse.body)["weeklyTotal"];
+    });
+    print(monthTotal);
+    print(weekTotal);
+
+    //get user's org info
+    var orgContent='{"user_token":"$token"}';
+    var orgResponse = await http.post("https://changecharity.io/api/users/getusersorginfo", body:orgContent);
+    setState(() {
+      selectedOrg=jsonDecode(orgResponse.body)["name"];
+      selectedOrgImg=jsonDecode(orgResponse.body)["logoLocation"];
+    });
+    print(selectedOrg);
+
+  }
+
+
 }
