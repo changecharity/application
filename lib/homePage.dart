@@ -5,11 +5,13 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';  //for date format
 import 'package:intl/date_symbol_data_local.dart';  //for date locale
+import 'package:charcode/ascii.dart';
+import 'package:charcode/html_entity.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'profile.dart';
 import 'paintings.dart';
-import 'signup.dart';
+import 'login.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -28,11 +30,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   ScrollController _scrollController;
   String token;
   String selectedOrg;
-  String selectedOrgImg;
+  String selectedOrgImg='https://wallpaperplay.com/walls/full/b/d/1/58065.jpg';
   int offset=0;
   var monthTotal;
   var weekTotal;
   var transactions;
+
 
 
 
@@ -82,7 +85,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
     _paintController.forward();
 
-    Future<void>.delayed(Duration(milliseconds:300),(){
+    Future<void>.delayed(Duration(milliseconds:800),(){
       _controller.forward();
     });
 
@@ -112,7 +115,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   Widget _currentInfo() {
     return Container(
       padding:EdgeInsets.all(15),
-      margin:EdgeInsets.only(bottom:30),
+      margin:EdgeInsets.only(bottom:10, top:15),
       width: MediaQuery.of(context).size.width * .75,
       decoration:BoxDecoration(
         color:Colors.grey[100],
@@ -230,8 +233,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 height:50,
                 width:50,
                 decoration:BoxDecoration(
-                  border:Border.all(color:Color.fromRGBO(0, 174, 229, 1), width:3),
-                  color:Color.fromRGBO(0, 174, 229, 1),
+                  color:Color.fromRGBO(0, 174, 229, .6),
                   shape:BoxShape.circle,
                 ),
                 child:Center(
@@ -297,22 +299,30 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     return Scaffold(
       body: SafeArea(
         child:SingleChildScrollView(
-          child:SlideTransition(
-            position:_paintAnimation,
-            child:CustomPaint(
-              painter:Home2Paint(),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  SlideTransition(position:_textAnimation, child:_accountIcon()),
-                  SlideTransition(position: _currentAnimation, child: _currentInfo()),
-                  Column(
-                    children: <Widget>[
-                      SlideTransition(position:_textAnimation, child:_transactionText()),
-                      SlideTransition(position: _transactionAnimation, child: _transactionHistory()),
-                    ],
-                  ),
-                ],
+          child:Container(
+          height:MediaQuery.of(context).size.height,
+            child:SlideTransition(
+              position:_paintAnimation,
+              child:CustomPaint(
+                painter:Home2Paint(),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+
+                    Column(
+                      children: <Widget>[
+                        SlideTransition(position:_textAnimation, child:_accountIcon()),
+                        SlideTransition(position: _currentAnimation, child: _currentInfo()),
+                      ],
+                    ),
+                    Column(
+                      children: <Widget>[
+                        SlideTransition(position:_textAnimation, child:_transactionText()),
+                        SlideTransition(position: _transactionAnimation, child: _transactionHistory()),
+                      ],
+                    ),
+                  ],
+                )
               )
             )
           )
@@ -355,7 +365,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     token = prefs.getString('token');
     print(token);
     if(token == null || token ==''){
-      Navigator.push(context, MaterialPageRoute(builder:(context)=>SignUp()));
+      Navigator.push(context, MaterialPageRoute(builder:(context)=>Login()));
     }
 
     //get transactions
@@ -372,8 +382,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     var totalContent='{"user_token":"$token"}';
     var totalResponse = await http.post("https://changecharity.io/api/users/getuserstotals", body:totalContent);
     setState(() {
-      monthTotal=jsonDecode(totalResponse.body)["monthlyTotal"];
-      weekTotal=jsonDecode(totalResponse.body)["weeklyTotal"];
+      jsonDecode(totalResponse.body)["monthlyTotal"]==null?monthTotal=0:monthTotal=jsonDecode(totalResponse.body)["monthlyTotal"];
+      jsonDecode(totalResponse.body)["weeklyTotal"]==null?weekTotal=0:weekTotal=jsonDecode(totalResponse.body)["monthlyTotal"];
     });
     print(monthTotal);
     print(weekTotal);
