@@ -306,7 +306,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-
                     Column(
                       children: <Widget>[
                         SlideTransition(position:_textAnimation, child:_accountIcon()),

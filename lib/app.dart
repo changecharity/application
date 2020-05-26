@@ -25,7 +25,7 @@ class _ChangeState extends State<Change>{
     ));
     return MaterialApp(
       title: 'Change',
-      home: Login(),
+      home: Profile(),
       theme: lightTheme,
       debugShowCheckedModeBanner: false,
     );

@@ -207,13 +207,60 @@ class Home2Paint extends CustomPainter{
       size.width-350, size.height*.35,
       size.width, size.height*.25);
 
-
-
-
     canvas.drawPath(pathA, paintA);
     canvas.drawPath(pathB, paintB);
   }
   @override
   bool shouldRepaint(Home2Paint oldDelegate)=>false;
 
+}
+
+class ProfilePaint extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    var paintA = Paint()
+      ..color = Colors.lightBlue[200]
+      ..style = PaintingStyle.fill;
+    var paintB = Paint()
+      ..color = Colors.lightBlue[400].withOpacity(0.8)
+      ..style = PaintingStyle.fill;
+
+    var pathA = Path();
+    pathA.moveTo(size.width*1, size.height*1);
+    pathA.lineTo(size.width*1, size.height *.85);
+    pathA.quadraticBezierTo(
+        size.width*.8, size.height*.6,
+        size.width*.65, size.height*.85
+    );
+    pathA.quadraticBezierTo(
+      size.width*.6, size.height*.95,
+      size.width*.3, size.height*.9
+    );
+    pathA.quadraticBezierTo(
+        size.width*.1, size.height*.88,
+        size.width*.2, size.height
+    );
+    canvas.drawPath(pathA, paintA);
+
+    var pathB = Path();
+    pathB.moveTo(size.width*1, size.height*1);
+    pathB.lineTo(size.width*1, size.height*.95);
+    pathB.quadraticBezierTo(
+        size.width*.7, size.height*.55,
+        size.width*.5, size.height*.9
+    );
+    pathB.quadraticBezierTo(
+        size.width*.45, size.height,
+        size.width*.2, size.height*.9
+    );
+    pathB.quadraticBezierTo(
+        size.width*.05, size.height*.85,
+        size.width*.1, size.height
+    );
+    canvas.drawPath(pathB, paintB);
+
+  }
+
+  @override
+  bool shouldRepaint(ProfilePaint oldDelegate) => false;
 }
