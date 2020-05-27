@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:avataaar_image/avataaar_image.dart';
+import 'package:provider/provider.dart';
 import 'SearchPage/search2.dart';
 import 'homePage.dart';
 import 'paintings.dart';
@@ -131,18 +131,32 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
       borderRadius: BorderRadius.circular(20),
       boxShadow: [BoxShadow(color:Colors.grey[300], offset:Offset.fromDirection(1), blurRadius:15)]
       ),
-      child:Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          _widgetIndex!=0?IconButton(
-              icon: Icon(Icons.arrow_back_ios, color:Colors.black, size:16),
-              onPressed:(){
-                setState(() {
-                  _widgetIndex--;
-                });
-              }
-          ):IconButton(icon:Icon(Icons.arrow_back_ios, size:16, color:Colors.transparent)),
+      child:Column(
+        children:[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              _widgetIndex!=0?IconButton(
+                  icon: Icon(Icons.arrow_back_ios, color:Colors.black, size:16),
+                  onPressed:(){
+                    setState(() {
+                      _widgetIndex--;
+                    });
+                  }
+              ):IconButton(icon:Icon(Icons.arrow_back_ios, size:16, color:Colors.transparent)),
+              _widgetIndex!=2?IconButton(
+                  icon: Icon(Icons.arrow_forward_ios),
+                  color:Colors.black,
+                  iconSize: 16,
+                  onPressed:(){
+                    setState(() {
+                      _widgetIndex++;
+                    });
+                  }
+              ):IconButton(icon:Icon(Icons.arrow_forward_ios, size:16, color:Colors.transparent)),
+            ],
+          ),
           IndexedStack(
             index:_widgetIndex,
             children: <Widget>[
@@ -151,72 +165,10 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
               _bankContent()
             ],
           ),
-          _widgetIndex!=2?IconButton(
-            icon: Icon(Icons.arrow_forward_ios),
-            color:Colors.black,
-            iconSize: 16,
-            onPressed:(){
-              setState(() {
-                _widgetIndex++;
-              });
-            }
-          ):IconButton(icon:Icon(Icons.arrow_forward_ios, size:16, color:Colors.transparent)),
-        ],
+        ]
       )
     );
   }
-//  Widget _bankInfo(){
-//    return Padding(
-//      padding:EdgeInsets.only(bottom:20),
-//      child:Container(
-//        margin:EdgeInsets.only(top:30),
-//        width:MediaQuery.of(context).size.width*.7,
-//        decoration: BoxDecoration(
-//            color:Colors.grey[100],
-//            borderRadius: BorderRadius.circular(15),
-//            boxShadow: [BoxShadow(color:Colors.grey, offset:Offset.fromDirection(.9), blurRadius:10)]
-//        ),
-//        child:Column(
-//          children: <Widget>[
-//            Container(
-//              height:20,
-//              width:MediaQuery.of(context).size.width*.7,
-//              decoration: BoxDecoration(
-//                color:Color.fromRGBO(0, 174, 229, 1).withOpacity(.5),
-//                borderRadius: BorderRadius.vertical(top: Radius.circular(15))
-//              ),
-//            ),
-//            Container(
-//              padding:EdgeInsets.fromLTRB(10, 10, 0, 0),
-//              alignment:Alignment.centerLeft,
-//              child:Text(
-//                'Linked Account',
-//                style:TextStyle(color:Colors.black, fontSize:16, fontWeight: FontWeight.bold)
-//              )
-//            ),
-//            Container(
-//              padding:EdgeInsets.fromLTRB(0,0, 10, 10),
-//              margin:EdgeInsets.only(top:40),
-//              alignment:Alignment.bottomRight,
-//              child:Column(
-//                crossAxisAlignment: CrossAxisAlignment.end ,
-//                children: <Widget>[
-//                  Text(
-//                    'Chase Savings (...8859)',
-//                    style:TextStyle(color:Color.fromRGBO(0, 174, 229, 1), fontSize:18)
-//                  ),
-//                  Text(
-//                    'Change Account',
-//                    style:TextStyle(color:Colors.grey[700], fontSize:12)
-//                  )
-//                ],
-//              )
-//            )
-//          ],
-//        )
-//      )
-//    );
-//  }
 
   Widget _bankContent(){
     return Padding(
@@ -250,9 +202,9 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
 
   Widget _currentOrgContent(){
     return Container(
-        child:Column(
+      alignment: Alignment.center,
+      child:Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Container(
               child:Text(
@@ -266,36 +218,44 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
                   width:100,
                   height:100,
                   decoration: BoxDecoration(
-                    color:Color.fromRGBO(0,174,229,1),
-                    borderRadius: BorderRadius.circular(100)
+                      color:Color.fromRGBO(0,174,229,1),
+                      borderRadius: BorderRadius.circular(100)
                   ),
                 ),
-                Text(
-                    'Partners in Torah',
-                    style:TextStyle(
-                        color:Color.fromRGBO(0, 174, 229, 1),
-                        fontSize:18
-                    )
-                )
+                _currentOrgText()
               ],
             ),
             Container(
-              child:RichText(
-                text:TextSpan(
-                  style:TextStyle(
-                    color:Colors.grey[700],
-                    fontSize:12
-                  ),
-                  text:"Change Organization",
-                  recognizer: TapGestureRecognizer()
-                    ..onTap=(){
-                      Navigator.push(context, MaterialPageRoute(builder:(context)=>Search2()));
-                    }
+                child:RichText(
+                    text:TextSpan(
+                        style:TextStyle(
+                            color:Colors.grey[700],
+                            fontSize:12
+                        ),
+                        text:"Change Organization",
+                        recognizer: TapGestureRecognizer()
+                          ..onTap=(){
+                            Navigator.push(context, MaterialPageRoute(builder:(context)=>Search2()));
+                          }
+                    )
                 )
-              )
             )
           ]
-        ),
+      ),
+    );
+  }
+
+  Widget _currentOrgText(){
+    return Consumer<UserOrgModel>(
+      builder:(context, userOrg, child){
+        return Text(
+          '${userOrg.userSelectedOrg}',
+          style:TextStyle(
+              color:Color.fromRGBO(0, 174, 229, 1),
+              fontSize:18
+          )
+        );
+      }
     );
   }
 

@@ -8,6 +8,8 @@ import 'package:intl/date_symbol_data_local.dart';  //for date locale
 import 'package:money2/money2.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
+
 import 'profile.dart';
 import 'paintings.dart';
 import 'login.dart';
@@ -395,6 +397,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     print(selectedOrg);
 
   }
+}
 
+class UserOrgModel extends ChangeNotifier{
+  final String _userOrg= _HomePageState().selectedOrg;
 
+  String get userSelectedOrg{
+    return _userOrg;
+  }
 }
