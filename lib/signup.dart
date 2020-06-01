@@ -25,6 +25,9 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
   double drawDuration = 1.8;
   String plaidToken;
   String accountId;
+  String bankName;
+  int mask;
+
   final _passController= TextEditingController();
   final _emailController= TextEditingController();
   final emailFocusNode=FocusNode();
@@ -443,8 +446,14 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
       setState(() {
         plaidToken = result.token;
       });
+      print(result.response);
+      print(result.institutionName);
       var accounts=jsonDecode(result.response["accounts"]);
       accountId=(accounts[0]["_id"]);
+      mask = int.parse(accounts[0]["meta"]["number"]);
+      bankName = result.institutionName;
+
+      print(mask);
       print(result.token);
     }, stripeToken: false);
   }
@@ -548,7 +557,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
       setState(() {
         loading=!loading;
       });
-      var content='{"email":"${_emailController.text}","password":"${_passController.text}", "plaid_public_token":"$plaidToken", "plaid_account_id":"$accountId"}';
+      var content='{"email":"${_emailController.text}","password":"${_passController.text}", "plaid_public_token":"$plaidToken", "plaid_account_id":"$accountId", "mask":$mask, "bank_name":"$bankName"}';
       var response= await http.post("https://changecharity.io/api/users/signup", body:content);
 
       print(response.body);
@@ -564,7 +573,6 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
         _setTime();
         print("successful");
       }
-
     }
   }
 
