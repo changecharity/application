@@ -3,13 +3,13 @@ import 'package:provider/provider.dart';
 import 'app.dart';
 import'././Services/service_locator.dart';
 
-import 'homePage.dart';
+import 'package:change/UserOrgModel.dart';
 
 
 void main() {
   setupLocator();
   runApp(
-    ChangeNotifierProvider(
+    ChangeNotifierProvider<UserOrgModel>(
       create:(context)=>UserOrgModel(),
       child:Change()
     )

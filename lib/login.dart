@@ -429,6 +429,11 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
     Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>HomePage()));
   }
 
+  void _saveEmailAddress(val) async{
+    SharedPreferences emailPrefs=await SharedPreferences.getInstance();
+    emailPrefs.setString('emailAddress', val);
+  }
+
   bool _checkValidEmail(){
 
     bool emailValid = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(_emailController.text);
@@ -520,6 +525,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
 
     if(response.body.startsWith("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9")){
       _saveLogin(response.body);
+      _saveEmailAddress(_emailController.text);
       print("successful");
     }
 
