@@ -306,8 +306,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Scaffold(
-      body: SafeArea(
+    return Material(
+      child: SafeArea(
         //child:SingleChildScrollView(
           child:Container(
           height:MediaQuery.of(context).size.height,
@@ -337,7 +337,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           )
         //)
       ),
-      extendBody: true,
     );
   }
 

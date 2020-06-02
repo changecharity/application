@@ -175,7 +175,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
     );
   }
 
-  Widget _accountInfo(){
+  Widget _accountPrefs(){
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -204,6 +204,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
                   children: <Widget>[
                     _widgetIndex!=0?IconButton(
                         icon: Icon(Icons.arrow_back_ios, color:Colors.black, size:16),
+                        highlightColor: Colors.transparent,
                         onPressed:(){
                           setState(() {
                             _widgetIndex--;
@@ -469,8 +470,8 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Scaffold(
-      body:SafeArea(
+    return Material(
+      child:SafeArea(
         child:SlideTransition(
           position:_rightToLeft,
           child:CustomPaint(
@@ -484,7 +485,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
                     mainAxisAlignment:MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         SlideTransition(position:_topDown, child:_accountContainer()),
-                        SlideTransition(position:_bottomUp, child:_accountInfo()),
+                        SlideTransition(position:_bottomUp, child:_accountPrefs()),
                       ]
                     ),
                     Positioned(
@@ -498,7 +499,6 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
             )
           ),
         ),
-      extendBody: true,
     );
   }
 
