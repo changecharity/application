@@ -30,6 +30,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   Animation<Offset>_textAnimation;
   Animation<Offset>_paintAnimation;
   ScrollController _scrollController;
+
   String token;
   String selectedOrg;
   String selectedOrgImg='https://wallpaperplay.com/walls/full/b/d/1/58065.jpg';

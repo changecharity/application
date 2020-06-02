@@ -1,10 +1,11 @@
-//import 'dart:html';
+import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 import 'SearchPage/search2.dart';
 import 'paintings.dart';
 import 'UserOrgModel.dart';
@@ -19,6 +20,8 @@ class Profile extends StatefulWidget{
   _ProfileState createState()=>_ProfileState();
 }
 
+enum MenuOptions { signOut, changePassword, deleteAccount, about }
+
 class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
 
   AnimationController _controller;
@@ -27,19 +30,26 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
   Animation<Offset>_rightToLeft;
 
   String token;
-  var maxChange=100.00;
+  var threshold=100;
+  var mask;
+  var bankName;
   bool sliderChanging=false;
   var _widgetIndex=0;
   var profileLetter='';
   bool showMenu=false;
+  var _selection;
 
 
 
-  void initState(){
+
+
+void initState(){
     super.initState();
 
     _confirmLogin();
-    _getProfileLetter();
+    _getInitInfo();
+
+
 
     _controller = AnimationController(vsync: this, duration: Duration(seconds:2));
 
@@ -69,7 +79,11 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
       curve:Curves.fastLinearToSlowEaseIn,
     )
     );
-    _controller.forward();
+
+    Future<void>.delayed(Duration(milliseconds:1000),(){
+      _controller.forward();
+
+    });
 
 
 
@@ -97,41 +111,54 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
     return Container(
       margin: EdgeInsets.only(top: 20, right: 10),
       alignment: Alignment.centerRight,
-      child: IconButton(
-        icon: Icon(Icons.settings),
-        color:Colors.black,
-        iconSize: 30,
-        onPressed: () {
-          setState(() {
-            showMenu=!showMenu;
-          });
-        },
-      ),
-    );
-  }
-
-  Widget _menuDialog(){
-    return Container(
-      height:MediaQuery.of(context).size.height*.15,
-      width:MediaQuery.of(context).size.width*.55,
-      padding:EdgeInsets.all(20),
-      decoration: BoxDecoration(
-          color:Colors.grey[100],
-          borderRadius:BorderRadius.circular(10),
-          border:Border.all(color:Colors.grey),
-          //boxShadow: [BoxShadow(color:Colors.grey, offset:Offset(5,5), blurRadius:5)]
-      ),
-      child:Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Text('Sign Out'),
-          Text('Change Password'),
-          Text('Delete Account')
+      child: PopupMenuButton<MenuOptions>(
+        color:Colors.grey[100],
+        icon:Icon(Icons.more_vert, size:30),
+        onSelected: (MenuOptions result) { setState(() { _selection = result; }); },
+        itemBuilder: (BuildContext context) => <PopupMenuEntry<MenuOptions>>[
+          const PopupMenuItem<MenuOptions>(
+            value: MenuOptions.signOut,
+            child: Text('Sign Out'),
+          ),
+          const PopupMenuItem<MenuOptions>(
+            value: MenuOptions.changePassword,
+            child: Text('Change Password'),
+          ),
+          const PopupMenuItem<MenuOptions>(
+            value: MenuOptions.deleteAccount,
+            child: Text('Delete Account'),
+          ),
+          const PopupMenuItem<MenuOptions>(
+            value: MenuOptions.about,
+            child: Text('About Change'),
+          ),
         ],
       )
     );
-
   }
+
+//  Widget _menuDialog(){
+//    return Container(
+//      height:MediaQuery.of(context).size.height*.15,
+//      width:MediaQuery.of(context).size.width*.55,
+//      padding:EdgeInsets.all(20),
+//      decoration: BoxDecoration(
+//          color:Colors.grey[100],
+//          borderRadius:BorderRadius.circular(10),
+//          border:Border.all(color:Colors.grey),
+//          //boxShadow: [BoxShadow(color:Colors.grey, offset:Offset(5,5), blurRadius:5)]
+//      ),
+//      child:Column(
+//        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//        children: <Widget>[
+//          Text('Sign Out'),
+//          Text('Change Password'),
+//          Text('Delete Account')
+//        ],
+//      )
+//    );
+//
+//  }
 
 
   Widget _accountContainer(){
@@ -273,7 +300,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
           Container(
             margin: EdgeInsets.only(top:10, bottom:15),
             child:Text(
-                'Chase Savings (...8859)',
+                '$bankName(...${mask==null||mask==0?'0000':'$mask'})',
                 style:TextStyle(color:Color.fromRGBO(0, 174, 229, 1), fontSize:18, fontWeight: FontWeight.bold)
             ),
           ),
@@ -381,7 +408,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
             ),
             child:Center(
               child:Text(
-              maxChange==100?"\$1":"${maxChange.toStringAsFixed(0)}\u{00A2}",
+              threshold==100?"\$1":"${threshold.toStringAsFixed(0)}\u{00A2}",
               style:TextStyle(
                 color:Colors.white,
                 fontSize:30,
@@ -422,10 +449,10 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
                         disabledInactiveTickMarkColor: Colors.black,
                       ),
                       child:Slider(
-                        value: maxChange,
+                        value: threshold.toDouble(),
                         onChanged:(newMax){
                           setState(() {
-                            maxChange=newMax;
+                            threshold=newMax.toInt();
                           });
                         },
                         onChangeStart:(s){
@@ -436,6 +463,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
                         onChangeEnd:(s){
                           setState(() {
                             sliderChanging=!sliderChanging;
+                            _setThreshold();
                           });
                         },
                         min:50,
@@ -479,22 +507,13 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
             child:Container(
               height:MediaQuery.of(context).size.height,
               padding:EdgeInsets.only(bottom:MediaQuery.of(context).size.height*.15),
-              child:Stack(
-                children: <Widget>[
-                    Column(
-                    mainAxisAlignment:MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        SlideTransition(position:_topDown, child:_accountContainer()),
-                        SlideTransition(position:_bottomUp, child:_accountPrefs()),
-                      ]
-                    ),
-                    Positioned(
-                      top:70,
-                      right:20,
-                      child:showMenu?_menuDialog():Container(color:Colors.transparent)
-                    )
-                  ],
-                )
+                child:Column(
+                mainAxisAlignment:MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    SlideTransition(position:_topDown, child:_accountContainer()),
+                    SlideTransition(position:_bottomUp, child:_accountPrefs()),
+                  ]
+                ),
               )
             )
           ),
@@ -522,14 +541,35 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
     });
   }
 
-  //call at initState to get user's max threshhold
-  _getThreshhold() async{
+  //call at initState to get user's max threshold, last 4 digits, and bank name
+  _getProfDetails() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    token = prefs.getString('token');
+    var content='{"user_token":"$token"}';
+    var profileResponse = await http.post("https://api.changecharity.io/api/users/getprofile", body:content);
+    setState(() {
+      threshold=jsonDecode(profileResponse.body)["threshold"];
+      mask=jsonDecode(profileResponse.body)["mask"];
+      bankName=jsonDecode(profileResponse.body)["bankName"];
+    });
+    print(jsonDecode(profileResponse.body));
 
   }
 
-  //call on end of slider change to set user's max threshhold
-  _setThreshhold() async{
+  _getInitInfo() async{
+    _getProfileLetter();
+    _getProfDetails();
+    context.read<UserOrgModel>().getOrgImg;
+    context.read<UserOrgModel>().getUserOrg;
+  }
 
+  //call on end of slider change to set user's max threshhold
+  _setThreshold() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    token = prefs.getString('token');
+    var content='{"user_token":"$token", "threshold":"${threshold.toInt()}"}';
+    await http.post("https://api.changecharity.io/api/users/updatethreshold", body:content);
+    print(threshold);
   }
 
 }
