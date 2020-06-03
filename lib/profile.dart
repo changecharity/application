@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
@@ -11,6 +12,7 @@ import 'paintings.dart';
 import 'UserOrgModel.dart';
 import 'homePage.dart';
 import 'login.dart';
+import 'Components/passwordDialog.dart';
 
 
 
@@ -38,10 +40,6 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
   var profileLetter='';
   bool showMenu=false;
   var _selection;
-
-
-
-
 
 void initState(){
     super.initState();
@@ -137,29 +135,6 @@ void initState(){
     );
   }
 
-//  Widget _menuDialog(){
-//    return Container(
-//      height:MediaQuery.of(context).size.height*.15,
-//      width:MediaQuery.of(context).size.width*.55,
-//      padding:EdgeInsets.all(20),
-//      decoration: BoxDecoration(
-//          color:Colors.grey[100],
-//          borderRadius:BorderRadius.circular(10),
-//          border:Border.all(color:Colors.grey),
-//          //boxShadow: [BoxShadow(color:Colors.grey, offset:Offset(5,5), blurRadius:5)]
-//      ),
-//      child:Column(
-//        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//        children: <Widget>[
-//          Text('Sign Out'),
-//          Text('Change Password'),
-//          Text('Delete Account')
-//        ],
-//      )
-//    );
-//
-//  }
-
 
   Widget _accountContainer(){
     return Container(
@@ -242,9 +217,9 @@ void initState(){
                       child:IndexedStack(
                         index:_widgetIndex,
                         children:<Widget>[
-                          Center(child:Text('Set Your Max', style:TextStyle(fontSize:16, fontWeight: FontWeight.bold))),
                           Center(child:Text('Current Organization', style:TextStyle(fontSize:16, fontWeight: FontWeight.bold))),
-                          Center(child:Text('Your Bank Account', style:TextStyle(fontSize:16, fontWeight: FontWeight.bold)))
+                          Center(child:Text('Your Bank Account', style:TextStyle(fontSize:16, fontWeight: FontWeight.bold))),
+                          Center(child:Text('Set Your Max', style:TextStyle(fontSize:16, fontWeight: FontWeight.bold))),
                         ]
                       )
                     ),
@@ -263,9 +238,9 @@ void initState(){
                 IndexedStack(
                   index:_widgetIndex,
                   children: <Widget>[
-                    _sliderContent(),
                     _currentOrgContent(),
-                    _bankContent()
+                    _bankContent(),
+                    _sliderContent()
                   ],
                 ),
               ]
@@ -307,14 +282,34 @@ void initState(){
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children:[
-              Text(
-                  'Change Account',
-                  style:TextStyle(color:Colors.grey[700], fontSize:12)
+              RichText(
+                  text:TextSpan(
+                      style:TextStyle(
+                        color:Colors.grey[700],
+                        fontSize:12,
+                        fontFamily: 'Montserrat',
+                      ),
+                      text:"Change Account",
+                      recognizer: TapGestureRecognizer()
+                        ..onTap=(){
+                          showDialog(context:context, builder:(context)=>PasswordDialog("change"), barrierDismissible: true);
+                        }
+                  )
               ),
-              Text(
-                'Unlink Account',
-                style:TextStyle(color:Colors.grey[700], fontSize:12)
-              )
+              RichText(
+                  text:TextSpan(
+                      style:TextStyle(
+                        color:Colors.grey[700],
+                        fontSize:12,
+                        fontFamily: 'Montserrat',
+                      ),
+                      text:"Unlink Account",
+                      recognizer: TapGestureRecognizer()
+                        ..onTap=(){
+                          showDialog(context:context, builder:(context)=>PasswordDialog("unlink"), barrierDismissible: true);
+                        }
+                  )
+              ),
             ]
           )
         ],
@@ -489,6 +484,8 @@ void initState(){
   }
 
 
+
+
   @override
   void dispose() {
     _controller.dispose();
@@ -520,6 +517,7 @@ void initState(){
         ),
     );
   }
+
 
   //call at init state. confirms user is logged in
   _confirmLogin() async{
