@@ -366,7 +366,7 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin{
     });
 
     var content='{"user_token":"$token"}';
-    var response = await http.post("https://changecharity.io/api/users/resendemailkey", body:content);
+    var response = await http.post("https://api.changecharity.io/users/resendemailkey", body:content);
 
     print(response.body);
     if(response.body=="rpc error: code = Unknown desc = unknown token"){
@@ -423,7 +423,7 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin{
         loading=!loading;
       });
       var content='{"user_token":"$token","key":"${_pinController.text}"}';
-      var response= await http.post("https://changecharity.io/api/users/updatesignup", body:content);
+      var response= await http.post("https://api.changecharity.io/users/updatesignup", body:content);
       print (response.body);
 
 

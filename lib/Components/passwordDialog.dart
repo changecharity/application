@@ -259,7 +259,7 @@ class _PwDialogState extends State<PasswordDialog> with SingleTickerProviderStat
     token = prefs.getString('token');
     print(token);
     var content='{"user_token":"$token", "password":"${_passController.text}"}';
-    var response=await http.post("https://api.changecharity.io/api/users/validpass", body:content);
+    var response=await http.post("https://api.changecharity.io/users/validpass", body:content);
     print(response.body);
 
     if(response.body=="rpc error: code = Unknown desc = Wrong Password") {

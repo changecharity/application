@@ -251,7 +251,7 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>{
         plaidClientId: '',
         secret: plaidSandbox ? '' : '',
         clientName: 'ClientName',
-        webhook: 'https://changecharity.io/api/plaidwebhook',
+        webhook: 'https://api.changecharity.io/plaidwebhook',
         products: 'auth,income',
         selectAccount: 'false');
 
@@ -295,7 +295,7 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>{
     token=prefs.getString('token');
     print(token);
     var content='{"user_token":"$token", "password":"${widget.password}", "plaid_public_token":"$plaidToken", "plaid_account_id":"$accountId", "mask":$mask, "bank_name":"$bankName"}';
-    var response=await http.post("https://api.changecharity.io/api/users/updatebankacc", body:content);
+    var response=await http.post("https://api.changecharity.io/users/updatebankacc", body:content);
     print(response.body);
   }
 }

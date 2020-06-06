@@ -360,7 +360,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   _getMoreTransactions() async{
     var transContent='{"user_token":"$token", "offset":$offset}';
-    var transactionResponse = await http.post("https://changecharity.io/api/users/gettransactions", body:transContent);
+    var transactionResponse = await http.post("https://api.changecharity.io/users/gettransactions", body:transContent);
     setState(() {
       transactions+=jsonDecode(transactionResponse.body)["transactions"];
     });
@@ -386,7 +386,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token');
     var transContent='{"user_token":"$token", "offset":$offset}';
-    var transactionResponse = await http.post("https://changecharity.io/api/users/gettransactions", body:transContent);
+    var transactionResponse = await http.post("https://api.changecharity.io/users/gettransactions", body:transContent);
     setState(() {
       transactions=jsonDecode(transactionResponse.body)["transactions"];
     });
@@ -399,7 +399,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token');
     var totalContent='{"user_token":"$token"}';
-    var totalResponse = await http.post("https://changecharity.io/api/users/getuserstotals", body:totalContent);
+    var totalResponse = await http.post("https://api.changecharity.io/users/getuserstotals", body:totalContent);
     setState(() {
       jsonDecode(totalResponse.body)["monthlyTotal"]==null?monthTotal=Money.fromInt(0, usdCurrency):monthTotal=Money.fromInt(int.parse(jsonDecode(totalResponse.body)["monthlyTotal"]), usdCurrency);
       jsonDecode(totalResponse.body)["weeklyTotal"]==null?weekTotal=Money.fromInt(0, usdCurrency):weekTotal=Money.fromInt(int.parse(jsonDecode(totalResponse.body)["monthlyTotal"]), usdCurrency);
@@ -415,7 +415,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token');
     var orgContent='{"user_token":"$token"}';
-    var orgResponse = await http.post("https://changecharity.io/api/users/getusersorginfo", body:orgContent);
+    var orgResponse = await http.post("https://api.changecharity.io/users/getusersorginfo", body:orgContent);
     setState(() {
       selectedOrg=jsonDecode(orgResponse.body)["name"];
       selectedOrgImg=jsonDecode(orgResponse.body)["logoLocation"];

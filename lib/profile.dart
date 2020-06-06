@@ -544,7 +544,7 @@ void initState(){
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token');
     var content='{"user_token":"$token"}';
-    var profileResponse = await http.post("https://api.changecharity.io/api/users/getprofile", body:content);
+    var profileResponse = await http.post("https://api.changecharity.io/users/getprofile", body:content);
     setState(() {
       threshold=jsonDecode(profileResponse.body)["threshold"];
       mask=jsonDecode(profileResponse.body)["mask"];
@@ -566,7 +566,7 @@ void initState(){
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token');
     var content='{"user_token":"$token", "threshold":"${threshold.toInt()}"}';
-    await http.post("https://api.changecharity.io/api/users/updatethreshold", body:content);
+    await http.post("https://api.changecharity.io/users/updatethreshold", body:content);
     print(threshold);
   }
 

@@ -107,7 +107,7 @@ class _UnlinkDialogState extends State<UnlinkDialog>{
     token = prefs.getString('token');
     print(token);
     var content='{"user_token":"$token", "password":"${widget.password}"}';
-    var response=await http.post("https://api.changecharity.io/api/users/deletebankacc", body:content);
+    var response=await http.post("https://api.changecharity.io/users/deletebankacc", body:content);
     print(response.body);
     if (response.body=="success"){
       Navigator.of(context).pop();
