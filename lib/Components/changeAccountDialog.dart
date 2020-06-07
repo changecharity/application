@@ -15,7 +15,7 @@ class ChangeAccDialog extends StatefulWidget {
 
 }
 
-class _ChangeAccDialogState extends State<ChangeAccDialog>{
+class _ChangeAccDialogState extends State<ChangeAccDialog>with SingleTickerProviderStateMixin{
 
   String plaidToken;
   String accountId;
@@ -23,6 +23,20 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>{
   int mask;
   String _plaidErr='';
   var token;
+  bool loading=false;
+  Animation<Color> loadingAn;
+  AnimationController loadingController;
+
+  void initState(){
+    super.initState();
+
+    loadingController= AnimationController(
+        vsync: this, duration: Duration(seconds: 1));
+    loadingAn = loadingController.drive(
+        ColorTween(begin: Colors.lightBlue[200], end: Colors.lightBlue[600]));
+
+    loadingController.repeat();
+  }
 
   Widget _accountText(){
     return Column(
@@ -37,7 +51,7 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>{
         Container(
           margin: EdgeInsets.only(top:10),
           child:Text(
-              'Please clink on the button to enter your account information',
+              'Please click on the button to enter your account information',
               textAlign: TextAlign.center,
               style:TextStyle(
                 fontSize: 14,
@@ -171,14 +185,14 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>{
   }
 
   Widget _linkButton(context){
-//    if(loading){
-//      return Container(
-//          margin: EdgeInsets.fromLTRB(32, 0, 32, 0),
-//          child:CircularProgressIndicator(
-//            valueColor:loadingAn,
-//          )
-//      );
-//    }
+    if(loading){
+      return Container(
+          margin: EdgeInsets.fromLTRB(32, 0, 32, 0),
+          child:CircularProgressIndicator(
+            valueColor:loadingAn,
+          )
+      );
+    }
     return Container(
       child: RaisedButton(
         onPressed: (){
@@ -274,28 +288,43 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>{
 
   bool _checkValidPlaid(){
     if(plaidToken==null|| plaidToken==''){
-      _plaidErr="You must link a bank";
+      setState(() {
+        _plaidErr="You must link a bank";
+      });
       return false;
     }
     return true;
   }
 
 
-  _changeAccount() async{
-    if(!_checkValidPlaid()) {
+  _changeAccount() async {
+    if (!_checkValidPlaid()) {
       print(_plaidErr);
       return;
     }
 
-//    setState(() {
-//      loading=!loading;
-//    });
+    setState(() {
+      loading=!loading;
+    });
 
-    SharedPreferences prefs=await SharedPreferences.getInstance();
-    token=prefs.getString('token');
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    token = prefs.getString('token');
     print(token);
-    var content='{"user_token":"$token", "password":"${widget.password}", "plaid_public_token":"$plaidToken", "plaid_account_id":"$accountId", "mask":$mask, "bank_name":"$bankName"}';
-    var response=await http.post("https://api.changecharity.io/api/users/updatebankacc", body:content);
+    var content = '{"user_token":"$token", "password":"${widget
+        .password}", "plaid_public_token":"$plaidToken", "plaid_account_id":"$accountId", "mask":$mask, "bank_name":"$bankName"}';
+    var response = await http.post("https://api.changecharity.io/users/updatebankacc", body: content);
     print(response.body);
+
+    if (response.body.contains('rpc error: code = Unknown desc = {"code":"bank_account_exists","doc_url":"https://stripe.com/docs/error-codes/bank-account-exists')){
+      setState(() {
+        loading=!loading;
+        _plaidErr = "This account is already linked";
+      });
+      return;
+    } else if (response.body == "success") {
+      //make another api call to get profile
+      Navigator.of(context).pop();
+    }
   }
+
 }

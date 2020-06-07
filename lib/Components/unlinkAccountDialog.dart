@@ -1,8 +1,8 @@
-import 'dart:async';
-import 'dart:convert';
 import'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:change/profile.dart';
+import 'package:change/profile.dart';
 
 class UnlinkDialog extends StatefulWidget {
   @override
@@ -102,17 +102,20 @@ class _UnlinkDialogState extends State<UnlinkDialog>{
     );
   }
 
-  _unlinkAccount() async{
+  _unlinkAccount() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token');
     print(token);
-    var content='{"user_token":"$token", "password":"${widget.password}"}';
-    var response=await http.post("https://api.changecharity.io/api/users/deletebankacc", body:content);
+    var content = '{"user_token":"$token", "password":"${widget.password}"}';
+    var response = await http.post(
+        "https://api.changecharity.io/users/deletebankacc", body: content);
     print(response.body);
-    if (response.body=="success"){
-      Navigator.of(context).pop();
+    if (response.body == "success") {
+      Navigator. pop(context, () {
+        setState(() {
+        });
+      });
     }
   }
-
 
 }

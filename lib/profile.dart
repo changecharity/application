@@ -40,6 +40,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
   var profileLetter='';
   bool showMenu=false;
   var _selection;
+  var password;
 
 void initState(){
     super.initState();
@@ -207,6 +208,7 @@ void initState(){
                     _widgetIndex!=0?IconButton(
                         icon: Icon(Icons.arrow_back_ios, color:Colors.black, size:16),
                         highlightColor: Colors.transparent,
+                        splashColor: Colors.grey[100],
                         onPressed:(){
                           setState(() {
                             _widgetIndex--;
@@ -227,6 +229,8 @@ void initState(){
                         icon: Icon(Icons.arrow_forward_ios),
                         color:Colors.black,
                         iconSize: 16,
+                        splashColor: Colors.grey[100],
+                        highlightColor: Colors.grey[100],
                         onPressed:(){
                           setState(() {
                             _widgetIndex++;
@@ -272,13 +276,36 @@ void initState(){
               )
             )
           ),
+
           Container(
             margin: EdgeInsets.only(top:10, bottom:15),
-            child:Text(
-                '$bankName(...${mask==null||mask==0?'0000':'$mask'})',
-                style:TextStyle(color:Color.fromRGBO(0, 174, 229, 1), fontSize:18, fontWeight: FontWeight.bold)
+            //if bank is unlinked, show no linked account. else, show info
+            child:bankName==null?
+            Text(
+               'No Linked Account',
+               style:TextStyle(color:Color.fromRGBO(0, 174, 229, 1), fontSize:18, fontWeight: FontWeight.bold)
+            ):
+            Text(
+              '$bankName(...${mask==0||mask==null?'0000':'$mask'})',
+              style:TextStyle(color:Color.fromRGBO(0, 174, 229, 1), fontSize:18, fontWeight: FontWeight.bold)
             ),
           ),
+          //if bank is unlinked, option to link account. otherwise, option to unlink or change
+          bankName==null?
+          RichText(
+              text:TextSpan(
+                  style:TextStyle(
+                    color:Colors.grey[700],
+                    fontSize:12,
+                    fontFamily: 'Montserrat',
+                  ),
+                  text:"Link Account",
+                  recognizer: TapGestureRecognizer()
+                    ..onTap=(){
+                      showDialog(context:context, builder:(context)=>PasswordDialog("change"), barrierDismissible: true);
+                    }
+              )
+          ):
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children:[
@@ -544,12 +571,14 @@ void initState(){
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token');
     var content='{"user_token":"$token"}';
-    var profileResponse = await http.post("https://api.changecharity.io/api/users/getprofile", body:content);
+    var profileResponse = await http.post("https://api.changecharity.io/users/getprofile", body:content);
     setState(() {
       threshold=jsonDecode(profileResponse.body)["threshold"];
       mask=jsonDecode(profileResponse.body)["mask"];
       bankName=jsonDecode(profileResponse.body)["bankName"];
     });
+
+
     print(jsonDecode(profileResponse.body));
 
   }
@@ -557,8 +586,12 @@ void initState(){
   _getInitInfo() async{
     _getProfileLetter();
     _getProfDetails();
+
+    //if cont...=-"", make the api call again...
     context.read<UserOrgModel>().getOrgImg;
     context.read<UserOrgModel>().getUserOrg;
+    print(context.read<UserOrgModel>().getOrgImg);
+
   }
 
   //call on end of slider change to set user's max threshhold
@@ -566,7 +599,7 @@ void initState(){
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token');
     var content='{"user_token":"$token", "threshold":"${threshold.toInt()}"}';
-    await http.post("https://api.changecharity.io/api/users/updatethreshold", body:content);
+    await http.post("https://api.changecharity.io/users/updatethreshold", body:content);
     print(threshold);
   }
 

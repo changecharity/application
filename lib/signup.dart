@@ -532,7 +532,9 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
   //throws error if plaid is not connected
   bool _checkValidPlaid(){
     if(plaidToken==null|| plaidToken==''){
-      _plaidErr="You must link a bank";
+      setState(() {
+        _plaidErr="You must link a bank";
+      });
       return false;
     }
     return true;
