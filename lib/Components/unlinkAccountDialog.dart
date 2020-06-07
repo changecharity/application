@@ -106,9 +106,11 @@ class _UnlinkDialogState extends State<UnlinkDialog>{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token');
     print(token);
+
     var content = '{"user_token":"$token", "password":"${widget.password}"}';
     var response = await http.post(
         "https://api.changecharity.io/users/deletebankacc", body: content);
+
     print(response.body);
     if (response.body == "success") {
       Navigator. pop(context, () {

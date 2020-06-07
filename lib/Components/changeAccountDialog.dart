@@ -266,6 +266,7 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>with SingleTickerProvi
         secret: plaidSandbox ? '' : '',
         clientName: 'ClientName',
         webhook: 'https://changecharity.io/api/plaidwebhook',
+        webhook: 'https://api.changecharity.io/plaidwebhook',
         products: 'auth,income',
         selectAccount: 'false');
 
@@ -310,9 +311,14 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>with SingleTickerProvi
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token');
     print(token);
+<<<<<<< HEAD
     var content = '{"user_token":"$token", "password":"${widget
         .password}", "plaid_public_token":"$plaidToken", "plaid_account_id":"$accountId", "mask":$mask, "bank_name":"$bankName"}';
     var response = await http.post("https://api.changecharity.io/users/updatebankacc", body: content);
+=======
+    var content='{"user_token":"$token", "password":"${widget.password}", "plaid_public_token":"$plaidToken", "plaid_account_id":"$accountId", "mask":$mask, "bank_name":"$bankName"}';
+    var response=await http.post("https://api.changecharity.io/users/updatebankacc", body:content);
+>>>>>>> 10fe276106d45c4d812cb8d6d4ba15958cf8de21
     print(response.body);
 
     if (response.body.contains('rpc error: code = Unknown desc = {"code":"bank_account_exists","doc_url":"https://stripe.com/docs/error-codes/bank-account-exists')){
