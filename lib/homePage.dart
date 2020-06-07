@@ -399,11 +399,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token');
     var totalContent='{"user_token":"$token"}';
-<<<<<<< HEAD
-    var totalResponse = await http.post("https://changecharity.io/users/getuserstotals", body:totalContent);
-=======
     var totalResponse = await http.post("https://api.changecharity.io/users/getuserstotals", body:totalContent);
->>>>>>> 10fe276106d45c4d812cb8d6d4ba15958cf8de21
     setState(() {
       jsonDecode(totalResponse.body)["monthlyTotal"]==null?monthTotal=Money.fromInt(0, usdCurrency):monthTotal=Money.fromInt(int.parse(jsonDecode(totalResponse.body)["monthlyTotal"]), usdCurrency);
       jsonDecode(totalResponse.body)["weeklyTotal"]==null?weekTotal=Money.fromInt(0, usdCurrency):weekTotal=Money.fromInt(int.parse(jsonDecode(totalResponse.body)["monthlyTotal"]), usdCurrency);
