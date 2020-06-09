@@ -1,8 +1,9 @@
 import'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:change/Pages/profile.dart';
-import 'package:change/Pages/profile.dart';
+import 'package:provider/provider.dart';
+
+import '../Models/userBankModel.dart';
 
 class UnlinkDialog extends StatefulWidget {
   @override
@@ -113,10 +114,8 @@ class _UnlinkDialogState extends State<UnlinkDialog>{
 
     print(response.body);
     if (response.body == "success") {
-      Navigator. pop(context, () {
-        setState(() {
-        });
-      });
+      context.read<UserBankModel>().notify(null, null);
+      Navigator.of(context).pop();
     }
   }
 

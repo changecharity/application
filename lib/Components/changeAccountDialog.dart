@@ -4,7 +4,9 @@ import'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:plaid/plaid.dart';
+import 'package:provider/provider.dart';
 
+import '../Models/userBankModel.dart';
 
 class ChangeAccDialog extends StatefulWidget {
   @override
@@ -322,7 +324,9 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>with SingleTickerProvi
       });
       return;
     } else if (response.body == "success") {
-      //make another api call to get profile
+      //save bank info in provider
+      context.read<UserBankModel>().notify(mask.toString(), bankName);
+
       Navigator.of(context).pop();
     }
   }

@@ -9,7 +9,7 @@ import 'package:money2/money2.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
-import 'package:change/Models/UserOrgModel.dart';
+import 'package:change/Models/userOrgModel.dart';
 
 import 'profile.dart';
 import '../paintings.dart';

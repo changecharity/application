@@ -9,11 +9,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import '../SearchPage/search2.dart';
 import '../paintings.dart';
-import '../Models/UserOrgModel.dart';
+import '../Models/userOrgModel.dart';
 import 'homePage.dart';
 import 'login.dart';
 import '../Components/passwordDialog.dart';
-
+import 'package:provider/provider.dart';
+import '../Models/userBankModel.dart';
 
 class Profile extends StatefulWidget{
 
@@ -32,8 +33,8 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
 
   String token;
   var threshold=100;
-  var mask;
-  var bankName;
+  String mask;
+  String bankName;
   bool sliderChanging=false;
   var _widgetIndex=0;
   var profileLetter='';
@@ -259,58 +260,42 @@ void initState(){
   Widget _bankContent(){
     return Container(
       alignment: Alignment.center,
-      child:Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Container(
-            margin: EdgeInsets.only(top:10),
-            width:100,
-            height:100,
-            decoration:BoxDecoration(
-                color:Color.fromRGBO(0,174,229,1),
-                borderRadius: BorderRadius.circular(100)
-            ),
-            child: Center(
-              child: Icon(
-                Icons.attach_money,
-                size: 100,
-                color:Colors.white
-              )
-            )
-          ),
-
-          Container(
-            margin: EdgeInsets.only(top:10, bottom:15),
-            //if bank is unlinked, show no linked account. else, show info
-            child:bankName==null?
-            Text(
-               'No Linked Account',
-               style:TextStyle(color:Color.fromRGBO(0, 174, 229, 1), fontSize:18, fontWeight: FontWeight.bold)
-            ):
-            Text(
-              '$bankName(...${mask==0||mask==null?'0000':'$mask'})',
-              style:TextStyle(color:Color.fromRGBO(0, 174, 229, 1), fontSize:18, fontWeight: FontWeight.bold)
-            ),
-          ),
-          //if bank is unlinked, option to link account. otherwise, option to unlink or change
-          bankName==null?
-          RichText(
-              text:TextSpan(
-                  style:TextStyle(
-                    color:Colors.grey[700],
-                    fontSize:12,
-                    fontFamily: 'Montserrat',
+      child: Consumer<UserBankModel>(
+        builder:(context, userBank, child){
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Container(
+                  margin: EdgeInsets.only(top:10),
+                  width:100,
+                  height:100,
+                  decoration:BoxDecoration(
+                      color:Color.fromRGBO(0,174,229,1),
+                      borderRadius: BorderRadius.circular(100)
                   ),
-                  text:"Link Account",
-                  recognizer: TapGestureRecognizer()
-                    ..onTap=(){
-                      showDialog(context:context, builder:(context)=>PasswordDialog("change"), barrierDismissible: true);
-                    }
-              )
-          ):
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children:[
+                  child: Center(
+                      child: Icon(
+                          Icons.attach_money,
+                          size: 100,
+                          color:Colors.white
+                      )
+                  )
+              ),
+              Container(
+                  margin: EdgeInsets.only(top:10, bottom:15),
+                  //if bank is unlinked, show no linked account. else, show info
+                  child:userBank.getBankName==null?
+                  Text(
+                      'No Linked Account',
+                      style:TextStyle(color:Color.fromRGBO(0, 174, 229, 1), fontSize:18, fontWeight: FontWeight.bold)
+                  ):
+                  Text(
+                      '${userBank.getBankName}(...${userBank.getMask=="0"||userBank.getMask==null?'0000':'${userBank.getMask}'})',
+                      style:TextStyle(color:Color.fromRGBO(0, 174, 229, 1), fontSize:18, fontWeight: FontWeight.bold)
+                  )
+              ),
+              //if bank is unlinked, option to link account. otherwise, option to unlink or change
+              userBank.getBankName==null?
               RichText(
                   text:TextSpan(
                       style:TextStyle(
@@ -318,33 +303,51 @@ void initState(){
                         fontSize:12,
                         fontFamily: 'Montserrat',
                       ),
-                      text:"Change Account",
+                      text:"Link Account",
                       recognizer: TapGestureRecognizer()
                         ..onTap=(){
                           showDialog(context:context, builder:(context)=>PasswordDialog("change"), barrierDismissible: true);
-                      }
-                  )
-              ),
-              RichText(
-                  text:TextSpan(
-                      style:TextStyle(
-                        color:Colors.grey[700],
-                        fontSize:12,
-                        fontFamily: 'Montserrat',
-                      ),
-                      text:"Unlink Account",
-                      recognizer: TapGestureRecognizer()
-                        ..onTap=(){
-                          showDialog(context:context, builder:(context)=>PasswordDialog("unlink"), barrierDismissible: true);
                         }
                   )
-              ),
-            ]
-          )
-        ],
+              ):
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children:[
+                    RichText(
+                        text:TextSpan(
+                            style:TextStyle(
+                              color:Colors.grey[700],
+                              fontSize:12,
+                              fontFamily: 'Montserrat',
+                            ),
+                            text:"Change Account",
+                            recognizer: TapGestureRecognizer()
+                              ..onTap=(){
+                                showDialog(context:context, builder:(context)=>PasswordDialog("change"), barrierDismissible: true);
+                              }
+                        )
+                    ),
+                    RichText(
+                        text:TextSpan(
+                            style:TextStyle(
+                              color:Colors.grey[700],
+                              fontSize:12,
+                              fontFamily: 'Montserrat',
+                            ),
+                            text:"Unlink Account",
+                            recognizer: TapGestureRecognizer()
+                              ..onTap=(){
+                                showDialog(context:context, builder:(context)=>PasswordDialog("unlink"), barrierDismissible: true);
+                              }
+                        )
+                    ),
+                  ]
+              )
+            ],
+          );
+        }
       )
     );
-
   }
 
   Widget _currentOrgContent(){
@@ -417,6 +420,8 @@ void initState(){
       }
     );
   }
+
+
 
   Widget _sliderContent(){
     return Container(
@@ -577,13 +582,17 @@ void initState(){
     var profileResponse = await http.post("https://api.changecharity.io/users/getprofile", body:content);
     setState(() {
       threshold=jsonDecode(profileResponse.body)["threshold"];
-      mask=jsonDecode(profileResponse.body)["mask"];
+      mask=jsonDecode(profileResponse.body)["mask"].toString();
       bankName=jsonDecode(profileResponse.body)["bankName"];
     });
 
     print(threshold);
     print(mask);
     print(bankName);
+
+    //notify provider of mask and bankName
+    context.read<UserBankModel>().notify(mask, bankName);
+
 
   }
 
@@ -612,7 +621,7 @@ void initState(){
 
 
 
-  //call on end of slider change to set user's max threshhold
+  //call on end of slider change to set user's max threshold
   _setThreshold() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token');
