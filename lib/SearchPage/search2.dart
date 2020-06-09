@@ -8,7 +8,7 @@ import 'orgCard.dart';
 import 'searchCard.dart';
 import 'searchButton.dart';
 import 'searchedOrganizations.dart';
-import '../login.dart';
+import '../Pages/login.dart';
 import 'categoryCard.dart';
 import 'catScreen.dart';
 

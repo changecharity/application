@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'app.dart';
 import'././Services/service_locator.dart';
 
-import 'package:change/UserOrgModel.dart';
+import 'package:change/Models/UserOrgModel.dart';
 
 
 void main() {

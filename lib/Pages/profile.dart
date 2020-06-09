@@ -7,12 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-import 'SearchPage/search2.dart';
-import 'paintings.dart';
-import 'UserOrgModel.dart';
+import '../SearchPage/search2.dart';
+import '../paintings.dart';
+import '../Models/UserOrgModel.dart';
 import 'homePage.dart';
 import 'login.dart';
-import 'Components/passwordDialog.dart';
+import '../Components/passwordDialog.dart';
 
 
 class Profile extends StatefulWidget{

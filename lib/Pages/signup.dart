@@ -6,7 +6,7 @@ import 'package:flutter/animation.dart';
 import 'package:plaid/plaid.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'paintings.dart';
+import '../paintings.dart';
 import 'emailAuth.dart';
 
 

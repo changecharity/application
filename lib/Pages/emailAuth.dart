@@ -4,9 +4,9 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
-import './paintings.dart';
-import './homePage.dart';
-import './signUp.dart';
+import '../paintings.dart';
+import 'homePage.dart';
+import '../Pages/signUp.dart';
 
 class EmailAuth extends StatefulWidget{
 
