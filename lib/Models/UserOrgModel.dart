@@ -9,12 +9,11 @@ class UserOrgModel extends ChangeNotifier{
    String get getUserOrg=>_userOrg;
    String get getOrgImg=> _userOrgImg;
 
-   void notify(String name, String img){
-     _userOrg=name;
-     _userOrgImg=img;
+   void notify(String name, String img) {
+     _userOrg = name;
+     _userOrgImg = img;
      notifyListeners();
    }
-
 
 
 }

@@ -15,7 +15,6 @@ import 'login.dart';
 import 'Components/passwordDialog.dart';
 
 
-
 class Profile extends StatefulWidget{
 
   @override
@@ -41,6 +40,9 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
   bool showMenu=false;
   var _selection;
   var password;
+
+  String selectedOrg;
+  String selectedOrgImg='https://wallpaperplay.com/walls/full/b/d/1/58065.jpg';
 
 void initState(){
     super.initState();
@@ -320,7 +322,7 @@ void initState(){
                       recognizer: TapGestureRecognizer()
                         ..onTap=(){
                           showDialog(context:context, builder:(context)=>PasswordDialog("change"), barrierDismissible: true);
-                        }
+                      }
                   )
               ),
               RichText(
@@ -385,7 +387,8 @@ void initState(){
     return Consumer<UserOrgModel>(
       builder:(context, userOrg, child){
         return Text(
-          '${userOrg.getUserOrg}',
+          //if selected org is not null, there was no image saved in provider and we called api which filled selectedOrg
+            selectedOrg!=null?selectedOrg:'${userOrg.getUserOrg}',
           style:TextStyle(
             color:Color.fromRGBO(0, 174, 229, 1),
             fontSize:18,
@@ -405,7 +408,7 @@ void initState(){
           width:100,
           decoration: BoxDecoration(
             image:DecorationImage(
-              image: NetworkImage('${userOrg.getOrgImg}'),
+              image: selectedOrg!=null?NetworkImage(selectedOrgImg):NetworkImage('${userOrg.getOrgImg}'),
               fit: BoxFit.cover,
             ),
             shape:BoxShape.circle,
@@ -578,21 +581,36 @@ void initState(){
       bankName=jsonDecode(profileResponse.body)["bankName"];
     });
 
+    print(threshold);
+    print(mask);
+    print(bankName);
 
-    print(jsonDecode(profileResponse.body));
+  }
 
+  //if the user provider is not filled, we have to make an api call here to get info
+  _getOrgInfo() async{
+    if(context.read<UserOrgModel>().getOrgImg==""||context.read<UserOrgModel>().getOrgImg==null){
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      token = prefs.getString('token');
+      var orgContent='{"user_token":"$token"}';
+      var orgResponse = await http.post("https://api.changecharity.io/users/getusersorginfo", body:orgContent);
+      setState(() {
+        selectedOrg=jsonDecode(orgResponse.body)["name"];
+        selectedOrgImg=jsonDecode(orgResponse.body)["logoLocation"];
+      });
+      print(selectedOrg);
+      //set org name and org image in provider
+      context.read<UserOrgModel>().notify(selectedOrg, selectedOrgImg);
+    }
   }
 
   _getInitInfo() async{
     _getProfileLetter();
     _getProfDetails();
-
-    //if cont...=-"", make the api call again...
-    context.read<UserOrgModel>().getOrgImg;
-    context.read<UserOrgModel>().getUserOrg;
-    print(context.read<UserOrgModel>().getOrgImg);
-
+    _getOrgInfo();
   }
+
+
 
   //call on end of slider change to set user's max threshhold
   _setThreshold() async{
