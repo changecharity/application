@@ -1,3 +1,4 @@
+import 'package:change/Pages/homePage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,9 +9,9 @@ import 'Pages/login.dart';
 //import 'Pages/homePage.dart';
 //import 'Pages/profile.dart';
 
-// Avi sPira was here 
-
 class Change extends StatefulWidget{
+  final bool initState;
+  Change(this.initState);
   @override
   _ChangeState createState() => _ChangeState();
 }
@@ -26,7 +27,7 @@ class _ChangeState extends State<Change>{
     ));
     return MaterialApp(
       title: 'Change',
-      home: Login(),
+      home: widget.initState ? HomePage() : Login(),
       theme: lightTheme,
       debugShowCheckedModeBanner: false,
     );

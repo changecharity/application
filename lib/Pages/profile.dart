@@ -100,10 +100,7 @@ void initState(){
         color:Colors.black,
         iconSize: 30,
         onPressed: () {
-          _controller.animateBack(0, duration:Duration(milliseconds:500), curve:Curves.linear);
-          Future<void>.delayed(Duration(milliseconds:500),(){
-            Navigator.push(context, MaterialPageRoute(builder:(context)=>HomePage()));
-          });
+          _returnHome();
         },
       ),
     );
@@ -116,7 +113,13 @@ void initState(){
       child: PopupMenuButton<MenuOptions>(
         color:Colors.grey[100],
         icon:Icon(Icons.more_vert, size:30),
-        onSelected: (MenuOptions result) { setState(() { _selection = result; }); },
+        onSelected: (MenuOptions result) {
+          setState(() { _selection = result;});
+          switch(result.index) {
+            case 0 :
+              _logout();
+          }
+        },
         itemBuilder: (BuildContext context) => <PopupMenuEntry<MenuOptions>>[
           const PopupMenuItem<MenuOptions>(
             value: MenuOptions.signOut,
@@ -529,27 +532,29 @@ void initState(){
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    return Material(
-      child:SafeArea(
-        child:SlideTransition(
-          position:_rightToLeft,
-          child:CustomPaint(
-            painter: ProfilePaint(),
-            child:Container(
-              height:MediaQuery.of(context).size.height,
-              padding:EdgeInsets.only(bottom:MediaQuery.of(context).size.height*.15),
-                child:Column(
-                mainAxisAlignment:MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    SlideTransition(position:_topDown, child:_accountContainer()),
-                    SlideTransition(position:_bottomUp, child:_accountPrefs()),
-                  ]
-                ),
+    return new WillPopScope(
+      onWillPop: _onWillPop,
+      child:Material(
+        child: SafeArea(
+          child:SlideTransition(
+            position:_rightToLeft,
+            child:CustomPaint(
+              painter: ProfilePaint(),
+              child:Container(
+                height:MediaQuery.of(context).size.height,
+                padding:EdgeInsets.only(bottom:MediaQuery.of(context).size.height*.15),
+                  child:Column(
+                  mainAxisAlignment:MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      SlideTransition(position:_topDown, child:_accountContainer()),
+                      SlideTransition(position:_bottomUp, child:_accountPrefs()),
+                    ]
+                  ),
+                )
               )
-            )
+            ),
           ),
-        ),
+      ),
     );
   }
 
@@ -619,7 +624,9 @@ void initState(){
     _getOrgInfo();
   }
 
-
+  Future<bool> _onWillPop() async {
+    _returnHome();
+  }
 
   //call on end of slider change to set user's max threshold
   _setThreshold() async{
@@ -630,4 +637,16 @@ void initState(){
     print(threshold);
   }
 
+  void _logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('token', null);
+    Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>Login()));
+  }
+
+  void _returnHome() {
+    _controller.animateBack(0, duration:Duration(milliseconds:500), curve:Curves.linear);
+    Future<void>.delayed(Duration(milliseconds:500),(){
+      Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>HomePage()));
+    });
+  }
 }
