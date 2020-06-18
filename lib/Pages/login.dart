@@ -19,6 +19,7 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> with TickerProviderStateMixin {
   Animation<Offset> animation;
   Animation<Offset> animationB;
+  Animation<Offset> animationD;
   Animation<Color> animationC;
   AnimationController controller;
   AnimationController controllerC;
@@ -66,47 +67,60 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
 
     controllerC.repeat();
 
-    Future<void>.delayed(Duration(milliseconds: 500), () {
+    animationD = Tween<Offset>(
+      begin: Offset(-2.0, -2.0),
+      end: Offset(0.0, 0.0),
+    ).animate(CurvedAnimation(
+      parent: controller,
+      curve: Curves.fastLinearToSlowEaseIn,
+    ));
+
+    Future<void>.delayed(Duration(milliseconds: 700), () {
       controller.forward();
       print(MediaQuery.of(context).viewInsets.bottom);
     });
   }
 
   Widget _helloContainer() {
-    return Container(
-      margin: EdgeInsets.only(
-          top: MediaQuery.of(context).viewInsets.bottom == 0
-              ? 160
-              : MediaQuery.of(context).viewInsets.bottom < 100
-                  ? MediaQuery.of(context).viewInsets.bottom
-                  : 20),
-      alignment: Alignment.center,
-      child: Text(
-        'Hello',
-        style: TextStyle(
-          fontSize: 95,
-          letterSpacing: -5,
+    if (MediaQuery.of(context).viewInsets.bottom == 0){
+      return Container(
+        margin: EdgeInsets.only(
+            top: 120, bottom: 10),
+        alignment: Alignment.center,
+        child: Image.asset(
+          "images/logo-circle.png",
+          width: 150,
+          height: 150,
         ),
-      ),
-    );
+      );
+    }
+    return Container();
   }
 
   Widget _messageContainer() {
     return Container(
-      margin: EdgeInsets.only(top: 10),
+      margin: EdgeInsets.only(top: MediaQuery.of(context).viewInsets.bottom == 0
+          ? 10
+          : MediaQuery.of(context).viewInsets.bottom < 100
+          ? MediaQuery.of(context).viewInsets.bottom
+          : 150),
       alignment: Alignment.center,
-      child: Text(
+      child: MediaQuery.of(context).viewInsets.bottom == 0 ? Text(
         'Sign in to your account',
         style: TextStyle(
           fontSize: 25,
         ),
-      ),
+      ) : Text(
+        'Welcome Back',
+        style: TextStyle(
+          fontSize: 29,
+        ),)
     );
   }
 
   Widget _emailInput() {
     return Container(
-      margin: EdgeInsets.only(right: 20, left: 20, top: 60),
+      margin: EdgeInsets.only(right: 10, left: 20, top: 50),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.all(Radius.circular(30)),
@@ -393,7 +407,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                   position: animation,
                   child: Column(
                     children: <Widget>[
-                      _helloContainer(),
+                      SlideTransition(child: _helloContainer(), position: animationD),
                       _messageContainer(),
                       _emailInput(),
                       _emailErrCont(),
@@ -401,9 +415,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                       _passErrCont(),
                       _forgotPass(),
                       _signinContainer(),
-                      Expanded(
-                        child: Text(""),
-                      ),
+                      Expanded(child: Text(""),),
                       _createText(),
                     ],
                   ),
