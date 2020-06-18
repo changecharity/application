@@ -28,10 +28,13 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
   String bankName;
   int mask;
 
+  final _nameController= TextEditingController();
   final _passController= TextEditingController();
   final _emailController= TextEditingController();
+  final nameFocusNode=FocusNode();
   final emailFocusNode=FocusNode();
   final passFocusNode=FocusNode();
+  String _nameErr='';
   String _passErr='';
   String _emailErr='';
   String _plaidErr='';
@@ -90,8 +93,9 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
   //Sign Up
   Widget _signUpText() {
     return Container(
-      margin: EdgeInsets.only(
-          top: MediaQuery.of(context).viewInsets.bottom > 345 ? 30 : 60),
+      margin: EdgeInsets.only(top: MediaQuery.of(context).viewInsets.bottom == 0
+          ? 60
+          : 0),
       alignment: Alignment.center,
       child: Text(
         'Sign Up',
@@ -102,10 +106,57 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
     );
   }
 
+  Widget _nameInput() {
+    return Container(
+      margin: EdgeInsets.only(right: 20, left: 20, top: MediaQuery.of(context).viewInsets.bottom == 0
+          ? 60
+          : 20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.all(Radius.circular(30)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey[350],
+            blurRadius: 20.0,
+            offset: Offset.fromDirection(0.9),
+          ),
+        ],
+      ),
+      child: TextField(
+        controller:_nameController,
+        onChanged: (s){
+          setState(() {
+            _nameErr='';
+          });
+        },
+        onEditingComplete: (){
+          nameFocusNode.nextFocus();
+        },
+        decoration: InputDecoration(
+          labelText: "Legal Name",
+          hasFloatingPlaceholder: false,
+          prefixIcon: _namePrefix(),
+        ),
+        focusNode: nameFocusNode,
+      ),
+    );
+  }
+
+  Widget _namePrefix() {
+    return Container(
+      margin: EdgeInsets.only(left: 25, right: 15),
+      child: Icon(
+        Icons.person,
+        size: 20,
+        color: Colors.black,
+      ),
+    );
+  }
+
   //email input
   Widget _emailInput() {
     return Container(
-      margin: EdgeInsets.only(right: 20, left: 20, top: 60),
+      margin: EdgeInsets.only(right: 20, left: 20),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.all(Radius.circular(30)),
@@ -396,6 +447,8 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                       children: <Widget>[
                         _backButton(),
                         _signUpText(),
+                        _nameInput(),
+                        _errCont(_nameErr),
                         _emailInput(),
                         _errCont(_emailErr),
                         _passInput(),
@@ -477,6 +530,17 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
     print(timePlusThirty.toString());
   }
 
+  bool _checkValidName() {
+
+    if(_nameController.text==''||_nameController.text==null){
+      setState((){
+        _nameErr="This field can't be blank";
+      });
+      return false;
+    }
+    return true;
+  }
+
   //throws errors if email isn't valid
   bool _checkValidEmail() {
 
@@ -543,23 +607,13 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
   //called on click of sign up button. checks email, password, and plaid before making api call and signing up.
   //if sign up is successful, api sends back token which gets stored in shared preferences
   _signUp()async{
-    if(!_checkValidEmail()){
-      setState(() {
-        return;
-      });
-    }else if(!_checkValidPassword()){
-      setState(() {
-        return;
-      });
-    } else if(!_checkValidPlaid()){
-      setState(() {
-        return;
-      });
+    if(!_checkValidName() || !_checkValidEmail() || !_checkValidPassword() || !_checkValidPlaid()){
+      return;
     }else{
       setState(() {
         loading=!loading;
       });
-      var content='{"email":"${_emailController.text}","password":"${_passController.text}", "plaid_public_token":"$plaidToken", "plaid_account_id":"$accountId", "mask":$mask, "bank_name":"$bankName"}';
+      var content='{"legal_name:":"${_nameController.text}","email":"${_emailController.text}","password":"${_passController.text}", "plaid_public_token":"$plaidToken", "plaid_account_id":"$accountId", "mask":$mask, "bank_name":"$bankName"}';
       var response= await http.post("https://api.changecharity.io/users/signup", body:content);
 
       print(response.body);
