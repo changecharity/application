@@ -571,11 +571,11 @@ void initState(){
     }
   }
 
-  //call at initstate. gets the first letter of email address stored in shared preferences
+  //call at initstate. gets the first letter of legal name stored in shared preferences
   _getProfileLetter() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      profileLetter = prefs.getString('emailAddress').substring(0,1).toUpperCase();
+      profileLetter = (prefs.getString('nameInitial')?? "A").toUpperCase();
     });
   }
 

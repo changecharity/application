@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'Pages/login.dart';
-import 'Pages/signup.dart';
+//import 'Pages/signup.dart';
 //import 'Pages/emailAuth.dart';
 //import 'SearchPage/search2.dart';
 //import 'Pages/homePage.dart';
@@ -27,8 +27,7 @@ class _ChangeState extends State<Change>{
     ));
     return MaterialApp(
       title: 'Change',
-      home: SignUp(),
-//      widget.initState ? HomePage() : Login()
+      home: widget.initState ? HomePage() : Login(),
       theme: lightTheme,
       debugShowCheckedModeBanner: false,
     );

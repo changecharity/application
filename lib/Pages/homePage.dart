@@ -104,17 +104,27 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     return Container(
       margin: EdgeInsets.only(top: 20, left: 10),
       alignment: Alignment.centerLeft,
-      child: IconButton(
-        onPressed: (){
-          Navigator.push(context, MaterialPageRoute(builder:(context)=>Profile()));
-        },
-        icon: Icon(Icons.perm_identity),
-        iconSize:32,
-        color:Colors.black,
-        splashColor:Colors.grey,
-      )
+      height: 50,
+        child: Container(
+          decoration: BoxDecoration(
+            color: Color.fromRGBO(0, 174, 229, 0.1),
+            shape: BoxShape.circle,
+          ),
+          child: IconButton(
+            onPressed: (){
+              Navigator.push(context, MaterialPageRoute(builder:(context)=>Profile()));
+            },
+            enableFeedback: true,
+            icon: Icon(Icons.perm_identity),
+            iconSize:32,
+            color:Colors.black,
+            splashColor:Colors.grey,
+            highlightColor: Color.fromRGBO(0, 174, 229, 0.4),
+          ),
+        )
     );
   }
+
 
   Widget _currentInfo() {
     return Container(
@@ -289,10 +299,21 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         ],
                       ),
                       Container(
-                        child: Text(
-                          '+${transactions[i]["change"]}\u{00A2}',
-                          style: TextStyle(color:Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
-                        )
+                        child: Row(
+                          children: <Widget>[
+                            Text(
+                              '${transactions[i]["change"]}',
+                              style: TextStyle(color:Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 2),
+                              child: Text(
+                                '\u{00A2}',
+                                style: TextStyle(color:Color.fromRGBO(0, 174, 229, 0.9), fontSize: 20, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic),
+                              ),
+                            ),
+                          ],
+                        ),
                       )
                     ],
                   )
@@ -416,7 +437,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   //get and save user's org info
   _getOrgInfo() async{
-
     //get user's org info
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token');

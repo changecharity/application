@@ -516,6 +516,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
   void _saveSignUp(val) async{
     SharedPreferences prefs=await SharedPreferences.getInstance();
     prefs.setString('token', val);
+    prefs.setString('NameInitial', _nameController.text[0]);
    if(prefs.getString('token')!=null&&prefs.getString('token')!=''){
       Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>EmailAuth(_emailController.text)));
     }
