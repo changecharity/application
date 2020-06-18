@@ -1,10 +1,11 @@
 import 'dart:convert';
+import 'package:flutter/services.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';  //for date format
-import 'package:intl/date_symbol_data_local.dart';  //for date locale
+//import 'package:intl/intl.dart';  //for date format
+//import 'package:intl/date_symbol_data_local.dart';  //for date locale
 import 'package:money2/money2.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -306,7 +307,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      systemNavigationBarColor: Colors.grey[100],
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+      systemNavigationBarIconBrightness: Brightness.dark,
+    ));
     return Material(
       child: SafeArea(
         //child:SingleChildScrollView(

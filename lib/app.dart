@@ -2,11 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'Pages/login.dart';
-import 'Pages/signup.dart';
-import 'Pages/emailAuth.dart';
-import 'SearchPage/search2.dart';
-import 'Pages/homePage.dart';
-import 'Pages/profile.dart';
+//import 'Pages/signup.dart';
+//import 'Pages/emailAuth.dart';
+//import 'SearchPage/search2.dart';
+//import 'Pages/homePage.dart';
+//import 'Pages/profile.dart';
 
 // Avi sPira was here 
 
@@ -19,8 +19,9 @@ class _ChangeState extends State<Change>{
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      systemNavigationBarColor: Colors.grey[100],
-      statusBarColor: Colors.black12,
+      systemNavigationBarColor: Colors.grey[50],
+      systemNavigationBarIconBrightness: Brightness.dark,
+      statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.dark,
     ));
     return MaterialApp(

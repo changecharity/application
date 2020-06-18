@@ -76,10 +76,10 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
     return Container(
       margin: EdgeInsets.only(
           top: MediaQuery.of(context).viewInsets.bottom == 0
-              ? 140
+              ? 160
               : MediaQuery.of(context).viewInsets.bottom < 100
                   ? MediaQuery.of(context).viewInsets.bottom
-                  : 0),
+                  : 20),
       alignment: Alignment.center,
       child: Text(
         'Hello',
@@ -341,7 +341,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
 
   Widget _createText() {
     return Container(
-      margin: EdgeInsets.only(top: 70),
+      margin: EdgeInsets.only(top: 0, bottom: 30),
       alignment: Alignment.bottomCenter,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -382,29 +382,30 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
         onTap:(){
           FocusScope.of(context).unfocus();
         },
-        child: SafeArea(
-          child:SingleChildScrollView(
-            child: SlideTransition(
-              position: animationB,
-              child: CustomPaint(
-                painter: LoginPaint(),
-                child: Container(
-                  height: MediaQuery.of(context).size.height,
-                  child: SlideTransition(
-                    position: animation,
-                    child: Column(
-                      children: <Widget>[
-                        _helloContainer(),
-                        _messageContainer(),
-                        _emailInput(),
-                        _emailErrCont(),
-                        _passInput(),
-                        _passErrCont(),
-                        _forgotPass(),
-                        _signinContainer(),
-                        _createText(),
-                      ],
-                    ),
+        child: SingleChildScrollView(
+          child: SlideTransition(
+            position: animationB,
+            child: CustomPaint(
+              painter: LoginPaint(),
+              child: Container(
+                height: MediaQuery.of(context).size.height,
+                child: SlideTransition(
+                  position: animation,
+                  child: Column(
+                    children: <Widget>[
+                      _helloContainer(),
+                      _messageContainer(),
+                      _emailInput(),
+                      _emailErrCont(),
+                      _passInput(),
+                      _passErrCont(),
+                      _forgotPass(),
+                      _signinContainer(),
+                      Expanded(
+                        child: Text(""),
+                      ),
+                      _createText(),
+                    ],
                   ),
                 ),
               ),
