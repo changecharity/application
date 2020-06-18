@@ -614,7 +614,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
       setState(() {
         loading=!loading;
       });
-      var content='{"legal_name:":"${_nameController.text}","email":"${_emailController.text}","password":"${_passController.text}", "plaid_public_token":"$plaidToken", "plaid_account_id":"$accountId", "mask":$mask, "bank_name":"$bankName"}';
+      var content='{"legal_name":"${_nameController.text}","email":"${_emailController.text}","password":"${_passController.text}", "plaid_public_token":"$plaidToken", "plaid_account_id":"$accountId", "mask":$mask, "bank_name":"$bankName"}';
       var response= await http.post("https://api.changecharity.io/users/signup", body:content);
 
       print(response.body);

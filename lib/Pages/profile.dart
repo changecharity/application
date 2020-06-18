@@ -575,7 +575,7 @@ void initState(){
   _getProfileLetter() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      profileLetter = (prefs.getString('nameInitial')?? "A").toUpperCase();
+      profileLetter = (prefs.getString('NameInitial')?? "A").toUpperCase();
     });
   }
 
