@@ -11,12 +11,6 @@ class Change extends StatefulWidget{
 class _ChangeState extends State<Change>{
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      systemNavigationBarColor: Colors.grey[50],
-      systemNavigationBarIconBrightness: Brightness.dark,
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.dark,
-    ));
     return MaterialApp(
       title: 'Change',
       home: Splash(),

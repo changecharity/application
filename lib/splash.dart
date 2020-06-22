@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Pages/login.dart';
 import 'Pages/homePage.dart';
+import 'package:flutter/services.dart';
 
 class Splash extends StatefulWidget {
   @override
@@ -21,6 +22,12 @@ class _SplashState extends State<Splash> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      systemNavigationBarColor: Colors.grey[50],
+      systemNavigationBarIconBrightness: Brightness.dark,
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+    ));
     return Material(
       color: Colors.grey[50],
       child: AnimatedContainer(
@@ -28,7 +35,7 @@ class _SplashState extends State<Splash> {
         child: Image.asset(
             "images/logo-circle.png",
         ),
-        duration: Duration(seconds: 2),
+        duration: Duration(milliseconds: 1500),
         curve: Curves.fastOutSlowIn,
       ),
     );
@@ -40,10 +47,9 @@ class _SplashState extends State<Splash> {
     _initScreen = token != null ? true : false;
 
 
-    Future<void>.delayed(Duration(milliseconds: 300), () {
+    Future<void>.delayed(Duration(milliseconds: 600), () {
       setState(() {
-        _width = 400;
-        _height = 400;
+        _width = 260;
       });
       Future<void>.delayed(Duration(milliseconds: 600), () {
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => _initScreen ? HomePage() : Login()));
