@@ -6,6 +6,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 //import 'package:intl/intl.dart';  //for date format
 //import 'package:intl/date_symbol_data_local.dart';  //for date locale
+import 'package:cache_image/cache_image.dart';
 import 'package:money2/money2.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -154,7 +155,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   width:100,
                   decoration: BoxDecoration(
                     image:DecorationImage(
-                      image: NetworkImage('${userOrg.getOrgImg}'),
+                      image: CacheImage('${userOrg.getOrgImg}'),
                       fit: BoxFit.cover,
                     ),
                     shape:BoxShape.circle,

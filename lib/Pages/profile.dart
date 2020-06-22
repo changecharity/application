@@ -13,8 +13,9 @@ import '../Models/userOrgModel.dart';
 import 'homePage.dart';
 import 'login.dart';
 import '../Components/passwordDialog.dart';
-import 'package:provider/provider.dart';
+//import 'package:provider/provider.dart';
 import '../Models/userBankModel.dart';
+import 'package:cache_image/cache_image.dart';
 
 class Profile extends StatefulWidget{
 
@@ -414,7 +415,7 @@ void initState(){
           width:100,
           decoration: BoxDecoration(
             image:DecorationImage(
-              image: selectedOrg!=null?NetworkImage(selectedOrgImg):NetworkImage('${userOrg.getOrgImg}'),
+              image: selectedOrg!=null?CacheImage(selectedOrgImg):CacheImage('${userOrg.getOrgImg}'),
               fit: BoxFit.cover,
             ),
             shape:BoxShape.circle,
