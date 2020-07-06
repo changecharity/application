@@ -14,7 +14,7 @@ class Search extends StatefulWidget{
 class _SearchState extends State<Search>{
 
   var suggestions=[];
-  bool areSuggestions=true;
+  bool areSuggestions=false;
   bool extraDetails=false;
   var token;
   var orgs;
@@ -50,12 +50,6 @@ class _SearchState extends State<Search>{
         onChanged: (s){
           setState(() {
             _getSuggestions();
-            if(suggestions.length==0||suggestions==null){
-              areSuggestions=false;
-            }else{
-              areSuggestions=true;
-            }
-            print(areSuggestions);
           });
         },
         onSubmitted: (s){
@@ -196,6 +190,11 @@ class _SearchState extends State<Search>{
     var response = await http.post("https://api.changecharity.io/users/getnames", body:content);
     setState(() {
       suggestions=jsonDecode(response.body)["names"];
+      if(suggestions == null||suggestions.length==0){
+        areSuggestions=false;
+      }else{
+        areSuggestions=true;
+      }
     });
     print(suggestions);
  }
