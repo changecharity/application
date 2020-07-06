@@ -255,11 +255,11 @@ class _DetailState extends State<DetailScreen>{
   void _setOrg() async{
       SharedPreferences prefs=await SharedPreferences.getInstance();
       token=prefs.getString('token');
-      var content = '{"user_token":"$token", "org":${widget.id}';
+      var content = '{"user_token":"$token", "org":${widget.id}}';
       var response = await http.post("https://api.changecharity.io/users/setorg", body:content);
       print(response.body);
       context.read<UserOrgModel>().notify(name, logo);
   }
 
-  }
+}
 

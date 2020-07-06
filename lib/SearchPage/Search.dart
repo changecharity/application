@@ -50,8 +50,7 @@ class _SearchState extends State<Search>{
         onChanged: (s){
           setState(() {
             _getSuggestions();
-            print(suggestions.length);
-            if(suggestions.length==0||suggestions.length==null){
+            if(suggestions.length==0||suggestions==null){
               areSuggestions=false;
             }else{
               areSuggestions=true;
