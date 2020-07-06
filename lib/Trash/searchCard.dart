@@ -39,7 +39,7 @@ class SearchCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                     color: Colors.grey,
                     image: DecorationImage(
-                      image: image,
+                      image: NetworkImage("$image"),
                       fit: BoxFit.cover,
                     ),
                    ),

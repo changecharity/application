@@ -6,7 +6,7 @@ import 'catTitle.dart';
 import '../paintings.dart';
 import 'orgCard.dart';
 import 'searchCard.dart';
-import 'searchButton.dart';
+import 'searchOrg.dart';
 import 'searchedOrganizations.dart';
 import '../Pages/login.dart';
 import 'categoryCard.dart';
@@ -212,7 +212,7 @@ class _SearchState extends State<Search2> {
               Positioned(
                 bottom: MediaQuery.of(context).size.height * .02,
                 right: MediaQuery.of(context).size.width *.04 ,
-                child: SearchButton()
+                //child: SearchButton()
               ),
             ],
           )

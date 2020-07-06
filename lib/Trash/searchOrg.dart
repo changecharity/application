@@ -1,38 +1,37 @@
 import 'package:flutter/material.dart';
-import 'searchedOrganizations.dart';
 
-class SearchButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return _searchButton(context);
-  }
-
-
-  Widget _searchButton(BuildContext context){
-      return Material(
-          color: Colors.transparent,
-          child: Center(
-              child: Container(
-                  decoration: BoxDecoration(
-                    color: Color.fromRGBO(0, 174, 229,1),
-                    borderRadius: BorderRadius.circular(50),
-                    boxShadow: [BoxShadow(color:Colors.grey, offset:Offset(5.0,5.0), blurRadius:10.0)]
-                  ),
-                  child: IconButton(
-                    padding:EdgeInsets.all(18),
-                      color: Colors.white,
-                      icon: Icon(Icons.search),
-                      iconSize:25,
-                      tooltip: 'Search',
-                      onPressed: () {
-                        showSearch(context:context, delegate:DataSearch());
-                      }
-                    )
-              )
-          )
-      );
-  }
-}
+//class SearchButton extends StatelessWidget {
+//  @override
+//  Widget build(BuildContext context) {
+//    return _searchButton(context);
+//  }
+//
+//
+////  Widget _searchButton(BuildContext context){
+////      return Material(
+////          color: Colors.transparent,
+////          child: Center(
+////              child: Container(
+////                  decoration: BoxDecoration(
+////                    color: Color.fromRGBO(0, 174, 229,1),
+////                    borderRadius: BorderRadius.circular(50),
+////                    boxShadow: [BoxShadow(color:Colors.grey, offset:Offset(5.0,5.0), blurRadius:10.0)]
+////                  ),
+////                  child: IconButton(
+////                    padding:EdgeInsets.all(18),
+////                      color: Colors.white,
+////                      icon: Icon(Icons.search),
+////                      iconSize:25,
+////                      tooltip: 'Search',
+////                      onPressed: () {
+////                        showSearch(context:context, delegate:DataSearch());
+////                      }
+////                    )
+////              )
+////          )
+////      );
+////  }
+//}
 
 class DataSearch extends SearchDelegate<String> {
   final organizations = [
@@ -66,11 +65,7 @@ class DataSearch extends SearchDelegate<String> {
     "Being ready for whatever tomorrow brings"
   ];
 
-  final recentOrganizations = [
-    "Emek Beracha",
-    "Jewish Study Network",
-    "Meira Academy"
-  ];
+  final List<String> recentOrganizations = [];
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -86,10 +81,7 @@ class DataSearch extends SearchDelegate<String> {
   @override
   Widget buildLeading(BuildContext context) {
     return IconButton(
-        icon: AnimatedIcon(
-          icon: AnimatedIcons.menu_arrow,
-          progress: transitionAnimation,
-        ),
+        icon: Icon(Icons.arrow_back),
         onPressed: () {
           close(context, null);
         });
@@ -97,11 +89,16 @@ class DataSearch extends SearchDelegate<String> {
 
   @override
   Widget buildResults(BuildContext context) {
-    return SearchedOrganizations(organizations, organizationImages, organizationSlogans);
+    return Container(
+      height:MediaQuery.of(context).size.height,
+      //child:SearchedOrganizations(organizations, organizationImages, organizationSlogans)
+    );
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
+
+    recentOrganizations.add(this.query);
     final suggestionList = query.isEmpty
         ? recentOrganizations
         : organizations
@@ -129,4 +126,12 @@ class DataSearch extends SearchDelegate<String> {
       ),
     );
   }
+
+//  @override
+//  ThemeData appBarTheme(BuildContext context) {
+//    // TODO: implement appBarTheme
+//
+//  }
+
+
 }

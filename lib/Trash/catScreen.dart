@@ -21,7 +21,7 @@ class CategoryScreen extends StatelessWidget{
                   children: <Widget>[
                     _backButton(context),
                     Expanded(
-                        child:SearchedOrganizations(namesList, imageList, sloganList)
+                        //child:SearchedOrganizations(namesList, imageList, sloganList)
                     )
                   ],
                 )
