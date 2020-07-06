@@ -1,21 +1,44 @@
+import "dart:convert";
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../Pages/profile.dart';
+import '../Models/userOrgModel.dart';
 import '../Services/calls_and_messages_service.dart';
 import '../Services/service_locator.dart';
 
-class DetailScreen extends StatelessWidget {
-  final CallsAndMessagesService _service = locator<CallsAndMessagesService>();
-  final number = '4242280919';
-  final emailAddress = 'batyashaps1@gmail.com';
+class DetailScreen extends StatefulWidget {
+
+  @override
+  _DetailState createState() => _DetailState();
 
   final tag;
-  final image;
-  final description;
-  final slogan;
+  final id;
   final context;
 
-  DetailScreen(this.tag, this.image, this.description, this.slogan,
-      this.context);
+  DetailScreen(this.tag, this.id, this.context);
+}
+
+class _DetailState extends State<DetailScreen>{
+
+  //final CallsAndMessagesService _service = locator<CallsAndMessagesService>();
+  //final number = '4242280919';
+  //final emailAddress = 'batyashaps1@gmail.com';
+
+  var token;
+  var logo="https://wallpaperplay.com/walls/full/b/d/1/58065.jpg";
+  var name="";
+  var slogan="insert slogan here";
+
+  void initState(){
+    super.initState();
+
+    _getOrgInfo();
+
+  }
 
   Widget _backButton() {
     return Container(
@@ -33,22 +56,22 @@ class DetailScreen extends StatelessWidget {
 
   Widget _orgLogoHero(){
     return Container(
-      width:MediaQuery.of(context).size.width*.5,
+      width:MediaQuery.of(context).size.width*.3,
       child:AspectRatio(
         aspectRatio: 1/1,
         child:Hero(
-          tag: tag,
+          tag: widget.tag,
           child:Card(
             elevation:5,
             shape:RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(25)
+              borderRadius: BorderRadius.circular(100)
             ),
             child:ClipRRect(
-              borderRadius: BorderRadius.circular(25),
+              borderRadius: BorderRadius.circular(100),
               child:Container(
                 decoration:BoxDecoration(
                   image: DecorationImage(
-                    image:image,
+                    image:NetworkImage("$logo"),
                     fit:BoxFit.cover
                   ),
                 )
@@ -65,12 +88,12 @@ class DetailScreen extends StatelessWidget {
       margin:EdgeInsets.only(top:10),
       //color:Colors.grey,
       child:Text(
-        '$description',
+        '$name',
         style:TextStyle(
           fontFamily:'Montserrat',
           fontSize:24,
           fontWeight:FontWeight.bold,
-          color:Colors.grey[700],
+          color:Colors.black,
 
         )
       )
@@ -92,7 +115,10 @@ class DetailScreen extends StatelessWidget {
           icon: Icon(Icons.attach_money),
           iconSize:25,
           tooltip: 'Donate',
-          onPressed: () {}
+          onPressed: () {
+            _setOrg();
+            Navigator.push(context, MaterialPageRoute(builder:(context)=>Profile()));
+          }
         )
       )
     );
@@ -101,7 +127,7 @@ class DetailScreen extends StatelessWidget {
   Widget _detailsContainer(){
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height *.45,
+      height: MediaQuery.of(context).size.height *.5,
       margin:EdgeInsets.only(top:60),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.only(topLeft: Radius.circular(25), topRight: Radius.circular(25),),
@@ -210,322 +236,30 @@ class DetailScreen extends StatelessWidget {
     );
   }
 
+  //get the org info
+  void _getOrgInfo() async{
+    SharedPreferences prefs=await SharedPreferences.getInstance();
+    token=prefs.getString('token');
+    var content='{"user_token":"$token", "org":${widget.id}}';
+    var response=await http.post("https://api.changecharity.io/users/getorginfo", body:content);
+    print(response.body);
+    setState(() {
+      logo=jsonDecode(response.body)["logo"];
+      name=jsonDecode(response.body)["name"];
+    });
 
-//  Widget _header() {
-//    return Row(
-//      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//      children: <Widget>[
-//        IconButton(
-//          icon: Icon(Icons.arrow_back, size: 24, color: Colors.black),
-//        ),
-//      ],
-//    );
-//  }
-//
-//  Widget _logoAndName(BuildContext context) {
-//    return Container(
-//      margin: EdgeInsets.only(bottom: MediaQuery
-//          .of(context)
-//          .size
-//          .height * 0.05),
-//      //color: Colors.blue[200],
-//      child: Row(
-//        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//        children: <Widget>[
-//          Flexible(
-//            flex: 1,
-//            child: Hero(
-//              tag: tag,
-//              child: SizedBox(
-//                height: MediaQuery
-//                    .of(context)
-//                    .size
-//                    .width * .3,
-//                width: MediaQuery
-//                    .of(context)
-//                    .size
-//                    .width * .3,
-//                child: Container(
-//                  decoration: BoxDecoration(
-//                    borderRadius: BorderRadius.circular(15),
-//                    color: Colors.grey,
-//                    image: DecorationImage(
-//                      image: image,
-//                      fit: BoxFit.cover,
-//                    ),
-//                  ),
-//                ),
-//              ),
-//            ),
-//          ),
-//          Flexible(
-//            flex: 2,
-//            child: Align(
-//              alignment: Alignment.centerLeft,
-//              child: Container(
-//                padding: EdgeInsets.only(left: 20, top: 5, bottom: 5),
-//                height: MediaQuery
-//                    .of(context)
-//                    .size
-//                    .width * .3,
-//                child: Column(
-//                  crossAxisAlignment: CrossAxisAlignment.start,
-//                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                  children: <Widget>[
-//                    Text(
-//                      '$description',
-//                      style: TextStyle(
-//                        color: Colors.black,
-//                        fontSize: 20,
-//                        fontWeight: FontWeight.bold,
-//                      ),
-//                    ),
-//                    Container(
-//                      child: Text(
-//                        '"$slogan"',
-//                        style: TextStyle(
-//                            color: Colors.black, fontStyle: FontStyle.italic),
-//                      ),
-//                    ),
-////                    Container(
-////                        child: Row(
-////                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-////                          children: <Widget>[
-////                            IconButton(
-////                                icon: _callIcon(),
-////                                onPressed: () {
-////                                  _service.call(number);
-////                                }),
-////                            IconButton(
-////                                icon: _textIcon(),
-////                                onPressed: () {
-////                                  _service.sendSms(number);
-////                                }),
-////                            IconButton(
-////                                icon: _emailIcon(),
-////                                onPressed: () {
-////                                  _service.sendEmail(emailAddress);
-////                                }
-////                            ),
-////                          ],
-////                        )),
-//                  ],
-//                ),
-//              ),
-//            ),
-//          ),
-//        ],
-//      ),
-//    );
-//  }
-//
-//  Widget _callIcon() {
-//    return Icon(
-//      Icons.call,
-//      size: 20,
-//      color: Colors.grey,
-//    );
-//  }
-//
-//  Widget _textIcon() {
-//    return Icon(
-//      Icons.sms,
-//      size: 20,
-//      color: Colors.grey,
-//    );
-//  }
-//
-//  Widget _emailIcon() {
-//    return Icon(
-//      Icons.email,
-//      size: 20,
-//      color: Colors.grey,
-//    );
-//  }
-//
-//  Widget _categoryAndDonors() {
-//    return Container(
-//      child: Row(
-//        children: <Widget>[
-//          Flexible(
-//            fit: FlexFit.tight,
-//            flex: 1,
-//            child: Container(
-//              decoration: BoxDecoration(
-//                border: Border(
-//                  right: BorderSide(width: 1.0, color: Colors.grey),
-//                ),
-//              ),
-//              child: Column(
-//                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                children: <Widget>[
-//                  Icon(Icons.monetization_on, size: 24, color: Colors.grey),
-//                  Text('50k Donors',
-//                    style: TextStyle(
-//                      color: Colors.black,
-//                      fontSize: 12,
-//                    ),
-//                  ),
-//                ],
-//              ),
-//            ),
-//          ),
-//          Flexible(
-//            flex: 1,
-//            fit: FlexFit.tight,
-//            child: Container(
-//                child: Column(
-//                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                  children: <Widget>[
-//                    Icon(Icons.local_florist, size: 24, color: Colors.grey),
-//                    Text('Jewish',
-//                      style: TextStyle(
-//                        color: Colors.black,
-//                        fontSize: 12,
-//                      ),
-//                    ),
-//                  ],
-//                )),
-//          ),
-//        ],
-//      ),
-//      //color: Colors.blue[300],
-//    );
-//  }
-//
-//  Widget _donateButton(context) {
-//    return Container(
-//      padding: EdgeInsets.symmetric(vertical: 20),
-//      width: MediaQuery
-//          .of(context)
-//          .size
-//          .width * 1,
-//      child: RaisedButton(
-//        onPressed: () {},
-//        color: Colors.blueAccent,
-//        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-//        child: Text(
-//          'Donate',
-//          style: TextStyle(
-//            fontSize: 16,
-//            fontWeight: FontWeight.bold,
-//            color: Colors.white,
-//          ),
-//        ),
-//      ),
-//    );
-//  }
-//
-//  Widget _media(BuildContext context) {
-//    return ListView.builder(
-//      scrollDirection: Axis.horizontal,
-//      itemCount: 5,
-//      itemBuilder: (BuildContext context, int index) {
-//        return Container(
-//          width: MediaQuery
-//              .of(context)
-//              .size
-//              .width * .4,
-//          child: Card(
-//            color: Colors.blue[int.parse('${index + 1}00')],
-//            margin: EdgeInsets.only(right: 20),
-//            shape:
-//            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-//          ),
-//        );
-//      },
-//    );
-//  }
-//
-//  Widget _about() {
-//    return Container(
-//      //color: Colors.blue[600],
-//      padding: EdgeInsets.only(top: 40),
-//      child: Column(
-//        crossAxisAlignment: CrossAxisAlignment.start,
-//        children: <Widget>[
-//          Row(
-//            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//            crossAxisAlignment: CrossAxisAlignment.center,
-//            children: <Widget>[
-//              Text(
-//                'About $description:',
-//                style: TextStyle(
-//                  fontSize: 16,
-//                  color: Colors.black,
-//                  fontWeight: FontWeight.bold,
-//                ),
-//              ),
-//            ],
-//          ),
-//          Text(
-//            'The Jewish study network inspires people all across the bay area and is a fun place to visit...etc etc',
-//            style: TextStyle(
-//              fontSize: 14,
-//              color: Colors.black54,
-//            ),
-//          ),
-//        ],
-//      ),
-//    );
-//  }
-//
-//  Widget _detailsPage() {
-//    return Scaffold(
-//      body: SafeArea(
-//        child: Container(
-//          width: MediaQuery
-//              .of(context)
-//              .size
-//              .width,
-//          height: MediaQuery
-//              .of(context)
-//              .size
-//              .height,
-//          margin: EdgeInsets.symmetric(horizontal: 20),
-//          child: GestureDetector(
-//            onVerticalDragDown: (s) {
-//              print(s.localPosition.distance);
-//              if (s.localPosition.distance < 300) {
-//                Navigator.pop(context);
-//              }
-//            },
-//            child: Column(
-//              children: <Widget>[
-//                Flexible(
-//                  flex: 1,
-//                  fit: FlexFit.tight,
-//                  child: _header(),
-//                ),
-//                Flexible(
-//                  flex: 2,
-//                  fit: FlexFit.loose,
-//                  child: _logoAndName(context),
-//                ),
-//                Flexible(
-//                  flex: 1,
-//                  child: _categoryAndDonors(),
-//                ),
-////                Flexible(
-////                  flex: 3,
-////                  fit: FlexFit.tight,
-////                  child: _media(context),
-////                ),
-//                Flexible(
-//                  flex: 2,
-//                  fit: FlexFit.tight,
-//                  child: _about(),
-//                ),
-//                Flexible(
-//                  flex: 1,
-//                  fit: FlexFit.loose,
-//                  child: _donateButton(context),
-//                )
-//              ],
-//            ),
-//          ),
-//        ),
-//      ),
-//    );
+
+  }
+
+  //set the org and notify provider of the new org to show in profile
+  void _setOrg() async{
+      SharedPreferences prefs=await SharedPreferences.getInstance();
+      token=prefs.getString('token');
+      var content = '{"user_token":"$token", "org":${widget.id}';
+      var response = await http.post("https://api.changecharity.io/users/setorg", body:content);
+      print(response.body);
+      context.read<UserOrgModel>().notify(name, logo);
+  }
+
   }
 

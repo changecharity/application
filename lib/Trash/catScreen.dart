@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'searchedOrganizations.dart';
 
 class CategoryScreen extends StatelessWidget{
   final namesList;

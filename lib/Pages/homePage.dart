@@ -397,6 +397,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   //get all initial user info
+
   //get token and make sure it's not null
   _confirmLogin() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -416,7 +417,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     var transContent='{"user_token":"$token", "offset":$offset}';
     var transactionResponse = await http.post("https://api.changecharity.io/users/gettransactions", body:transContent);
     setState(() {
-      transactions=jsonDecode(transactionResponse.body)["transactions"];
+      transactions = jsonDecode(transactionResponse.body)["transactions"];
     });
     print(transactions);
     print(transactions.length);

@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-import '../SearchPage/search2.dart';
+import '../SearchPage/Search.dart';
 import '../paintings.dart';
 import '../Models/userOrgModel.dart';
 import 'homePage.dart';
@@ -15,6 +15,7 @@ import 'login.dart';
 import '../Components/passwordDialog.dart';
 //import 'package:provider/provider.dart';
 import '../Models/userBankModel.dart';
+
 import 'package:cache_image/cache_image.dart';
 
 class Profile extends StatefulWidget{
@@ -380,7 +381,8 @@ void initState(){
                         text:"Change Organization",
                         recognizer: TapGestureRecognizer()
                           ..onTap=(){
-                            Navigator.push(context, MaterialPageRoute(builder:(context)=>Search2()));
+                            //showSearch(context:context, delegate:DataSearch());
+                            Navigator.push(context, MaterialPageRoute(builder:(context)=>Search()));
                           }
                     )
                 )

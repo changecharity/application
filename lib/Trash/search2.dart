@@ -1,13 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'details.dart';
+import '../SearchPage/details.dart';
 import 'orgCard.dart';
 import 'catTitle.dart';
 import '../paintings.dart';
 import 'orgCard.dart';
 import 'searchCard.dart';
 import 'searchOrg.dart';
-import 'searchedOrganizations.dart';
 import '../Pages/login.dart';
 import 'categoryCard.dart';
 import 'catScreen.dart';
@@ -109,9 +108,7 @@ class _SearchState extends State<Search2> {
                     Navigator.push(context, MaterialPageRoute(
                       builder: (context) => DetailScreen(
                         '${index}tag',
-                        _orgImages[index],
-                        _orgNames[index],
-                        _orgSlogans[index],
+                        13,
                         context,
                       ),
                     )

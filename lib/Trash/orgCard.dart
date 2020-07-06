@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io';
 import 'dart:convert';
-import 'details.dart';
+import '../SearchPage/details.dart';
 import 'organization.dart';
 
 class OrgCard extends StatelessWidget {

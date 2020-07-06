@@ -516,6 +516,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
 
     setState(() {
       loading=!loading;
+      print("loading");
     });
 
     var content = '{"email": "${_emailController.text}", "password":"${_passController.text}"}';
@@ -535,7 +536,6 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
         setState((){
           _passErr="Wrong Password";
           loading=!loading;
-
         });
         return;
       }
