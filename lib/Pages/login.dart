@@ -85,7 +85,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
     if (MediaQuery.of(context).viewInsets.bottom == 0){
       return Container(
         margin: EdgeInsets.only(
-            top: 120, bottom: 10),
+            top: MediaQuery.of(context).size.height * 0.16, bottom: 10),
         alignment: Alignment.center,
         child: Image.asset(
           "images/logo-circle.png",
@@ -120,7 +120,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
 
   Widget _emailInput() {
     return Container(
-      margin: EdgeInsets.only(right: 10, left: 20, top: 50),
+      margin: EdgeInsets.only(right: 10, left: 20, top: MediaQuery.of(context).size.height > 700 ? 50 : 20),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.all(Radius.circular(30)),
@@ -290,7 +290,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
       alignment: Alignment.centerRight,
       child: Container(
         alignment: Alignment.centerRight,
-        margin: EdgeInsets.only(right: 20, top: 40),
+        margin: EdgeInsets.only(right: 20, top: 10, bottom: 20),
         width: 250,
         height: 50,
         child: Row(

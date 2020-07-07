@@ -94,7 +94,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
   Widget _signUpText() {
     return Container(
       margin: EdgeInsets.only(top: MediaQuery.of(context).viewInsets.bottom == 0
-          ? 60
+          ? MediaQuery.of(context).size.height *0.05
           : 0),
       alignment: Alignment.center,
       child: Text(
@@ -109,7 +109,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
   Widget _nameInput() {
     return Container(
       margin: EdgeInsets.only(right: 20, left: 20, top: MediaQuery.of(context).viewInsets.bottom == 0
-          ? 60
+          ? MediaQuery.of(context).size.height *0.06
           : 20),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -367,7 +367,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
   //Sign up button. Switches to loading on load
   Widget _signUpCont() {
     return Container(
-      margin: EdgeInsets.only(right: 20, top: 50),
+      margin: EdgeInsets.only(right: 20, top: MediaQuery.of(context).size.height *0.05, bottom: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[

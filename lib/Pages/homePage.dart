@@ -218,7 +218,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   Widget _transactionHistory() {
     return Container(
-        height: MediaQuery.of(context).size.height * .45,
+        height: MediaQuery.of(context).size.height * .40,
         padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
         decoration: BoxDecoration(
           color: Colors.grey[100],
@@ -233,7 +233,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     if(transactions==''|| transactions==null){
      return Container(
        width: MediaQuery.of(context).size.width,
-       height: MediaQuery.of(context).size.height * .45,
+       height: MediaQuery.of(context).size.height * .42,
        alignment: Alignment.center,
        child:Text(
            'You have no transactions at this time.'

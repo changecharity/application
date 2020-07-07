@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'splash.dart';
+import 'Pages/signup.dart';
 
 class Change extends StatefulWidget{
   @override
@@ -12,7 +13,7 @@ class _ChangeState extends State<Change>{
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Change',
-      home: Splash(),
+      home: SignUp(),
       theme: lightTheme,
       debugShowCheckedModeBanner: false,
     );

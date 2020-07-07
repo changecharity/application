@@ -547,7 +547,7 @@ void initState(){
               painter: ProfilePaint(),
               child:Container(
                 height:MediaQuery.of(context).size.height,
-                padding:EdgeInsets.only(bottom:MediaQuery.of(context).size.height*.15),
+                padding:EdgeInsets.only(bottom:MediaQuery.of(context).size.height*.10),
                   child:Column(
                   mainAxisAlignment:MainAxisAlignment.spaceBetween,
                     children: <Widget>[
