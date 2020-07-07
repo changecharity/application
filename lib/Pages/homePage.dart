@@ -46,6 +46,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
     //handle getting info
     _confirmLogin();
+    _checkSelOrg();
     _getAllInfo();
 
 
@@ -412,6 +413,20 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     print(token);
     if(token == null || token ==''){
       Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>Login()));
+    }
+  }
+
+  _checkSelOrg() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int org = prefs.getInt("selOrg");
+    token = prefs.getString('token');
+    if (org != null) {
+      print("org selected is ${org.toString()}");
+      var content = '{"user_token":"$token", "org":$org}';
+      var response = await http.post("https://api.changecharity.io/users/setorg", body:content);
+      print(response.body);
+      _getOrgInfo();
+      prefs.setInt('selOrg', null);
     }
   }
 

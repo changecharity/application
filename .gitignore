@@ -41,4 +41,5 @@ google-services.json
 key.properties
 upload_certificate.pem
 GoogleService-Info.plist
+google-services.json
 *.lock
