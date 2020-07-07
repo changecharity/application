@@ -109,7 +109,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
   Widget _nameInput() {
     return Container(
       margin: EdgeInsets.only(right: 20, left: 20, top: MediaQuery.of(context).viewInsets.bottom == 0
-          ? MediaQuery.of(context).size.height *0.06
+          ? MediaQuery.of(context).size.height>700 ? 80 :MediaQuery.of(context).size.height *0.06
           : 20),
       decoration: BoxDecoration(
         color: Colors.white,
