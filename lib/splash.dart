@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'Pages/login.dart';
 import 'Pages/homePage.dart';
 import 'package:flutter/services.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 
 class Splash extends StatefulWidget {
   @override
@@ -17,6 +18,7 @@ class _SplashState extends State<Splash> {
   @override
   void initState() {
     super.initState();
+    this.initDynamicLinks();
     _getRoute();
   }
 
@@ -51,10 +53,43 @@ class _SplashState extends State<Splash> {
       setState(() {
         _width = 260;
       });
-      Future<void>.delayed(Duration(milliseconds: 600), () {
+      Future<void>.delayed(Duration(milliseconds: 650), () {
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => _initScreen ? HomePage() : Login()));
       });
     });
+  }
 
+//  responsible for checking dynamic link. Sets the shared prefs "selOrg" to the id of the chosen org, which is later consumed
+//  by the homepage.
+  void initDynamicLinks() async {
+    final PendingDynamicLinkData data = await FirebaseDynamicLinks.instance.getInitialLink();
+    final Uri deepLink = data?.link;
+    int selOrg;
+    if (deepLink != null) {
+      print("first");
+      selOrg = int.parse(deepLink.queryParameters["org"]);
+      _saveSelectedOrg(selOrg);
+    }
+
+    FirebaseDynamicLinks.instance.onLink(
+        onSuccess: (PendingDynamicLinkData dynamicLink) async {
+          final Uri deepLink = dynamicLink?.link;
+
+          if (deepLink != null) {
+            print("second");
+            selOrg = int.parse(deepLink.queryParameters["org"]);
+            _saveSelectedOrg(selOrg);
+          }
+        },
+        onError: (OnLinkErrorException e) async {
+          print('onLinkError');
+          print(e.message);
+        }
+    );
+
+  }
+  void _saveSelectedOrg(int org) async{
+    SharedPreferences prefs=await SharedPreferences.getInstance();
+    prefs.setInt('selOrg', org);
   }
 }
