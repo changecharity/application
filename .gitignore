@@ -43,3 +43,4 @@ upload_certificate.pem
 GoogleService-Info.plist
 google-services.json
 *.lock
+pubspec.lock

@@ -427,6 +427,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       print(response.body);
       _getOrgInfo();
       prefs.setInt('selOrg', null);
+      _showDialog();
     }
   }
 
@@ -495,6 +496,66 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     _getTransactions();
     _getTotals();
     _getOrgInfo();
+  }
+  void _showDialog() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(15)),
+          ),
+          title: Align(
+            alignment: Alignment.center,
+            child: Text(
+              "Organization Selected",
+              style: TextStyle(
+                fontSize: 20,
+              ),
+            ),
+          ),
+          content: Container(
+            height: 50,
+            child: Align(
+              alignment: Alignment.center,
+              child: Column(
+                children: <Widget>[
+                  Text(
+                    "You have selected:",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 15,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 10),
+                  ),
+                  Text(
+                    "${context.watch<UserOrgModel>().getUserOrg}",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }
 
