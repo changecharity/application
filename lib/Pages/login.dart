@@ -520,7 +520,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
     });
 
     var content = '{"email": "${_emailController.text}", "password":"${_passController.text}"}';
-    var response = await http.post("https://api.changecharity.io/users/login", body:content);
+    var response = await http.post("https://api.changecharity.io/users/login", body:content).timeout(Duration(seconds: 3));
     print(response.body);
 
     switch(response.body){

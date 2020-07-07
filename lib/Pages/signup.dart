@@ -489,9 +489,9 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
             'https://sandbox.plaid.com/processor/stripe/bank_account_token/create',
         plaidClientId: '',
         secret: plaidSandbox ? '' : '',
-        clientName: 'ClientName',
+        clientName: 'Change',
         webhook: 'https://api.changecharity.io/plaidwebhook',
-        products: 'auth,income',
+        products: 'transactions',
         selectAccount: 'false');
 
     FlutterPlaidApi flutterPlaidApi = FlutterPlaidApi(configuration);
@@ -516,9 +516,8 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
   void _saveSignUp(val) async{
     SharedPreferences prefs=await SharedPreferences.getInstance();
     prefs.setString('token', val);
-    prefs.setString('NameInitial', _nameController.text[0]);
    if(prefs.getString('token')!=null&&prefs.getString('token')!=''){
-      Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>EmailAuth(_emailController.text)));
+      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder:(context)=>EmailAuth(_emailController.text)), (route) => false);
     }
   }
 
@@ -615,7 +614,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
         loading=!loading;
       });
       var content='{"legal_name":"${_nameController.text}","email":"${_emailController.text}","password":"${_passController.text}", "plaid_public_token":"$plaidToken", "plaid_account_id":"$accountId", "mask":$mask, "bank_name":"$bankName"}';
-      var response= await http.post("https://api.changecharity.io/users/signup", body:content);
+      var response= await http.post("https://api.changecharity.io/users/signup", body:content).timeout(Duration(seconds: 7));
 
       print(response.body);
 

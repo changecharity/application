@@ -15,8 +15,8 @@ import 'login.dart';
 import '../Components/passwordDialog.dart';
 //import 'package:provider/provider.dart';
 import '../Models/userBankModel.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
-import 'package:cache_image/cache_image.dart';
 
 class Profile extends StatefulWidget{
 
@@ -381,7 +381,6 @@ void initState(){
                         text:"Change Organization",
                         recognizer: TapGestureRecognizer()
                           ..onTap=(){
-                            //showSearch(context:context, delegate:DataSearch());
                             Navigator.push(context, MaterialPageRoute(builder:(context)=>Search()));
                           }
                     )
@@ -415,19 +414,22 @@ void initState(){
           margin:EdgeInsets.only(top:10),
           height:100,
           width:100,
-          decoration: BoxDecoration(
-            image:DecorationImage(
-              image: selectedOrg!=null?CacheImage(selectedOrgImg):CacheImage('${userOrg.getOrgImg}'),
+          child: ClipOval(
+            child: CachedNetworkImage(
               fit: BoxFit.cover,
+              imageUrl: userOrg.getOrgImg,
+              placeholder: (context, url) => CircularProgressIndicator(),
+              errorWidget: (context, url, error) => IconButton(
+                icon: Icon(Icons.search),
+                iconSize: 45,
+                onPressed: () => Navigator.push(context, MaterialPageRoute(builder:(context)=>Search())),
+              ),
             ),
-            shape:BoxShape.circle,
           ),
         );
       }
     );
   }
-
-
 
   Widget _sliderContent(){
     return Container(
@@ -574,24 +576,20 @@ void initState(){
     }
   }
 
-  //call at initstate. gets the first letter of legal name stored in shared preferences
-  _getProfileLetter() async{
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      profileLetter = (prefs.getString('NameInitial')?? "A").toUpperCase();
-    });
-  }
-
   //call at initState to get user's max threshold, last 4 digits, and bank name
   _getProfDetails() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token');
     var content='{"user_token":"$token"}';
     var profileResponse = await http.post("https://api.changecharity.io/users/getprofile", body:content);
+    var decodedMask = jsonDecode(profileResponse.body)["mask"].toString();
+    var decodedPL = jsonDecode(profileResponse.body)["legalName"];
+    print(profileResponse.body);
     setState(() {
       threshold=jsonDecode(profileResponse.body)["threshold"];
-      mask=jsonDecode(profileResponse.body)["mask"].toString();
+      mask = decodedMask != null ? "0000" : decodedMask;
       bankName=jsonDecode(profileResponse.body)["bankName"];
+      profileLetter = decodedPL != null ? decodedPL[0] : "";
     });
 
     print(threshold);
@@ -622,7 +620,6 @@ void initState(){
   }
 
   _getInitInfo() async{
-    _getProfileLetter();
     _getProfDetails();
     _getOrgInfo();
   }
@@ -643,13 +640,14 @@ void initState(){
   void _logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('token', null);
-    Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>Login()));
+    Navigator.pushAndRemoveUntil(context, PageRouteBuilder(pageBuilder: (_, __, ___) => Login()), (route) => false);
+
   }
 
   void _returnHome() {
     _controller.animateBack(0, duration:Duration(milliseconds:500), curve:Curves.linear);
     Future<void>.delayed(Duration(milliseconds:500),(){
-      Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>HomePage()));
+      Navigator.pushAndRemoveUntil(context, PageRouteBuilder(pageBuilder: (_, __, ___) => HomePage()), (route) => false);
     });
   }
 }

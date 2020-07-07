@@ -100,7 +100,7 @@ class SignUpPaint extends CustomPainter {
       ..style = PaintingStyle.fill;
 
     var pathA = Path();
-    pathA.moveTo(-100, size.height * 0.35);
+    pathA.moveTo(0, size.height * 0.35);
     pathA.quadraticBezierTo(
         size.width*0.5, size.height * 0.32,
         size.width*0.38, size.height* 0.42);
@@ -109,11 +109,11 @@ class SignUpPaint extends CustomPainter {
         size.width*0.35, size.height* 0.7);
     pathA.quadraticBezierTo(
         size.width * 0.6, size.height * 0.78,
-        -100, size.height*0.85);
+        0, size.height*0.85);
     canvas.drawPath(pathA, paintA);
 
     var pathB = Path();
-    pathB.moveTo(-100, size.height * 0.3);
+    pathB.moveTo(0, size.height * 0.3);
     pathB.quadraticBezierTo(
         size.width*0.39, size.height * 0.25,
         size.width*0.25, size.height* 0.42);
@@ -122,7 +122,7 @@ class SignUpPaint extends CustomPainter {
         size.width*0.3, size.height* 0.62);
     pathB.quadraticBezierTo(
         size.width*0.52, size.height * 0.65,
-        -100, size.height* 0.75);
+        0, size.height* 0.75);
     canvas.drawPath(pathB, paintB);
   }
 
@@ -226,8 +226,8 @@ class ProfilePaint extends CustomPainter {
       ..style = PaintingStyle.fill;
 
     var pathA = Path();
-    pathA.moveTo(size.width*1, size.height*1);
-    pathA.lineTo(size.width*1, size.height *.85);
+    pathA.moveTo(size.width, size.height+50);
+    pathA.lineTo(size.width, size.height *.85);
     pathA.quadraticBezierTo(
         size.width*.8, size.height*.6,
         size.width*.65, size.height*.85
@@ -238,13 +238,13 @@ class ProfilePaint extends CustomPainter {
     );
     pathA.quadraticBezierTo(
         size.width*.1, size.height*.88,
-        size.width*.2, size.height
+        size.width*.2, size.height+50
     );
     canvas.drawPath(pathA, paintA);
 
     var pathB = Path();
-    pathB.moveTo(size.width*1, size.height*1);
-    pathB.lineTo(size.width*1, size.height*.95);
+    pathB.moveTo(size.width, size.height+50);
+    pathB.lineTo(size.width, size.height*.95);
     pathB.quadraticBezierTo(
         size.width*.7, size.height*.55,
         size.width*.5, size.height*.9
@@ -255,7 +255,7 @@ class ProfilePaint extends CustomPainter {
     );
     pathB.quadraticBezierTo(
         size.width*.05, size.height*.85,
-        size.width*.1, size.height
+        size.width*.1, size.height+50
     );
     canvas.drawPath(pathB, paintB);
 
