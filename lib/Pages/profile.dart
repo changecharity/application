@@ -158,7 +158,7 @@ void initState(){
             ],
           ),
           Container(
-            margin:EdgeInsets.only(bottom:10, top:40),
+            margin:EdgeInsets.only(bottom:10, top: MediaQuery.of(context).size.height < 650 ? 0 : MediaQuery.of(context).size.height*0.1),
             height:80,
             width:80,
             decoration: BoxDecoration(
@@ -187,78 +187,81 @@ void initState(){
   }
 
   Widget _accountPrefs(){
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Container(
-            margin:EdgeInsets.only(bottom:10, left:10, top:15),
-            child:Text(
-                'Preferences',
-                style: TextStyle(fontSize:16, color:Colors.grey)
+    return Container(
+      margin: EdgeInsets.only(bottom:  MediaQuery.of(context).size.height < 650 ? MediaQuery.of(context).size.height * 0.07 : MediaQuery.of(context).size.height * 0.09),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Container(
+              margin:EdgeInsets.only(bottom:10, left:10, top:15),
+              child:Text(
+                  'Preferences',
+                  style: TextStyle(fontSize:16, color:Colors.grey)
+              )
+          ),
+          Container(
+              padding:EdgeInsets.fromLTRB(0, 15, 0, 15),
+              width: MediaQuery.of(context).size.width * .75,
+              //height:MediaQuery.of(context).size.height*.4,
+              decoration:BoxDecoration(
+                  color:Colors.grey[100],
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [BoxShadow(color:Colors.grey[300], offset:Offset.fromDirection(1), blurRadius:15)]
+              ),
+              child:Column(
+                //mainAxisAlignment: MainAxisAlignment,
+                children:[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      _widgetIndex!=0?IconButton(
+                          icon: Icon(Icons.arrow_back_ios, color:Colors.black, size:16),
+                          highlightColor: Colors.transparent,
+                          splashColor: Colors.grey[100],
+                          onPressed:(){
+                            setState(() {
+                              _widgetIndex--;
+                            });
+                          }
+                      ):IconButton(icon:Icon(Icons.arrow_back_ios, size:16, color:Colors.transparent)),
+                      Expanded(
+                        child:IndexedStack(
+                          index:_widgetIndex,
+                          children:<Widget>[
+                            Center(child:Text('Current Organization', style:TextStyle(fontSize:16, fontWeight: FontWeight.bold))),
+                            Center(child:Text('Your Bank Account', style:TextStyle(fontSize:16, fontWeight: FontWeight.bold))),
+                            Center(child:Text('Set Your Max', style:TextStyle(fontSize:16, fontWeight: FontWeight.bold))),
+                          ]
+                        )
+                      ),
+                      _widgetIndex!=2?IconButton(
+                          icon: Icon(Icons.arrow_forward_ios),
+                          color:Colors.black,
+                          iconSize: 16,
+                          splashColor: Colors.grey[100],
+                          highlightColor: Colors.grey[100],
+                          onPressed:(){
+                            setState(() {
+                              _widgetIndex++;
+                            });
+                          }
+                      ):IconButton(icon:Icon(Icons.arrow_forward_ios, size:16, color:Colors.transparent)),
+                    ],
+                  ),
+                  IndexedStack(
+                    index:_widgetIndex,
+                    children: <Widget>[
+                      _currentOrgContent(),
+                      _bankContent(),
+                      _sliderContent()
+                    ],
+                  ),
+                ]
             )
-        ),
-        Container(
-            padding:EdgeInsets.fromLTRB(0, 15, 0, 15),
-            width: MediaQuery.of(context).size.width * .75,
-            //height:MediaQuery.of(context).size.height*.4,
-            decoration:BoxDecoration(
-                color:Colors.grey[100],
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [BoxShadow(color:Colors.grey[300], offset:Offset.fromDirection(1), blurRadius:15)]
-            ),
-            child:Column(
-              //mainAxisAlignment: MainAxisAlignment,
-              children:[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    _widgetIndex!=0?IconButton(
-                        icon: Icon(Icons.arrow_back_ios, color:Colors.black, size:16),
-                        highlightColor: Colors.transparent,
-                        splashColor: Colors.grey[100],
-                        onPressed:(){
-                          setState(() {
-                            _widgetIndex--;
-                          });
-                        }
-                    ):IconButton(icon:Icon(Icons.arrow_back_ios, size:16, color:Colors.transparent)),
-                    Expanded(
-                      child:IndexedStack(
-                        index:_widgetIndex,
-                        children:<Widget>[
-                          Center(child:Text('Current Organization', style:TextStyle(fontSize:16, fontWeight: FontWeight.bold))),
-                          Center(child:Text('Your Bank Account', style:TextStyle(fontSize:16, fontWeight: FontWeight.bold))),
-                          Center(child:Text('Set Your Max', style:TextStyle(fontSize:16, fontWeight: FontWeight.bold))),
-                        ]
-                      )
-                    ),
-                    _widgetIndex!=2?IconButton(
-                        icon: Icon(Icons.arrow_forward_ios),
-                        color:Colors.black,
-                        iconSize: 16,
-                        splashColor: Colors.grey[100],
-                        highlightColor: Colors.grey[100],
-                        onPressed:(){
-                          setState(() {
-                            _widgetIndex++;
-                          });
-                        }
-                    ):IconButton(icon:Icon(Icons.arrow_forward_ios, size:16, color:Colors.transparent)),
-                  ],
-                ),
-                IndexedStack(
-                  index:_widgetIndex,
-                  children: <Widget>[
-                    _currentOrgContent(),
-                    _bankContent(),
-                    _sliderContent()
-                  ],
-                ),
-              ]
           )
-        )
-      ],
+        ],
+      ),
     );
   }
 
@@ -547,7 +550,7 @@ void initState(){
               painter: ProfilePaint(),
               child:Container(
                 height:MediaQuery.of(context).size.height,
-                padding:EdgeInsets.only(bottom:MediaQuery.of(context).size.height*.10),
+//                margin:EdgeInsets.only(bottom:MediaQuery.of(context).size.height*.10),
                   child:Column(
                   mainAxisAlignment:MainAxisAlignment.spaceBetween,
                     children: <Widget>[

@@ -85,7 +85,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
     if (MediaQuery.of(context).viewInsets.bottom == 0){
       return Container(
         margin: EdgeInsets.only(
-            top: MediaQuery.of(context).size.height * 0.16, bottom: 10),
+            top: MediaQuery.of(context).size.height < 650 ? 70 : MediaQuery.of(context).size.height * 0.16, bottom: 10),
         alignment: Alignment.center,
         child: Image.asset(
           "images/logo-circle.png",
@@ -355,7 +355,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
 
   Widget _createText() {
     return Container(
-      margin: EdgeInsets.only(top: 0, bottom: 30),
+      margin: EdgeInsets.only(top: 0, bottom: MediaQuery.of(context).size.height < 650 ? 3: 30),
       alignment: Alignment.bottomCenter,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,

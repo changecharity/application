@@ -218,7 +218,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   Widget _transactionHistory() {
     return Container(
-        height: MediaQuery.of(context).size.height * .40,
+        height: MediaQuery.of(context).size.height > 700 ? MediaQuery.of(context).size.height * .45 : MediaQuery.of(context).size.height < 650 ? 210 : MediaQuery.of(context).size.height * .40,
         padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
         decoration: BoxDecoration(
           color: Colors.grey[100],
