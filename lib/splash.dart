@@ -52,7 +52,7 @@ class _SplashState extends State<Splash> {
         _width = 260;
       });
       Future<void>.delayed(Duration(milliseconds: 600), () {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => _initScreen ? HomePage() : Login()));
+          Navigator.pushReplacement(context, PageRouteBuilder(pageBuilder: (_, __, ___) => _initScreen ? HomePage() : Login()));
       });
     });
 

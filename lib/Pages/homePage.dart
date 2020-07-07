@@ -4,15 +4,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-//import 'package:intl/intl.dart';  //for date format
-//import 'package:intl/date_symbol_data_local.dart';  //for date locale
-import 'package:cache_image/cache_image.dart';
 import 'package:money2/money2.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:change/Models/userOrgModel.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
+import '../SearchPage/Search.dart';
 import 'profile.dart';
 import '../paintings.dart';
 import 'login.dart';
@@ -65,7 +64,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     ));
 
     _textAnimation=Tween<Offset>(
-      begin: Offset(-1.0, 0),
+      begin: Offset(-1.3, 0),
       end:Offset(0,0)
     ).animate(CurvedAnimation(
       parent:_controller,
@@ -113,7 +112,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           ),
           child: IconButton(
             onPressed: (){
-              Navigator.push(context, MaterialPageRoute(builder:(context)=>Profile()));
+              Navigator.push(context, PageRouteBuilder(pageBuilder: (_, __, ___) =>Profile()));
             },
             enableFeedback: true,
             icon: Icon(Icons.perm_identity),
@@ -153,12 +152,17 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   margin:EdgeInsets.only(top:20),
                   height:100,
                   width:100,
-                  decoration: BoxDecoration(
-                    image:DecorationImage(
-                      image: CacheImage('${userOrg.getOrgImg}'),
+                  child: ClipOval(
+                    child: CachedNetworkImage(
                       fit: BoxFit.cover,
+                      imageUrl: userOrg.getOrgImg,
+                      placeholder: (context, url) => CircularProgressIndicator(),
+                      errorWidget: (context, url, error) => IconButton(
+                        icon: Icon(Icons.search),
+                        iconSize: 60,
+                        onPressed: () => Navigator.push(context, MaterialPageRoute(builder:(context)=>Search())),
+                      ),
                     ),
-                    shape:BoxShape.circle,
                   ),
                 );
               }
@@ -197,8 +201,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           )
         ],
       )
-
-
     );
   }
 
@@ -389,11 +391,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   _getMoreTransactions() async{
     var transContent='{"user_token":"$token", "offset":$offset}';
     var transactionResponse = await http.post("https://api.changecharity.io/users/gettransactions", body:transContent);
-    setState(() {
-      transactions+=jsonDecode(transactionResponse.body)["transactions"];
-    });
-    print(transactions);
-    print(transactions.length);
+    var transDecoded = jsonDecode(transactionResponse.body)["transactions"];
+    if (transDecoded != null) {
+      setState(() {
+        transactions+=transDecoded;
+      });
+      print(transactions);
+      print(transactions.length);
+    }
   }
 
   //get all initial user info
@@ -406,7 +411,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     });
     print(token);
     if(token == null || token ==''){
-      Navigator.push(context, MaterialPageRoute(builder:(context)=>Login()));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>Login()));
     }
   }
 
@@ -416,22 +421,33 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     token = prefs.getString('token');
     var transContent='{"user_token":"$token", "offset":$offset}';
     var transactionResponse = await http.post("https://api.changecharity.io/users/gettransactions", body:transContent);
-    setState(() {
-      transactions = jsonDecode(transactionResponse.body)["transactions"];
-    });
-    print(transactions);
-    print(transactions.length);
+//  this means the user isnt logged in anymore
+    if (transactionResponse.body.contains("no rows in result set")) {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>Login()));
+    }
+    var transDecoded = jsonDecode(transactionResponse.body)["transactions"];
+    if(transDecoded != null){
+      setState(() {
+        transactions = transDecoded;
+      });
+      print(transactions);
+      print(transactions.length);
+    }
   }
 
   //get user's totals
   _getTotals() async{
+    setState(() {
+      monthTotal=Money.fromInt(0, usdCurrency);
+      weekTotal=Money.fromInt(0, usdCurrency);
+    });
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token');
     var totalContent='{"user_token":"$token"}';
     var totalResponse = await http.post("https://api.changecharity.io/users/getuserstotals", body:totalContent);
     setState(() {
       jsonDecode(totalResponse.body)["monthlyTotal"]==null?monthTotal=Money.fromInt(0, usdCurrency):monthTotal=Money.fromInt(int.parse(jsonDecode(totalResponse.body)["monthlyTotal"]), usdCurrency);
-      jsonDecode(totalResponse.body)["weeklyTotal"]==null?weekTotal=Money.fromInt(0, usdCurrency):weekTotal=Money.fromInt(int.parse(jsonDecode(totalResponse.body)["monthlyTotal"]), usdCurrency);
+      jsonDecode(totalResponse.body)["weeklyTotal"]==null?weekTotal=Money.fromInt(0, usdCurrency):weekTotal=Money.fromInt(int.parse(jsonDecode(totalResponse.body)["weeklyTotal"]), usdCurrency);
     });
     print(monthTotal);
     print(weekTotal);
@@ -444,12 +460,18 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     token = prefs.getString('token');
     var orgContent='{"user_token":"$token"}';
     var orgResponse = await http.post("https://api.changecharity.io/users/getusersorginfo", body:orgContent);
-    setState(() {
-      selectedOrg=jsonDecode(orgResponse.body)["name"];
-      selectedOrgImg=jsonDecode(orgResponse.body)["logoLocation"];
-    });
-    print(selectedOrg);
-
+    print(orgResponse.body);
+    if(orgResponse.body.contains("no rows in result")) {
+      setState(() {
+        selectedOrg="Choose Your Org";
+        selectedOrgImg="error";
+      });
+    } else {
+      setState(() {
+        selectedOrg=jsonDecode(orgResponse.body)["name"];
+        selectedOrgImg=jsonDecode(orgResponse.body)["logoLocation"];
+      });
+    }
     //set org name and org image in provider
     context.read<UserOrgModel>().notify(selectedOrg, selectedOrgImg);
   }
