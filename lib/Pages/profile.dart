@@ -590,7 +590,7 @@ void initState(){
     print(profileResponse.body);
     setState(() {
       threshold=jsonDecode(profileResponse.body)["threshold"];
-      mask = decodedMask != null ? "0000" : decodedMask;
+      mask = decodedMask == null ? "0000" : decodedMask;
       bankName=jsonDecode(profileResponse.body)["bankName"];
       profileLetter = decodedPL != null ? decodedPL[0] : "";
     });
