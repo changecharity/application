@@ -36,7 +36,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   String token;
   String selectedOrg;
   String selectedOrgImg='https://wallpaperplay.com/walls/full/b/d/1/58065.jpg';
-  int offset=0;
+  int offset;
   var transactions;
   Money monthTotal;
   Money weekTotal;
@@ -45,6 +45,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   void initState() {
     super.initState();
 
+    offset=0;
     //handle getting info
     _confirmLogin();
     _getAllInfo();
@@ -105,25 +106,29 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     return Container(
       margin: EdgeInsets.only(top: 20, left: 10),
       alignment: Alignment.centerLeft,
-      height: 50,
-        child: Container(
-          decoration: BoxDecoration(
-            color: Color.fromRGBO(0, 174, 229, 0.1),
-            shape: BoxShape.circle,
-          ),
-          child: IconButton(
-            onPressed: (){
-              Navigator.push(context, MaterialPageRoute(builder:(context)=>Profile()));
-            },
-            enableFeedback: true,
-            icon: Icon(Icons.perm_identity),
-            iconSize:32,
-            color:Colors.black,
-            splashColor:Colors.grey,
-            highlightColor: Color.fromRGBO(0, 174, 229, 0.4),
-          ),
+        child: GestureDetector(
+          onTap:(){
+            Navigator.push(context, MaterialPageRoute(builder:(context)=>Profile()));
+          },
+          child:Container(
+            height:50,
+            width:50,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: Color.fromRGBO(0, 174, 229, 1),
+              shape: BoxShape.circle,
+            ),
+            child: Text(
+              'A',
+              style:TextStyle(fontSize: 24, color:Colors.white, fontWeight: FontWeight.bold)
+//              icon: Icon(Icons.person),
+//              enableFeedback: true,
+
+            ),
+          )
         )
     );
+
   }
 
 
@@ -215,14 +220,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   Widget _transactionHistory() {
     return Container(
-        height: MediaQuery.of(context).size.height * .45,
-        padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-        decoration: BoxDecoration(
-          color: Colors.grey[100],
-          borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
-          boxShadow: [BoxShadow(color:Colors.grey[300], offset:Offset.fromDirection(5, 7), blurRadius: 10)]
-        ),
-      child:_transactionsList()
+          height: MediaQuery.of(context).size.height * .43,
+          padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+          decoration: BoxDecoration(
+              color: Colors.grey[100],
+              borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+              boxShadow: [BoxShadow(color:Colors.grey[300], offset:Offset.fromDirection(5, 7), blurRadius: 10)]
+          ),
+          child:_transactionsList()
     );
   }
 
@@ -381,19 +386,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         !_scrollController.position.outOfRange) {
       setState(() {
         offset+=15;
-        _getMoreTransactions();
+        _getTransactions();
       });
     }
-  }
-
-  _getMoreTransactions() async{
-    var transContent='{"user_token":"$token", "offset":$offset}';
-    var transactionResponse = await http.post("https://api.changecharity.io/users/gettransactions", body:transContent);
-    setState(() {
-      transactions+=jsonDecode(transactionResponse.body)["transactions"];
-    });
-    print(transactions);
-    print(transactions.length);
   }
 
   //get all initial user info
@@ -416,9 +411,17 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     token = prefs.getString('token');
     var transContent='{"user_token":"$token", "offset":$offset}';
     var transactionResponse = await http.post("https://api.changecharity.io/users/gettransactions", body:transContent);
-    setState(() {
-      transactions = jsonDecode(transactionResponse.body)["transactions"];
-    });
+    //at first, get original list
+    if(offset==0){
+      setState(() {
+        transactions = jsonDecode(transactionResponse.body)["transactions"];
+      });
+      //on scroll, get additional transactions
+    }else{
+      setState(() {
+        transactions += jsonDecode(transactionResponse.body)["transactions"];
+      });
+    }
     print(transactions);
     print(transactions.length);
   }
