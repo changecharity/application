@@ -505,7 +505,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
   }
 
   _submit() async{
-
+  print(_emailController.text);
     if(!_checkValidEmail()) {
       print(_emailErr);
       return;
@@ -522,7 +522,6 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
     var content = '{"email": "${_emailController.text}", "password":"${_passController.text}"}';
     var response = await http.post("https://api.changecharity.io/users/login", body:content).timeout(Duration(seconds: 3));
     print(response.body);
-
     switch(response.body){
       case "rpc error: code = Unknown desc = Wrong Email":{
         setState((){
@@ -546,6 +545,15 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
       _saveLogin(response.body);
       _saveEmailAddress(_emailController.text);
       print("successful");
+    } else if (response.body.contains("invalid character")){
+      setState((){
+        _emailErr="Please remove any tabs";
+        loading=!loading;
+      });
+    } else {
+      setState((){
+        loading=!loading;
+      });
     }
 
     print(response.body);
