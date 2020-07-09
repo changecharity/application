@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   String token;
   String selectedOrg;
   String selectedOrgImg='https://wallpaperplay.com/walls/full/b/d/1/58065.jpg';
-  int offset=0;
+  int offset;
   var transactions;
   Money monthTotal;
   Money weekTotal;
@@ -44,6 +44,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   void initState() {
     super.initState();
 
+    offset=0;
     //handle getting info
     _confirmLogin();
     _checkSelOrg();
@@ -105,24 +106,24 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     return Container(
       margin: EdgeInsets.only(top: 20, left: 10),
       alignment: Alignment.centerLeft,
-      height: 50,
-        child: Container(
+      child: GestureDetector(
+        onTap:(){
+          Navigator.push(context, MaterialPageRoute(builder:(context)=>Profile()));
+        },
+        child:Container(
+          height:50,
+          width:50,
+          alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: Color.fromRGBO(0, 174, 229, 0.1),
+            color: Color.fromRGBO(0, 174, 229, 1),
             shape: BoxShape.circle,
           ),
-          child: IconButton(
-            onPressed: (){
-              Navigator.push(context, PageRouteBuilder(pageBuilder: (_, __, ___) =>Profile()));
-            },
-            enableFeedback: true,
-            icon: Icon(Icons.perm_identity),
-            iconSize:32,
-            color:Colors.black,
-            splashColor:Colors.grey,
-            highlightColor: Color.fromRGBO(0, 174, 229, 0.4),
+          child: Text(
+            'A',
+            style:TextStyle(fontSize: 24, color:Colors.white, fontWeight: FontWeight.bold),
           ),
-        )
+        ),
+      ),
     );
   }
 
@@ -384,21 +385,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         !_scrollController.position.outOfRange) {
       setState(() {
         offset+=15;
-        _getMoreTransactions();
+        _getTransactions();
       });
-    }
-  }
-
-  _getMoreTransactions() async{
-    var transContent='{"user_token":"$token", "offset":$offset}';
-    var transactionResponse = await http.post("https://api.changecharity.io/users/gettransactions", body:transContent);
-    var transDecoded = jsonDecode(transactionResponse.body)["transactions"];
-    if (transDecoded != null) {
-      setState(() {
-        transactions+=transDecoded;
-      });
-      print(transactions);
-      print(transactions.length);
     }
   }
 
@@ -437,15 +425,21 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     token = prefs.getString('token');
     var transContent='{"user_token":"$token", "offset":$offset}';
     var transactionResponse = await http.post("https://api.changecharity.io/users/gettransactions", body:transContent);
-//  this means the user isnt logged in anymore
     if (transactionResponse.body.contains("no rows in result set")) {
       Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>Login()));
     }
     var transDecoded = jsonDecode(transactionResponse.body)["transactions"];
     if(transDecoded != null){
-      setState(() {
-        transactions = transDecoded;
-      });
+      if(offset==0){
+        setState(() {
+          transactions = jsonDecode(transactionResponse.body)["transactions"];
+        });
+      //on scroll, get additional transactions
+      }else{
+        setState(() {
+          transactions += jsonDecode(transactionResponse.body)["transactions"];
+        });
+      }
       print(transactions);
       print(transactions.length);
     }

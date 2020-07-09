@@ -14,16 +14,29 @@ class Search extends StatefulWidget{
 class _SearchState extends State<Search>{
 
   var suggestions=[];
+  var suggestionOffset=0;
+  var searchOffset=0;
   bool areSuggestions=false;
   bool extraDetails=false;
   var token;
   var orgs;
   final _searchController=new TextEditingController();
+  String searchText;
+  ScrollController _suggestionScrollController;
+  ScrollController _searchScrollController;
 
   void initState(){
     super.initState();
 
     _confirmLogin();
+
+    //handle scroll controllers
+    _suggestionScrollController=ScrollController();
+    _suggestionScrollController.addListener(_suggestionScrollListener);
+
+    _searchScrollController=ScrollController();
+    _searchScrollController.addListener(_searchScrollListener);
+
   }
 
   Widget _searchBar(){
@@ -53,7 +66,8 @@ class _SearchState extends State<Search>{
           });
         },
         onSubmitted: (s){
-          _searchOrgs(_searchController.text);
+          searchText=_searchController.text;
+          _searchOrgs();
         },
         decoration:InputDecoration(
             labelText:'Search',
@@ -103,6 +117,7 @@ class _SearchState extends State<Search>{
     return Expanded(
       child: !areSuggestions ? Container(color:Colors.transparent):
       ListView.builder(
+        controller:_suggestionScrollController,
         itemCount: !areSuggestions? 1: suggestions.length,
         itemBuilder: (context, index){
           return !areSuggestions?Container(color:Colors.transparent):
@@ -112,7 +127,8 @@ class _SearchState extends State<Search>{
               //trailing:Icon(Icons.search),
               title: Text(suggestions[index]),
               onTap:(){
-                  _searchOrgs(suggestions[index]);
+                searchText=suggestions[index];
+                  _searchOrgs();
               }
           );
         }
@@ -125,6 +141,7 @@ class _SearchState extends State<Search>{
         child: Container(
             color: Colors.grey[100],
             child: ListView.builder(
+                controller: _searchScrollController,
                 scrollDirection: Axis.vertical,
                 itemCount: orgs.length,
                 itemBuilder: (context, orgIndex) {
@@ -186,7 +203,7 @@ class _SearchState extends State<Search>{
   _getSuggestions() async{
     SharedPreferences preferences=await SharedPreferences.getInstance();
     token = preferences.getString('token');
-    var content = '{"user_token":"$token", "name":"${_searchController.text}", "offset":0}';
+    var content = '{"user_token":"$token", "name":"${_searchController.text}", "offset":$suggestionOffset}';
     var response = await http.post("https://api.changecharity.io/users/getnames", body:content);
     setState(() {
       suggestions=jsonDecode(response.body)["names"];
@@ -199,10 +216,10 @@ class _SearchState extends State<Search>{
     print(suggestions);
  }
 
- _searchOrgs(searchText) async{
+ _searchOrgs() async{
    SharedPreferences preferences=await SharedPreferences.getInstance();
    token = preferences.getString('token');
-   var content = '{"user_token":"$token", "name":"$searchText", "offset":0}';
+   var content = '{"user_token":"$token", "name":"$searchText", "offset":$searchOffset}';
    var response = await http.post("https://api.changecharity.io/users/searchorgs", body:content);
    //Navigator.push(context, MaterialPageRoute(builder:(context)=>SearchedOrganizations(orgs)));
    setState(() {
@@ -212,4 +229,23 @@ class _SearchState extends State<Search>{
    print(orgs);
  }
 
+ _searchScrollListener(){
+    if(_searchScrollController.offset>=_searchScrollController.position.maxScrollExtent &&
+        !_searchScrollController.position.outOfRange){
+      setState(() {
+        searchOffset+=15;
+        _searchOrgs();
+      });
+    }
+ }
+
+ _suggestionScrollListener(){
+    if(_suggestionScrollController.offset>=_suggestionScrollController.position.maxScrollExtent &&
+      !_suggestionScrollController.position.outOfRange){
+      setState(() {
+        suggestionOffset+=15;
+        _getSuggestions();
+      });
+   }
+ }
 }
