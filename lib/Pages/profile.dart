@@ -15,8 +15,8 @@ import 'login.dart';
 import '../Components/passwordDialog.dart';
 //import 'package:provider/provider.dart';
 import '../Models/userBankModel.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
-import 'package:cache_image/cache_image.dart';
 
 class Profile extends StatefulWidget{
 
@@ -158,7 +158,7 @@ void initState(){
             ],
           ),
           Container(
-            margin:EdgeInsets.only(bottom:10, top:40),
+            margin:EdgeInsets.only(bottom:10, top: MediaQuery.of(context).size.height < 650 ? 0 : MediaQuery.of(context).size.height*0.1),
             height:80,
             width:80,
             decoration: BoxDecoration(
@@ -187,78 +187,81 @@ void initState(){
   }
 
   Widget _accountPrefs(){
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Container(
-            margin:EdgeInsets.only(bottom:10, left:10, top:15),
-            child:Text(
-                'Preferences',
-                style: TextStyle(fontSize:16, color:Colors.grey)
+    return Container(
+      margin: EdgeInsets.only(bottom:  MediaQuery.of(context).size.height < 650 ? MediaQuery.of(context).size.height * 0.07 : MediaQuery.of(context).size.height * 0.09),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Container(
+              margin:EdgeInsets.only(bottom:10, left:10, top:15),
+              child:Text(
+                  'Preferences',
+                  style: TextStyle(fontSize:16, color:Colors.grey)
+              )
+          ),
+          Container(
+              padding:EdgeInsets.fromLTRB(0, 15, 0, 15),
+              width: MediaQuery.of(context).size.width * .75,
+              //height:MediaQuery.of(context).size.height*.4,
+              decoration:BoxDecoration(
+                  color:Colors.grey[100],
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [BoxShadow(color:Colors.grey[300], offset:Offset.fromDirection(1), blurRadius:15)]
+              ),
+              child:Column(
+                //mainAxisAlignment: MainAxisAlignment,
+                children:[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      _widgetIndex!=0?IconButton(
+                          icon: Icon(Icons.arrow_back_ios, color:Colors.black, size:16),
+                          highlightColor: Colors.transparent,
+                          splashColor: Colors.grey[100],
+                          onPressed:(){
+                            setState(() {
+                              _widgetIndex--;
+                            });
+                          }
+                      ):IconButton(icon:Icon(Icons.arrow_back_ios, size:16, color:Colors.transparent)),
+                      Expanded(
+                        child:IndexedStack(
+                          index:_widgetIndex,
+                          children:<Widget>[
+                            Center(child:Text('Current Organization', style:TextStyle(fontSize:16, fontWeight: FontWeight.bold))),
+                            Center(child:Text('Your Bank Account', style:TextStyle(fontSize:16, fontWeight: FontWeight.bold))),
+                            Center(child:Text('Set Your Max', style:TextStyle(fontSize:16, fontWeight: FontWeight.bold))),
+                          ]
+                        )
+                      ),
+                      _widgetIndex!=2?IconButton(
+                          icon: Icon(Icons.arrow_forward_ios),
+                          color:Colors.black,
+                          iconSize: 16,
+                          splashColor: Colors.grey[100],
+                          highlightColor: Colors.grey[100],
+                          onPressed:(){
+                            setState(() {
+                              _widgetIndex++;
+                            });
+                          }
+                      ):IconButton(icon:Icon(Icons.arrow_forward_ios, size:16, color:Colors.transparent)),
+                    ],
+                  ),
+                  IndexedStack(
+                    index:_widgetIndex,
+                    children: <Widget>[
+                      _currentOrgContent(),
+                      _bankContent(),
+                      _sliderContent()
+                    ],
+                  ),
+                ]
             )
-        ),
-        Container(
-            padding:EdgeInsets.fromLTRB(0, 15, 0, 15),
-            width: MediaQuery.of(context).size.width * .75,
-            //height:MediaQuery.of(context).size.height*.4,
-            decoration:BoxDecoration(
-                color:Colors.grey[100],
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [BoxShadow(color:Colors.grey[300], offset:Offset.fromDirection(1), blurRadius:15)]
-            ),
-            child:Column(
-              //mainAxisAlignment: MainAxisAlignment,
-              children:[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    _widgetIndex!=0?IconButton(
-                        icon: Icon(Icons.arrow_back_ios, color:Colors.black, size:16),
-                        highlightColor: Colors.transparent,
-                        splashColor: Colors.grey[100],
-                        onPressed:(){
-                          setState(() {
-                            _widgetIndex--;
-                          });
-                        }
-                    ):IconButton(icon:Icon(Icons.arrow_back_ios, size:16, color:Colors.transparent)),
-                    Expanded(
-                      child:IndexedStack(
-                        index:_widgetIndex,
-                        children:<Widget>[
-                          Center(child:Text('Current Organization', style:TextStyle(fontSize:16, fontWeight: FontWeight.bold))),
-                          Center(child:Text('Your Bank Account', style:TextStyle(fontSize:16, fontWeight: FontWeight.bold))),
-                          Center(child:Text('Set Your Max', style:TextStyle(fontSize:16, fontWeight: FontWeight.bold))),
-                        ]
-                      )
-                    ),
-                    _widgetIndex!=2?IconButton(
-                        icon: Icon(Icons.arrow_forward_ios),
-                        color:Colors.black,
-                        iconSize: 16,
-                        splashColor: Colors.grey[100],
-                        highlightColor: Colors.grey[100],
-                        onPressed:(){
-                          setState(() {
-                            _widgetIndex++;
-                          });
-                        }
-                    ):IconButton(icon:Icon(Icons.arrow_forward_ios, size:16, color:Colors.transparent)),
-                  ],
-                ),
-                IndexedStack(
-                  index:_widgetIndex,
-                  children: <Widget>[
-                    _currentOrgContent(),
-                    _bankContent(),
-                    _sliderContent()
-                  ],
-                ),
-              ]
           )
-        )
-      ],
+        ],
+      ),
     );
   }
 
@@ -381,7 +384,6 @@ void initState(){
                         text:"Change Organization",
                         recognizer: TapGestureRecognizer()
                           ..onTap=(){
-                            //showSearch(context:context, delegate:DataSearch());
                             Navigator.push(context, MaterialPageRoute(builder:(context)=>Search()));
                           }
                     )
@@ -415,19 +417,22 @@ void initState(){
           margin:EdgeInsets.only(top:10),
           height:100,
           width:100,
-          decoration: BoxDecoration(
-            image:DecorationImage(
-              image: selectedOrg!=null?CacheImage(selectedOrgImg):CacheImage('${userOrg.getOrgImg}'),
+          child: ClipOval(
+            child: CachedNetworkImage(
               fit: BoxFit.cover,
+              imageUrl: userOrg.getOrgImg,
+              placeholder: (context, url) => CircularProgressIndicator(),
+              errorWidget: (context, url, error) => IconButton(
+                icon: Icon(Icons.search),
+                iconSize: 45,
+                onPressed: () => Navigator.push(context, MaterialPageRoute(builder:(context)=>Search())),
+              ),
             ),
-            shape:BoxShape.circle,
           ),
         );
       }
     );
   }
-
-
 
   Widget _sliderContent(){
     return Container(
@@ -545,7 +550,7 @@ void initState(){
               painter: ProfilePaint(),
               child:Container(
                 height:MediaQuery.of(context).size.height,
-                padding:EdgeInsets.only(bottom:MediaQuery.of(context).size.height*.15),
+//                margin:EdgeInsets.only(bottom:MediaQuery.of(context).size.height*.10),
                   child:Column(
                   mainAxisAlignment:MainAxisAlignment.spaceBetween,
                     children: <Widget>[
@@ -574,24 +579,20 @@ void initState(){
     }
   }
 
-  //call at initstate. gets the first letter of legal name stored in shared preferences
-  _getProfileLetter() async{
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      profileLetter = (prefs.getString('NameInitial')?? "A").toUpperCase();
-    });
-  }
-
   //call at initState to get user's max threshold, last 4 digits, and bank name
   _getProfDetails() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token');
     var content='{"user_token":"$token"}';
     var profileResponse = await http.post("https://api.changecharity.io/users/getprofile", body:content);
+    var decodedMask = jsonDecode(profileResponse.body)["mask"].toString();
+    var decodedPL = jsonDecode(profileResponse.body)["legalName"];
+    print(profileResponse.body);
     setState(() {
       threshold=jsonDecode(profileResponse.body)["threshold"];
-      mask=jsonDecode(profileResponse.body)["mask"].toString();
+      mask = decodedMask == null ? "0000" : decodedMask;
       bankName=jsonDecode(profileResponse.body)["bankName"];
+      profileLetter = decodedPL != null ? decodedPL[0] : "";
     });
 
     print(threshold);
@@ -622,7 +623,6 @@ void initState(){
   }
 
   _getInitInfo() async{
-    _getProfileLetter();
     _getProfDetails();
     _getOrgInfo();
   }
@@ -643,13 +643,14 @@ void initState(){
   void _logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('token', null);
-    Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>Login()));
+    Navigator.pushAndRemoveUntil(context, PageRouteBuilder(pageBuilder: (_, __, ___) => Login()), (route) => false);
+
   }
 
   void _returnHome() {
     _controller.animateBack(0, duration:Duration(milliseconds:500), curve:Curves.linear);
     Future<void>.delayed(Duration(milliseconds:500),(){
-      Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>HomePage()));
+      Navigator.pushAndRemoveUntil(context, PageRouteBuilder(pageBuilder: (_, __, ___) => HomePage()), (route) => false);
     });
   }
 }

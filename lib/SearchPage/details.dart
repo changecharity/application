@@ -5,10 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../Pages/profile.dart';
+import '../Pages/homePage.dart';
 import '../Models/userOrgModel.dart';
-import '../Services/calls_and_messages_service.dart';
-import '../Services/service_locator.dart';
 
 class DetailScreen extends StatefulWidget {
 
@@ -23,11 +21,6 @@ class DetailScreen extends StatefulWidget {
 }
 
 class _DetailState extends State<DetailScreen>{
-
-  //final CallsAndMessagesService _service = locator<CallsAndMessagesService>();
-  //final number = '4242280919';
-  //final emailAddress = 'batyashaps1@gmail.com';
-
   var token;
   var logo="https://wallpaperplay.com/walls/full/b/d/1/58065.jpg";
   var name="";
@@ -117,7 +110,7 @@ class _DetailState extends State<DetailScreen>{
           tooltip: 'Donate',
           onPressed: () {
             _setOrg();
-            Navigator.push(context, MaterialPageRoute(builder:(context)=>Profile()));
+            Navigator.pushAndRemoveUntil(context, PageRouteBuilder(pageBuilder: (_, __, ___) => HomePage()), (route) => false);
           }
         )
       )

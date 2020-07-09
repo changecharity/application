@@ -4,15 +4,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-//import 'package:intl/intl.dart';  //for date format
-//import 'package:intl/date_symbol_data_local.dart';  //for date locale
-import 'package:cache_image/cache_image.dart';
 import 'package:money2/money2.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:change/Models/userOrgModel.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
+import '../SearchPage/Search.dart';
 import 'profile.dart';
 import '../paintings.dart';
 import 'login.dart';
@@ -48,6 +47,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     offset=0;
     //handle getting info
     _confirmLogin();
+    _checkSelOrg();
     _getAllInfo();
 
 
@@ -66,7 +66,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     ));
 
     _textAnimation=Tween<Offset>(
-      begin: Offset(-1.0, 0),
+      begin: Offset(-1.3, 0),
       end:Offset(0,0)
     ).animate(CurvedAnimation(
       parent:_controller,
@@ -106,29 +106,25 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     return Container(
       margin: EdgeInsets.only(top: 20, left: 10),
       alignment: Alignment.centerLeft,
-        child: GestureDetector(
-          onTap:(){
-            Navigator.push(context, MaterialPageRoute(builder:(context)=>Profile()));
-          },
-          child:Container(
-            height:50,
-            width:50,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: Color.fromRGBO(0, 174, 229, 1),
-              shape: BoxShape.circle,
-            ),
-            child: Text(
-              'A',
-              style:TextStyle(fontSize: 24, color:Colors.white, fontWeight: FontWeight.bold)
-//              icon: Icon(Icons.person),
-//              enableFeedback: true,
-
-            ),
-          )
-        )
+      child: GestureDetector(
+        onTap:(){
+          Navigator.push(context, MaterialPageRoute(builder:(context)=>Profile()));
+        },
+        child:Container(
+          height:50,
+          width:50,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: Color.fromRGBO(0, 174, 229, 1),
+            shape: BoxShape.circle,
+          ),
+          child: Text(
+            'A',
+            style:TextStyle(fontSize: 24, color:Colors.white, fontWeight: FontWeight.bold),
+          ),
+        ),
+      ),
     );
-
   }
 
 
@@ -158,12 +154,17 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   margin:EdgeInsets.only(top:20),
                   height:100,
                   width:100,
-                  decoration: BoxDecoration(
-                    image:DecorationImage(
-                      image: CacheImage('${userOrg.getOrgImg}'),
+                  child: ClipOval(
+                    child: CachedNetworkImage(
                       fit: BoxFit.cover,
+                      imageUrl: userOrg.getOrgImg,
+                      placeholder: (context, url) => CircularProgressIndicator(),
+                      errorWidget: (context, url, error) => IconButton(
+                        icon: Icon(Icons.search),
+                        iconSize: 60,
+                        onPressed: () => Navigator.push(context, MaterialPageRoute(builder:(context)=>Search())),
+                      ),
                     ),
-                    shape:BoxShape.circle,
                   ),
                 );
               }
@@ -202,8 +203,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           )
         ],
       )
-
-
     );
   }
 
@@ -220,14 +219,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   Widget _transactionHistory() {
     return Container(
-          height: MediaQuery.of(context).size.height * .43,
-          padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-          decoration: BoxDecoration(
-              color: Colors.grey[100],
-              borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
-              boxShadow: [BoxShadow(color:Colors.grey[300], offset:Offset.fromDirection(5, 7), blurRadius: 10)]
-          ),
-          child:_transactionsList()
+        height: MediaQuery.of(context).size.height > 700 ? MediaQuery.of(context).size.height * .45 : MediaQuery.of(context).size.height < 650 ? 210 : MediaQuery.of(context).size.height * .40,
+        padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+        decoration: BoxDecoration(
+          color: Colors.grey[100],
+          borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+          boxShadow: [BoxShadow(color:Colors.grey[300], offset:Offset.fromDirection(5, 7), blurRadius: 10)]
+        ),
+      child:_transactionsList()
     );
   }
 
@@ -235,7 +234,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     if(transactions==''|| transactions==null){
      return Container(
        width: MediaQuery.of(context).size.width,
-       height: MediaQuery.of(context).size.height * .45,
+       height: MediaQuery.of(context).size.height * .42,
        alignment: Alignment.center,
        child:Text(
            'You have no transactions at this time.'
@@ -401,7 +400,22 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     });
     print(token);
     if(token == null || token ==''){
-      Navigator.push(context, MaterialPageRoute(builder:(context)=>Login()));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>Login()));
+    }
+  }
+
+  _checkSelOrg() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int org = prefs.getInt("selOrg");
+    token = prefs.getString('token');
+    if (org != null) {
+      print("org selected is ${org.toString()}");
+      var content = '{"user_token":"$token", "org":$org}';
+      var response = await http.post("https://api.changecharity.io/users/setorg", body:content);
+      print(response.body);
+      _getOrgInfo();
+      prefs.setInt('selOrg', null);
+      _showDialog();
     }
   }
 
@@ -411,30 +425,39 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     token = prefs.getString('token');
     var transContent='{"user_token":"$token", "offset":$offset}';
     var transactionResponse = await http.post("https://api.changecharity.io/users/gettransactions", body:transContent);
-    //at first, get original list
-    if(offset==0){
-      setState(() {
-        transactions = jsonDecode(transactionResponse.body)["transactions"];
-      });
-      //on scroll, get additional transactions
-    }else{
-      setState(() {
-        transactions += jsonDecode(transactionResponse.body)["transactions"];
-      });
+    if (transactionResponse.body.contains("no rows in result set")) {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>Login()));
     }
-    print(transactions);
-    print(transactions.length);
+    var transDecoded = jsonDecode(transactionResponse.body)["transactions"];
+    if(transDecoded != null){
+      if(offset==0){
+        setState(() {
+          transactions = jsonDecode(transactionResponse.body)["transactions"];
+        });
+      //on scroll, get additional transactions
+      }else{
+        setState(() {
+          transactions += jsonDecode(transactionResponse.body)["transactions"];
+        });
+      }
+      print(transactions);
+      print(transactions.length);
+    }
   }
 
   //get user's totals
   _getTotals() async{
+    setState(() {
+      monthTotal=Money.fromInt(0, usdCurrency);
+      weekTotal=Money.fromInt(0, usdCurrency);
+    });
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token');
     var totalContent='{"user_token":"$token"}';
     var totalResponse = await http.post("https://api.changecharity.io/users/getuserstotals", body:totalContent);
     setState(() {
       jsonDecode(totalResponse.body)["monthlyTotal"]==null?monthTotal=Money.fromInt(0, usdCurrency):monthTotal=Money.fromInt(int.parse(jsonDecode(totalResponse.body)["monthlyTotal"]), usdCurrency);
-      jsonDecode(totalResponse.body)["weeklyTotal"]==null?weekTotal=Money.fromInt(0, usdCurrency):weekTotal=Money.fromInt(int.parse(jsonDecode(totalResponse.body)["monthlyTotal"]), usdCurrency);
+      jsonDecode(totalResponse.body)["weeklyTotal"]==null?weekTotal=Money.fromInt(0, usdCurrency):weekTotal=Money.fromInt(int.parse(jsonDecode(totalResponse.body)["weeklyTotal"]), usdCurrency);
     });
     print(monthTotal);
     print(weekTotal);
@@ -447,12 +470,18 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     token = prefs.getString('token');
     var orgContent='{"user_token":"$token"}';
     var orgResponse = await http.post("https://api.changecharity.io/users/getusersorginfo", body:orgContent);
-    setState(() {
-      selectedOrg=jsonDecode(orgResponse.body)["name"];
-      selectedOrgImg=jsonDecode(orgResponse.body)["logoLocation"];
-    });
-    print(selectedOrg);
-
+    print(orgResponse.body);
+    if(orgResponse.body.contains("no rows in result")) {
+      setState(() {
+        selectedOrg="Choose Your Org";
+        selectedOrgImg="error";
+      });
+    } else {
+      setState(() {
+        selectedOrg=jsonDecode(orgResponse.body)["name"];
+        selectedOrgImg=jsonDecode(orgResponse.body)["logoLocation"];
+      });
+    }
     //set org name and org image in provider
     context.read<UserOrgModel>().notify(selectedOrg, selectedOrgImg);
   }
@@ -461,6 +490,66 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     _getTransactions();
     _getTotals();
     _getOrgInfo();
+  }
+  void _showDialog() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(15)),
+          ),
+          title: Align(
+            alignment: Alignment.center,
+            child: Text(
+              "Organization Selected",
+              style: TextStyle(
+                fontSize: 20,
+              ),
+            ),
+          ),
+          content: Container(
+            height: 50,
+            child: Align(
+              alignment: Alignment.center,
+              child: Column(
+                children: <Widget>[
+                  Text(
+                    "You have selected:",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 15,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 10),
+                  ),
+                  Text(
+                    "${context.watch<UserOrgModel>().getUserOrg}",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }
 

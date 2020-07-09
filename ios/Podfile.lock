@@ -6,14 +6,11 @@ PODS:
     - FirebaseAnalytics (= 6.6.1)
   - Firebase/CoreOnly (6.27.0):
     - FirebaseCore (= 6.8.0)
-  - Firebase/Storage (6.27.0):
+  - Firebase/DynamicLinks (6.27.0):
     - Firebase/CoreOnly
-    - FirebaseStorage (~> 3.7.0)
-  - firebase_core (0.0.1):
-    - Firebase/Core
-    - Flutter
-  - firebase_storage (0.0.1):
-    - Firebase/Storage
+    - FirebaseDynamicLinks (~> 4.1.0)
+  - firebase_dynamic_links (0.1.0):
+    - Firebase/DynamicLinks
     - Flutter
   - FirebaseAnalytics (6.6.1):
     - FirebaseCore (~> 6.8)
@@ -33,14 +30,13 @@ PODS:
     - GoogleUtilities/Environment (~> 6.5)
     - GoogleUtilities/Logger (~> 6.5)
     - nanopb (~> 1.30905.0)
+  - FirebaseDynamicLinks (4.1.0):
+    - FirebaseCore (~> 6.8)
   - FirebaseInstallations (1.4.0):
     - FirebaseCore (~> 6.8)
     - GoogleUtilities/Environment (~> 6.6)
     - GoogleUtilities/UserDefaults (~> 6.6)
     - PromisesObjC (~> 1.2)
-  - FirebaseStorage (3.7.0):
-    - FirebaseCore (~> 6.8)
-    - GTMSessionFetcher/Core (~> 1.1)
   - Flutter (1.0.0)
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
@@ -74,7 +70,6 @@ PODS:
     - GoogleUtilities/Logger
   - GoogleUtilities/UserDefaults (6.6.0):
     - GoogleUtilities/Logger
-  - GTMSessionFetcher/Core (1.4.0)
   - nanopb (1.30905.0):
     - nanopb/decode (= 1.30905.0)
     - nanopb/encode (= 1.30905.0)
@@ -95,8 +90,7 @@ PODS:
 
 DEPENDENCIES:
   - Firebase/Analytics
-  - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
-  - firebase_storage (from `.symlinks/plugins/firebase_storage/ios`)
+  - firebase_dynamic_links (from `.symlinks/plugins/firebase_dynamic_links/ios`)
   - Flutter (from `Flutter`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
@@ -110,22 +104,19 @@ SPEC REPOS:
     - FirebaseAnalytics
     - FirebaseCore
     - FirebaseCoreDiagnostics
+    - FirebaseDynamicLinks
     - FirebaseInstallations
-    - FirebaseStorage
     - FMDB
     - GoogleAppMeasurement
     - GoogleDataTransport
     - GoogleDataTransportCCTSupport
     - GoogleUtilities
-    - GTMSessionFetcher
     - nanopb
     - PromisesObjC
 
 EXTERNAL SOURCES:
-  firebase_core:
-    :path: ".symlinks/plugins/firebase_core/ios"
-  firebase_storage:
-    :path: ".symlinks/plugins/firebase_storage/ios"
+  firebase_dynamic_links:
+    :path: ".symlinks/plugins/firebase_dynamic_links/ios"
   Flutter:
     :path: Flutter
   path_provider:
@@ -141,20 +132,18 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Firebase: fc4cbf6f1592636431821ef9a3c557e4dfd9f268
-  firebase_core: 335c02abd48672b7c83c683df833d0488a72e73e
-  firebase_storage: 22966fce4aa6e8848cbaa017df62107cee29f327
+  firebase_dynamic_links: c70e8764252b4f4f130fffe273e0bbd01e6b7aef
   FirebaseAnalytics: 0ea640473474f036cabbc2576e20c2d63671c92f
   FirebaseCore: feda061cb1ee6d8ad4824f4a4a8ffbcfe284f595
   FirebaseCoreDiagnostics: 4505e4d4009b1d93f605088ee7d7764d5f0d1c84
+  FirebaseDynamicLinks: 50cff91aff05347770be750dde61d3311ff7ffc8
   FirebaseInstallations: 293f567159b6d66d1c990f13bb868066096c94ec
-  FirebaseStorage: af7bdbd12177cf567df00904e3e3a93704f25b15
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   GoogleAppMeasurement: 2fd5c5a56c069db635c8e7b92d4809a9591d0a69
   GoogleDataTransport: 9a8a16f79feffc7f42096743de2a7c4815e84020
   GoogleDataTransportCCTSupport: 489c1265d2c85b68187a83a911913d190012158d
   GoogleUtilities: 39530bc0ad980530298e9c4af8549e991fd033b1
-  GTMSessionFetcher: 6f5c8abbab8a9bce4bb3f057e317728ec6182b10
   nanopb: c43f40fadfe79e8b8db116583945847910cbabc9
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
   PromisesObjC: b48e0338dbbac2207e611750777895f7a5811b75

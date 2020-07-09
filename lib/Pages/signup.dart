@@ -92,9 +92,12 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
 
   //Sign Up
   Widget _signUpText() {
+    if(MediaQuery.of(context).size.height < 650 && MediaQuery.of(context).viewInsets.bottom != 0) {
+      return Text("");
+    }
     return Container(
       margin: EdgeInsets.only(top: MediaQuery.of(context).viewInsets.bottom == 0
-          ? 60
+          ? MediaQuery.of(context).size.height < 650 ? 0 : MediaQuery.of(context).size.height *0.05
           : 0),
       alignment: Alignment.center,
       child: Text(
@@ -109,7 +112,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
   Widget _nameInput() {
     return Container(
       margin: EdgeInsets.only(right: 20, left: 20, top: MediaQuery.of(context).viewInsets.bottom == 0
-          ? 60
+          ? MediaQuery.of(context).size.height>700 ? 80 :MediaQuery.of(context).size.height *0.06
           : 20),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -367,7 +370,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
   //Sign up button. Switches to loading on load
   Widget _signUpCont() {
     return Container(
-      margin: EdgeInsets.only(right: 20, top: 50),
+      margin: EdgeInsets.only(right: 20, top: MediaQuery.of(context).size.height < 650 ? 0 : MediaQuery.of(context).size.height *0.05, bottom: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
@@ -489,9 +492,9 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
             'https://sandbox.plaid.com/processor/stripe/bank_account_token/create',
         plaidClientId: '',
         secret: plaidSandbox ? '' : '',
-        clientName: 'ClientName',
+        clientName: 'Change',
         webhook: 'https://api.changecharity.io/plaidwebhook',
-        products: 'auth,income',
+        products: 'transactions',
         selectAccount: 'false');
 
     FlutterPlaidApi flutterPlaidApi = FlutterPlaidApi(configuration);
@@ -516,9 +519,8 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
   void _saveSignUp(val) async{
     SharedPreferences prefs=await SharedPreferences.getInstance();
     prefs.setString('token', val);
-    prefs.setString('NameInitial', _nameController.text[0]);
    if(prefs.getString('token')!=null&&prefs.getString('token')!=''){
-      Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>EmailAuth(_emailController.text)));
+      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder:(context)=>EmailAuth(_emailController.text)), (route) => false);
     }
   }
 
@@ -615,7 +617,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
         loading=!loading;
       });
       var content='{"legal_name":"${_nameController.text}","email":"${_emailController.text}","password":"${_passController.text}", "plaid_public_token":"$plaidToken", "plaid_account_id":"$accountId", "mask":$mask, "bank_name":"$bankName"}';
-      var response= await http.post("https://api.changecharity.io/users/signup", body:content);
+      var response= await http.post("https://api.changecharity.io/users/signup", body:content).timeout(Duration(seconds: 7));
 
       print(response.body);
 

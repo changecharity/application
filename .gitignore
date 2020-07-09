@@ -41,4 +41,6 @@ google-services.json
 key.properties
 upload_certificate.pem
 GoogleService-Info.plist
-Podfile.lock
+google-services.json
+*.lock
+pubspec.lock
