@@ -41,6 +41,13 @@ class _ChangeOrgDialogState extends State<ChangeOrgDialog>{
 
   Widget _orgInfo(){
     return Container(
+      margin:EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width*.1,vertical:MediaQuery.of(context).size.height*.02),
+        padding:EdgeInsets.all(MediaQuery.of(context).size.height*.05),
+      decoration:BoxDecoration(
+        color:Colors.grey[100],
+        borderRadius:BorderRadius.circular(10),
+        boxShadow:[BoxShadow(offset:Offset(1.0, 1.0), color: Colors.grey, blurRadius:5)]
+      ),
       child:Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -139,7 +146,7 @@ class _ChangeOrgDialogState extends State<ChangeOrgDialog>{
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     _selectText(),
-                    _orgInfo(),
+                    Flexible(child:_orgInfo()),
                     _selectOrgButtons()
                   ],
                 )
