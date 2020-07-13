@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import '../Models/userOrgModel.dart';
+import '../Pages/profile.dart';
 
 
 class ChangeOrgDialog extends StatefulWidget{
@@ -18,28 +19,106 @@ class ChangeOrgDialog extends StatefulWidget{
 class _ChangeOrgDialogState extends State<ChangeOrgDialog>{
 
   var token;
-  var name;
-  var logo;
-  var description;
+  var name="";
+  var logo="https://wallpaperplay.com/walls/full/b/d/1/58065.jpg";
+  var description="";
 
+  void initState(){
+    super.initState();
+    _getOrgInfo();
+  }
 
+  Widget _selectText(){
+    return Text(
+      'Select Organization?',
+      style:TextStyle(
+          fontSize:24,
+          fontWeight:FontWeight.bold
+      ),
+      textAlign: TextAlign.center,
+    );
+  }
+
+  Widget _orgInfo(){
+    return Container(
+      child:Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          _orgLogo(),
+          _orgName(),
+          _orgDescription()
+        ],
+      )
+    );
+  }
   Widget _orgLogo(){
     return CircleAvatar(
       backgroundImage: NetworkImage("$logo"),
-      radius:30
+      radius:40
     );
   }
 
   Widget _orgName(){
     return Text(
       '$name',
-      style: TextStyle(fontWeight:FontWeight.bold, color:Colors.black, fontSize: 24)
+      style: TextStyle(fontWeight:FontWeight.bold, color:Colors.black, fontSize: 30)
     );
   }
 
   Widget _orgDescription(){
     return Text(
       'About: $description'
+    );
+  }
+
+
+  Widget _selectOrgButtons(){
+    return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children:[
+          _optionButton("No"),
+          _optionButton("Yes")
+        ]
+    );
+  }
+
+  Widget _optionButton(String option){
+    return Container(
+      child: RaisedButton(
+        onPressed: (){
+          if(option=="No"){
+            Navigator.of(context).pop();
+          }else if(option=="Yes"){
+            _setOrg();
+          }
+        },
+        padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
+        elevation: 10,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(60))),
+        child: Ink(
+          width: 86,
+          height: 40,
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Colors.lightBlue[400], Colors.lightBlue[300]],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
+              borderRadius: BorderRadius.circular(30.0)),
+          child: Center(
+              child:Text(
+                  option,
+                  textAlign: TextAlign.center,
+                  style:TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold
+                  )
+              )
+          ),
+        ),
+      ),
     );
   }
   @override
@@ -59,10 +138,9 @@ class _ChangeOrgDialogState extends State<ChangeOrgDialog>{
                 child:Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    _orgLogo(),
-                    _orgName(),
-                    _orgDescription(),
-                    //_donateButton(),
+                    _selectText(),
+                    _orgInfo(),
+                    _selectOrgButtons()
                   ],
                 )
             )
