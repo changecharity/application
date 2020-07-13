@@ -20,7 +20,28 @@ class _ChangeOrgDialogState extends State<ChangeOrgDialog>{
   var token;
   var name;
   var logo;
+  var description;
 
+
+  Widget _orgLogo(){
+    return CircleAvatar(
+      backgroundImage: NetworkImage("$logo"),
+      radius:30
+    );
+  }
+
+  Widget _orgName(){
+    return Text(
+      '$name',
+      style: TextStyle(fontWeight:FontWeight.bold, color:Colors.black, fontSize: 24)
+    );
+  }
+
+  Widget _orgDescription(){
+    return Text(
+      'About: $description'
+    );
+  }
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -38,7 +59,10 @@ class _ChangeOrgDialogState extends State<ChangeOrgDialog>{
                 child:Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-
+                    _orgLogo(),
+                    _orgName(),
+                    _orgDescription(),
+                    //_donateButton(),
                   ],
                 )
             )
@@ -56,6 +80,7 @@ class _ChangeOrgDialogState extends State<ChangeOrgDialog>{
     setState(() {
       logo=jsonDecode(response.body)["logo"];
       name=jsonDecode(response.body)["name"];
+      description=jsonDecode(response.body)["description"];
     });
 
 

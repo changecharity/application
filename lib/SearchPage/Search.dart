@@ -209,7 +209,7 @@ class _SearchState extends State<Search>{
     var content = '{"user_token":"$token", "name":"${_searchController.text}", "offset":$suggestionOffset}';
     var response = await http.post("https://api.changecharity.io/users/getnames", body:content);
     setState(() {
-      suggestions+=jsonDecode(response.body)["names"];
+      suggestions=jsonDecode(response.body)["names"];
       if(suggestions == null||suggestions.length==0){
         areSuggestions=false;
       }else{
@@ -226,7 +226,7 @@ class _SearchState extends State<Search>{
    var response = await http.post("https://api.changecharity.io/users/searchorgs", body:content);
    //Navigator.push(context, MaterialPageRoute(builder:(context)=>SearchedOrganizations(orgs)));
    setState(() {
-     orgs+=jsonDecode(response.body)["orgs"];
+     orgs=jsonDecode(response.body)["orgs"];
      extraDetails=true;
    });
    print(orgs);
