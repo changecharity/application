@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import '../Pages/login.dart';
 import '../SearchPage/details.dart';
+import '../Components/changeOrgDialog.dart';
 
 
 class Search extends StatefulWidget{
@@ -159,16 +160,18 @@ class _SearchState extends State<Search>{
                       subtitle: Text("Insert Slogan Here"),
                       //isThreeLine: true,
                       onTap: () {
-                        Navigator.push(
-                            context, MaterialPageRoute(builder: (context) =>
-                            DetailScreen(
-                              'org$orgIndex',
-                              orgs[orgIndex]["id"],
-                              context,
-                            ),
-                        )
-                        );
+                        showDialog(context: context, builder: (context)=>ChangeOrgDialog(orgs[orgIndex]["id"]), barrierDismissible: true );
                       }
+//                        Navigator.push(
+//                            context, MaterialPageRoute(builder: (context) =>
+//                            DetailScreen(
+//                              'org$orgIndex',
+//                              orgs[orgIndex]["id"],
+//                              context,
+//                            ),
+//                        )
+//                        );
+//                      }
 
                   );
                 })
@@ -206,7 +209,7 @@ class _SearchState extends State<Search>{
     var content = '{"user_token":"$token", "name":"${_searchController.text}", "offset":$suggestionOffset}';
     var response = await http.post("https://api.changecharity.io/users/getnames", body:content);
     setState(() {
-      suggestions=jsonDecode(response.body)["names"];
+      suggestions+=jsonDecode(response.body)["names"];
       if(suggestions == null||suggestions.length==0){
         areSuggestions=false;
       }else{
@@ -223,7 +226,7 @@ class _SearchState extends State<Search>{
    var response = await http.post("https://api.changecharity.io/users/searchorgs", body:content);
    //Navigator.push(context, MaterialPageRoute(builder:(context)=>SearchedOrganizations(orgs)));
    setState(() {
-     orgs=jsonDecode(response.body)["orgs"];
+     orgs+=jsonDecode(response.body)["orgs"];
      extraDetails=true;
    });
    print(orgs);
