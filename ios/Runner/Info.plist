@@ -24,10 +24,10 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>change.link</string>
+			<string>Bundle ID</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>link.changecharity.io</string>
+				<string>com.changecharity.flutter</string>
 			</array>
 		</dict>
 	</array>
