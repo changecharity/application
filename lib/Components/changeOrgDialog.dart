@@ -16,16 +16,18 @@ class ChangeOrgDialog extends StatefulWidget{
 
 }
 
-class _ChangeOrgDialogState extends State<ChangeOrgDialog>{
+class _ChangeOrgDialogState extends State<ChangeOrgDialog> with TickerProviderStateMixin{
 
   var token;
   var name="";
   var logo="https://wallpaperplay.com/walls/full/b/d/1/58065.jpg";
   var description="";
 
+
   void initState(){
     super.initState();
     _getOrgInfo();
+    
   }
 
   Widget _selectText(){
@@ -41,13 +43,6 @@ class _ChangeOrgDialogState extends State<ChangeOrgDialog>{
 
   Widget _orgInfo(){
     return Container(
-      margin:EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width*.1,vertical:MediaQuery.of(context).size.height*.02),
-        padding:EdgeInsets.all(MediaQuery.of(context).size.height*.05),
-      decoration:BoxDecoration(
-        color:Colors.grey[100],
-        borderRadius:BorderRadius.circular(10),
-        boxShadow:[BoxShadow(offset:Offset(1.0, 1.0), color: Colors.grey, blurRadius:5)]
-      ),
       child:Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -66,15 +61,20 @@ class _ChangeOrgDialogState extends State<ChangeOrgDialog>{
   }
 
   Widget _orgName(){
-    return Text(
-      '$name',
-      style: TextStyle(fontWeight:FontWeight.bold, color:Colors.black, fontSize: 30)
+    return Container(
+      margin:EdgeInsets.only(top:10, bottom:10),
+      child:Text(
+          '$name',
+          style: TextStyle(fontWeight:FontWeight.bold, color:Color.fromRGBO(0, 174, 229, 1), fontSize: 18)
+      )
     );
   }
 
   Widget _orgDescription(){
     return Text(
-      'About: $description'
+      '$description',
+      textAlign:TextAlign.center,
+
     );
   }
 
@@ -140,13 +140,13 @@ class _ChangeOrgDialogState extends State<ChangeOrgDialog>{
             elevation:15,
             shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(20)),
             child:Container(
-                height:MediaQuery.of(context).size.height*.4,
+                height:MediaQuery.of(context).size.height*.5,
                 padding:EdgeInsets.symmetric(vertical:20, horizontal:10),
                 child:Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     _selectText(),
-                    Flexible(child:_orgInfo()),
+                    _orgInfo(),
                     _selectOrgButtons()
                   ],
                 )
@@ -179,10 +179,7 @@ class _ChangeOrgDialogState extends State<ChangeOrgDialog>{
     var response = await http.post("https://api.changecharity.io/users/setorg", body:content);
     print(response.body);
     context.read<UserOrgModel>().notify(name, logo);
+    var count=0;
+    Navigator.popUntil(context,(route)=>count++==2);
   }
-
-
-
-
-
 }

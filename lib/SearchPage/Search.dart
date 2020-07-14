@@ -18,6 +18,7 @@ class _SearchState extends State<Search>{
   var suggestionOffset=0;
   var searchOffset=0;
   bool areSuggestions=false;
+  bool areOrgs=false;
   bool extraDetails=false;
   var token;
   var orgs;
@@ -63,7 +64,18 @@ class _SearchState extends State<Search>{
         textInputAction: TextInputAction.search,
         onChanged: (s){
           setState(() {
+            if(extraDetails){
+              extraDetails=!extraDetails;
+            }
             _getSuggestions();
+          });
+        },
+        onTap:(){
+          setState(() {
+            if(extraDetails){
+              _searchController.text='';
+              extraDetails=!extraDetails;
+            }
           });
         },
         onSubmitted: (s){
@@ -103,6 +115,9 @@ class _SearchState extends State<Search>{
       onPressed:(){
         setState(() {
           _searchController.text='';
+          if (extraDetails){
+            extraDetails=!extraDetails;
+          }
           _getSuggestions();
         });
       },
@@ -138,7 +153,8 @@ class _SearchState extends State<Search>{
   }
 
   Widget _searchedOrganizations() {
-    return Expanded(
+    return !areOrgs?Container(color:Colors.transparent, padding:EdgeInsets.only(top: 30), child:Text('No organizations')):
+    Expanded(
         child: Container(
             color: Colors.grey[100],
             child: ListView.builder(
@@ -162,17 +178,6 @@ class _SearchState extends State<Search>{
                       onTap: () {
                         showDialog(context: context, builder: (context)=>ChangeOrgDialog(orgs[orgIndex]["id"]), barrierDismissible: true );
                       }
-//                        Navigator.push(
-//                            context, MaterialPageRoute(builder: (context) =>
-//                            DetailScreen(
-//                              'org$orgIndex',
-//                              orgs[orgIndex]["id"],
-//                              context,
-//                            ),
-//                        )
-//                        );
-//                      }
-
                   );
                 })
         )
@@ -224,10 +229,14 @@ class _SearchState extends State<Search>{
    token = preferences.getString('token');
    var content = '{"user_token":"$token", "name":"$searchText", "offset":$searchOffset}';
    var response = await http.post("https://api.changecharity.io/users/searchorgs", body:content);
-   //Navigator.push(context, MaterialPageRoute(builder:(context)=>SearchedOrganizations(orgs)));
    setState(() {
      orgs=jsonDecode(response.body)["orgs"];
      extraDetails=true;
+     if(orgs == null || orgs.length ==0){
+       areOrgs=false;
+     }else{
+       areOrgs=true;
+     }
    });
    print(orgs);
  }

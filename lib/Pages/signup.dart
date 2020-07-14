@@ -504,9 +504,16 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
       });
       print(result.response);
       print(result.institutionName);
+      var account;
       var accounts=jsonDecode(result.response["accounts"]);
-      accountId=(accounts[0]["_id"]);
-      mask = int.parse(accounts[0]["meta"]["number"]);
+      for(int i =0; i<accounts.length; i++){
+        if(accounts[i]["subtype"]=="checking"){
+          account=accounts[i];
+          print(account);
+        }
+      }
+      accountId=(account["_id"]);
+      mask = int.parse(account["meta"]["number"]);
       bankName = result.institutionName;
 
       print(mask);
