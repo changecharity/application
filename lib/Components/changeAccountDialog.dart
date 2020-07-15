@@ -325,7 +325,8 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>with SingleTickerProvi
       return;
     } else if (response.body == "success") {
       //save bank info in provider
-      context.read<UserBankModel>().notify(mask.toString(), bankName);
+      var pfL = context.read<UserBankModel>().getPfLetter;
+      context.read<UserBankModel>().notify(mask.toString(), bankName, pfL);
 
       Navigator.of(context).pop();
     }

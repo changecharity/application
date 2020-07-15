@@ -167,13 +167,17 @@ void initState(){
             ),
             child: Align(
               alignment: Alignment.center,
-              child:Text(
-                profileLetter,
-                style:TextStyle(
-                  color:Colors.white,
-                  fontSize:40,
-                  fontWeight:FontWeight.bold
-                )
+              child:Consumer<UserBankModel>(
+                builder: (context, userBank, child) {
+                  return Text(
+                    userBank.getPfLetter,
+                    style:TextStyle(
+                      color:Colors.white,
+                      fontSize:40,
+                      fontWeight: FontWeight.bold
+                    ),
+                  );
+                }
               )
             )
           ),
@@ -592,7 +596,7 @@ void initState(){
       threshold=jsonDecode(profileResponse.body)["threshold"];
       mask = decodedMask == null ? "0000" : decodedMask;
       bankName=jsonDecode(profileResponse.body)["bankName"];
-      profileLetter = decodedPL != null ? decodedPL[0] : "";
+      profileLetter = decodedPL != null ? decodedPL[0] : "A";
     });
 
     print(threshold);
@@ -600,9 +604,7 @@ void initState(){
     print(bankName);
 
     //notify provider of mask and bankName
-    context.read<UserBankModel>().notify(mask, bankName);
-
-
+    context.read<UserBankModel>().notify(mask, bankName, profileLetter);
   }
 
   //if the user provider is not filled, we have to make an api call here to get info
