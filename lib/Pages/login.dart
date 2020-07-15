@@ -122,7 +122,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
 
   Widget _emailInput() {
     return Container(
-      margin: EdgeInsets.only(right: 10, left: 20, top: MediaQuery.of(context).size.height > 700 ? 50 : 20),
+      margin: EdgeInsets.only(right: 20, left: 20, top: MediaQuery.of(context).size.height > 700 ? 50 : 20),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.all(Radius.circular(30)),
@@ -297,26 +297,33 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
       alignment: Alignment.centerRight,
       child: Container(
         alignment: Alignment.centerRight,
-        margin: EdgeInsets.only(right: 20, top: 10, bottom: 20),
         width: 250,
-        height: 50,
+        height: MediaQuery.of(context).size.height > 700 ? 70 : 60,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 10),
-              child: Text(
-                'Sign In',
-                style: TextStyle(
-                  fontSize: 35,
-                ),
-              ),
-            ),
+            _signInEnterText(),
             _signinButton(),
           ],
         ),
       ),
     );
+  }
+
+  Widget _signInEnterText() {
+    if(MediaQuery.of(context).size.height > 700) {
+      return Container(
+        margin: EdgeInsets.fromLTRB(10,10,10,0),
+        child: Text(
+          'Sign In',
+          style: TextStyle(
+            fontSize: 33,
+          ),
+        ),
+      );
+    } else {
+      return Container();
+    }
   }
 
   Widget _signinButton() {
@@ -329,18 +336,18 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
       );
     } else {
       return Container(
+        margin: EdgeInsets.fromLTRB(0,10,20,0),
         child: RaisedButton(
           onPressed: () {
             FocusScope.of(context).unfocus();
             _submit();
-
           },
           padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
           elevation: 10,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(60))),
           child: Ink(
-            width: 100,
+            width: 90,
             height: 50,
             decoration: BoxDecoration(
                 gradient: LinearGradient(

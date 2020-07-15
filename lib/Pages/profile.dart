@@ -158,7 +158,7 @@ void initState(){
             ],
           ),
           Container(
-            margin:EdgeInsets.only(bottom:10, top: MediaQuery.of(context).size.height < 650 ? 0 : MediaQuery.of(context).size.height*0.1),
+            margin:EdgeInsets.only(bottom:10, top: MediaQuery.of(context).size.height < 700 ? 0 : MediaQuery.of(context).size.height*0.1),
             height:80,
             width:80,
             decoration: BoxDecoration(
@@ -188,7 +188,7 @@ void initState(){
 
   Widget _accountPrefs(){
     return Container(
-      margin: EdgeInsets.only(bottom:  MediaQuery.of(context).size.height < 650 ? MediaQuery.of(context).size.height * 0.07 : MediaQuery.of(context).size.height * 0.09),
+      margin: EdgeInsets.only(bottom:  MediaQuery.of(context).size.height < 700 ? MediaQuery.of(context).size.height * 0.07 : MediaQuery.of(context).size.height * 0.09),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
