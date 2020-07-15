@@ -104,7 +104,7 @@ class _ChangeOrgDialogState extends State<ChangeOrgDialog> with TickerProviderSt
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(60))),
         child: Ink(
-          width: 86,
+          width: 90,
           height: 40,
           decoration: BoxDecoration(
               gradient: LinearGradient(

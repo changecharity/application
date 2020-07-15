@@ -206,7 +206,7 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>with SingleTickerProvi
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(60))),
         child: Ink(
-          width: 86,
+          width: 90,
           height: 40,
           decoration: BoxDecoration(
               gradient: LinearGradient(

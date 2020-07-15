@@ -157,14 +157,13 @@ class _EnterEmailState extends State<EnterEmail> with TickerProviderStateMixin{
         onPressed: (){
           FocusScope.of(context).unfocus();
           _submitEmail();
-
         },
         padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
         elevation: 10,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(60))),
         child: Ink(
-          width: 86,
+          width: 90,
           height: 40,
           decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -172,7 +171,7 @@ class _EnterEmailState extends State<EnterEmail> with TickerProviderStateMixin{
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
               ),
-              borderRadius: BorderRadius.circular(30.0)),
+              borderRadius: BorderRadius.all(Radius.circular(60))),
           child: Icon(
             Icons.arrow_forward,
             color: Colors.white,
