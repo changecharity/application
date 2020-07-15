@@ -114,7 +114,8 @@ class _UnlinkDialogState extends State<UnlinkDialog>{
 
     print(response.body);
     if (response.body == "success") {
-      context.read<UserBankModel>().notify(null, null);
+      var pfL = context.read<UserBankModel>().getPfLetter;
+      context.read<UserBankModel>().notify(null, null, pfL);
       Navigator.of(context).pop();
     }
   }

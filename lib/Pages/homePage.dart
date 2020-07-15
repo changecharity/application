@@ -15,6 +15,7 @@ import '../SearchPage/Search.dart';
 import 'profile.dart';
 import '../paintings.dart';
 import 'login.dart';
+import '../Models/userBankModel.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -118,9 +119,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             color: Color.fromRGBO(0, 174, 229, 1),
             shape: BoxShape.circle,
           ),
-          child: Text(
-            'A',
-            style:TextStyle(fontSize: 24, color:Colors.white, fontWeight: FontWeight.bold),
+          child: Consumer<UserBankModel>(
+            builder: (context, userBank, child){
+              return Text(
+                userBank.getPfLetter,
+                style:TextStyle(fontSize: 24, color:Colors.white, fontWeight: FontWeight.bold),
+              );
+            },
           ),
         ),
       ),
@@ -486,10 +491,28 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     context.read<UserOrgModel>().notify(selectedOrg, selectedOrgImg);
   }
 
+  //call at initState to get user's max threshold, last 4 digits, and bank name
+  _getProfDetails() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    token = prefs.getString('token');
+    var content='{"user_token":"$token"}';
+    var profileResponse = await http.post("https://api.changecharity.io/users/getprofile", body:content);
+    var decodedMask = jsonDecode(profileResponse.body)["mask"].toString();
+    var decodedPL = jsonDecode(profileResponse.body)["legalName"];
+    var mask = decodedMask == null ? "0000" : decodedMask;
+    var bankName=jsonDecode(profileResponse.body)["bankName"];
+    var profileLetter = decodedPL != null ? decodedPL[0] : "A";
+    var threshold=jsonDecode(profileResponse.body)["threshold"];
+
+    //notify provider of mask and bankName
+    context.read<UserBankModel>().notify(mask, bankName, profileLetter);
+  }
+
   _getAllInfo() async{
     _getTransactions();
     _getTotals();
     _getOrgInfo();
+    _getProfDetails();
   }
   void _showDialog() {
     // flutter defined function

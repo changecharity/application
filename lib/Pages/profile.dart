@@ -158,7 +158,7 @@ void initState(){
             ],
           ),
           Container(
-            margin:EdgeInsets.only(bottom:10, top: MediaQuery.of(context).size.height < 650 ? 0 : MediaQuery.of(context).size.height*0.1),
+            margin:EdgeInsets.only(bottom:10, top: MediaQuery.of(context).size.height < 700 ? 0 : MediaQuery.of(context).size.height*0.1),
             height:80,
             width:80,
             decoration: BoxDecoration(
@@ -167,13 +167,17 @@ void initState(){
             ),
             child: Align(
               alignment: Alignment.center,
-              child:Text(
-                profileLetter,
-                style:TextStyle(
-                  color:Colors.white,
-                  fontSize:40,
-                  fontWeight:FontWeight.bold
-                )
+              child:Consumer<UserBankModel>(
+                builder: (context, userBank, child) {
+                  return Text(
+                    userBank.getPfLetter,
+                    style:TextStyle(
+                      color:Colors.white,
+                      fontSize:40,
+                      fontWeight: FontWeight.bold
+                    ),
+                  );
+                }
               )
             )
           ),
@@ -188,7 +192,7 @@ void initState(){
 
   Widget _accountPrefs(){
     return Container(
-      margin: EdgeInsets.only(bottom:  MediaQuery.of(context).size.height < 650 ? MediaQuery.of(context).size.height * 0.07 : MediaQuery.of(context).size.height * 0.09),
+      margin: EdgeInsets.only(bottom:  MediaQuery.of(context).size.height < 700 ? MediaQuery.of(context).size.height * 0.07 : MediaQuery.of(context).size.height * 0.09),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -592,7 +596,7 @@ void initState(){
       threshold=jsonDecode(profileResponse.body)["threshold"];
       mask = decodedMask == null ? "0000" : decodedMask;
       bankName=jsonDecode(profileResponse.body)["bankName"];
-      profileLetter = decodedPL != null ? decodedPL[0] : "";
+      profileLetter = decodedPL != null ? decodedPL[0] : "A";
     });
 
     print(threshold);
@@ -600,9 +604,7 @@ void initState(){
     print(bankName);
 
     //notify provider of mask and bankName
-    context.read<UserBankModel>().notify(mask, bankName);
-
-
+    context.read<UserBankModel>().notify(mask, bankName, profileLetter);
   }
 
   //if the user provider is not filled, we have to make an api call here to get info

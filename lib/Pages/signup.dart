@@ -6,6 +6,7 @@ import 'package:flutter/animation.dart';
 import 'package:plaid/plaid.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../paintings.dart';
 import 'emailAuth.dart';
 
@@ -34,12 +35,14 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
   final nameFocusNode=FocusNode();
   final emailFocusNode=FocusNode();
   final passFocusNode=FocusNode();
+  final tosFocusNode=FocusNode();
   String _nameErr='';
   String _passErr='';
   String _emailErr='';
   String _plaidErr='';
   bool obscurePass=true;
   bool loading=false;
+  bool _tosAccepted = false;
 
   void initState() {
     super.initState();
@@ -92,12 +95,12 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
 
   //Sign Up
   Widget _signUpText() {
-    if(MediaQuery.of(context).size.height < 650 && MediaQuery.of(context).viewInsets.bottom != 0) {
+    if(MediaQuery.of(context).size.height < 700 && MediaQuery.of(context).viewInsets.bottom != 0) {
       return Text("");
     }
     return Container(
       margin: EdgeInsets.only(top: MediaQuery.of(context).viewInsets.bottom == 0
-          ? MediaQuery.of(context).size.height < 650 ? 0 : MediaQuery.of(context).size.height *0.05
+          ? MediaQuery.of(context).size.height < 700 ? 0 : MediaQuery.of(context).size.height *0.05
           : 0),
       alignment: Alignment.center,
       child: Text(
@@ -247,7 +250,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
           });
         },
         onEditingComplete: (){
-          FocusScope.of(context).unfocus();
+          FocusScope.of(context).nextFocus();
         },
         decoration: InputDecoration(
           labelText: "Password",
@@ -311,7 +314,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
       child: Container(
         width: MediaQuery.of(context).size.width,
         height: 60,
-        margin: EdgeInsets.only(right: 20, left: 20, ),
+        margin: EdgeInsets.only(right: 20, left: 20),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.all(Radius.circular(30)),
@@ -367,26 +370,92 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
     }
   }
 
-  //Sign up button. Switches to loading on load
-  Widget _signUpCont() {
+  Widget _tosPrivacyCont() {
     return Container(
-      margin: EdgeInsets.only(right: 20, top: MediaQuery.of(context).size.height < 650 ? 0 : MediaQuery.of(context).size.height *0.05, bottom: 10),
+      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 0),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 10),
+        children: [
+          Checkbox(
+            value: _tosAccepted,
+            checkColor: Colors.lightBlue[900],
+            activeColor: Colors.orange[200],
+            focusColor: Colors.red[500],
+            autofocus: true,
+            focusNode: tosFocusNode,
+            onChanged: (bool newVal) {
+              setState(() {
+                _tosAccepted = !_tosAccepted;
+              });
+            },
+          ),
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                _tosAccepted = !_tosAccepted;
+              });
+            },
             child: Text(
-              'Sign Up',
+              'I agree to the ',
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+                _launchURL("https://changecharity.io/terms-of-service");
+              },
+            child: Text(
+                'Terms',
               style: TextStyle(
-                fontSize: 35,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),
-          _signUpButton()
+          Text(
+              ' and '
+          ),
+          GestureDetector(
+            onTap: () {
+              _launchURL("https://changecharity.io/privacy-policy");
+            },
+            child: Text(
+              'Privacy Policy',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
         ],
       ),
     );
+  }
+
+  //Sign up button. Switches to loading on load
+  Widget _signUpCont() {
+    return Container(
+      margin: EdgeInsets.only(right: 20, top:0, bottom: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          _signUpEnterText(),
+          _signUpButton(),
+        ],
+      ),
+    );
+  }
+
+  Widget _signUpEnterText() {
+    if(MediaQuery.of(context).size.height > 700) {
+      return Container(
+        margin: EdgeInsets.symmetric(horizontal: 10),
+        child: Text(
+          'Sign Up',
+          style: TextStyle(
+            fontSize: 35,
+          ),
+        ),
+      );
+    } else {
+      return Container();
+    }
   }
 
   Widget _signUpButton(){
@@ -401,11 +470,15 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
     return Container(
       child: RaisedButton(
         onPressed: (){
-          FocusScope.of(context).unfocus();
-          _signUp();
+          if(_tosAccepted) {
+            FocusScope.of(context).unfocus();
+            _signUp();
+          } else {
+            tosFocusNode.hasFocus;
+          }
         },
         padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
-        elevation: 10,
+        elevation: _tosAccepted ? 10 : 0,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(60))),
         child: Ink(
@@ -413,7 +486,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
           height: 50,
           decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [Colors.lightBlue[400], Colors.lightBlue[300]],
+                colors: _tosAccepted ? [Colors.lightBlue[400], Colors.lightBlue[300]] : [Colors.grey[400], Colors.grey[400]],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
               ),
@@ -458,6 +531,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                         _errCont(_passErr),
                         _plaidButton(),
                         _errCont(_plaidErr),
+                        _tosPrivacyCont(),
                         _signUpCont(),
                       ],
                     ),
@@ -641,5 +715,11 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
       }
     }
   }
-
+  _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
 }
