@@ -1,30 +1,19 @@
-import 'dart:async';
-import 'dart:convert';
-import'package:http/http.dart' as http;
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'unlinkAccountDialog.dart';
-import 'changeAccountDialog.dart';
+import 'package:http/http.dart' as http;
+import '../Pages/emailAuth.dart';
 
-
-class PasswordDialog extends StatefulWidget {
-  @override
-  _PwDialogState createState() => _PwDialogState();
-
-  final String action;
-
-  PasswordDialog(this.action);
+class EnterEmail extends StatefulWidget{
+  _EnterEmailState createState()=> _EnterEmailState();
 }
 
-class _PwDialogState extends State<PasswordDialog> with SingleTickerProviderStateMixin{
-
+class _EnterEmailState extends State<EnterEmail> with TickerProviderStateMixin{
   Animation<Color> loadingAn;
   AnimationController loadingController;
 
-  var token;
-  String _passErr="";
-  var _passController=TextEditingController();
-  bool obscurePass=true;
+  String _emailErr="";
+  var _emailController=TextEditingController();
   bool loading=false;
 
 
@@ -43,7 +32,7 @@ class _PwDialogState extends State<PasswordDialog> with SingleTickerProviderStat
     return Column(
       children: <Widget>[
         Text(
-            'Password Confirmation',
+            'Forgot Password?',
             style:TextStyle(
                 fontSize: 24,
                 fontWeight:FontWeight.bold
@@ -52,7 +41,7 @@ class _PwDialogState extends State<PasswordDialog> with SingleTickerProviderStat
         Container(
           margin: EdgeInsets.only(top:10),
           child:Text(
-              'Please confirm your password to continue:',
+              'Please enter your email address to continue:',
               style:TextStyle(
                 fontSize: 14,
               )
@@ -62,7 +51,7 @@ class _PwDialogState extends State<PasswordDialog> with SingleTickerProviderStat
     );
   }
 
-  Widget _passwordContainer(){
+  Widget _emailContainer(){
     return Column(
       children: <Widget>[
         Container(
@@ -79,59 +68,38 @@ class _PwDialogState extends State<PasswordDialog> with SingleTickerProviderStat
               ],
             ),
             child: TextField(
-              controller:_passController,
-              obscureText: obscurePass,
+              controller:_emailController,
               onChanged: (s){
                 setState(() {
-                  _passErr='';
+                  _emailErr='';
                 });
               },
               onEditingComplete: (){
                 FocusScope.of(context).unfocus();
               },
               decoration: InputDecoration(
-                labelText: "Password",
+                labelText: "Email",
                 hasFloatingPlaceholder: false,
-                prefixIcon: _passPrefix(),
-                suffixIcon: _passSuffix(),
+                prefixIcon: _emailIcon(),
               ),
             )
         ),
-        _passErr==null||_passErr==''?Container():_errorContainer(),
+        _emailErr==null||_emailErr==''?Container():_errorContainer(),
       ],
     );
   }
 
-  Widget _passPrefix() {
+  Widget _emailIcon() {
     return Container(
       margin: EdgeInsets.only(left: 15, right: 15),
       child: Icon(
-        Icons.lock,
+        Icons.email,
         size: 20,
         color: Colors.black,
       ),
     );
   }
 
-  //visibility suffix
-  Widget _passSuffix() {
-    return Container(
-      margin: EdgeInsets.only(left: 15, right: 15),
-      child: IconButton(
-          onPressed:(){
-            setState(() {
-              obscurePass=!obscurePass;
-            });
-          },
-          icon:Icon(
-            obscurePass?Icons.visibility:Icons.visibility_off,
-            size: 20,
-            color: Colors.black,
-          )
-
-      ),
-    );
-  }
 
   Widget _errorContainer() {
     return Align(
@@ -143,7 +111,7 @@ class _PwDialogState extends State<PasswordDialog> with SingleTickerProviderStat
           bottom: 3,
         ),
         child: Text(
-          _passErr,
+          _emailErr,
           style: TextStyle(
             color: Colors.red,
             fontWeight: FontWeight.bold,
@@ -154,7 +122,7 @@ class _PwDialogState extends State<PasswordDialog> with SingleTickerProviderStat
   }
 
 
-  Widget _confirmCont(context) {
+  Widget _submitCont(context) {
     return Container(
       margin: EdgeInsets.only(),
       child: Row(
@@ -163,19 +131,19 @@ class _PwDialogState extends State<PasswordDialog> with SingleTickerProviderStat
           Container(
             margin: EdgeInsets.symmetric(horizontal: 10),
             child: Text(
-              'Confirm',
+              'Submit',
               style: TextStyle(
                 fontSize: 24,
               ),
             ),
           ),
-          _confirmButton(context)
+          _submitButton(context)
         ],
       ),
     );
   }
 
-  Widget _confirmButton(context){
+  Widget _submitButton(context){
     if(loading){
       return Container(
           margin: EdgeInsets.fromLTRB(32, 0, 32, 0),
@@ -188,7 +156,7 @@ class _PwDialogState extends State<PasswordDialog> with SingleTickerProviderStat
       child: RaisedButton(
         onPressed: (){
           FocusScope.of(context).unfocus();
-          _validPassAndAction(widget.action);
+          _submitEmail();
 
         },
         padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
@@ -215,32 +183,29 @@ class _PwDialogState extends State<PasswordDialog> with SingleTickerProviderStat
     );
   }
 
-
-
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return GestureDetector(
-      onTap:() {
-        FocusScope.of(context).unfocus();
-      },
-      child:Dialog(
-          backgroundColor: Colors.grey[100],
-          elevation:15,
-          shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(20)),
-          child:Container(
-              height:MediaQuery.of(context).size.height*.4,
-              padding:EdgeInsets.symmetric(vertical:20, horizontal:10),
-              child:Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  _confirmText(),
-                  _passwordContainer(),
-                  _confirmCont(context)
-                ],
-              )
-          )
-      )
+        onTap:() {
+          FocusScope.of(context).unfocus();
+        },
+        child:Dialog(
+            backgroundColor: Colors.grey[100],
+            elevation:15,
+            shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(20)),
+            child:Container(
+                height:MediaQuery.of(context).size.height*.4,
+                padding:EdgeInsets.symmetric(vertical:20, horizontal:10),
+                child:Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    _confirmText(),
+                    _emailContainer(),
+                    _submitCont(context)
+                  ],
+                )
+            )
+        )
     );
   }
 
@@ -250,35 +215,27 @@ class _PwDialogState extends State<PasswordDialog> with SingleTickerProviderStat
     super.dispose();
   }
 
-  _validPassAndAction(String action) async{
+  _submitEmail() async{
     setState(() {
       loading=!loading;
     });
 
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    token = prefs.getString('token');
-    print(token);
-    var content='{"user_token":"$token", "password":"${_passController.text}"}';
-    var response=await http.post("https://api.changecharity.io/users/validpass", body:content);
+    var content='{"email":"${_emailController.text}"}';
+    var response=await http.post("https://api.changecharity.io/users/sendforgotpass", body:content);
     print(response.body);
 
-    if(response.body=="rpc error: code = Unknown desc = Wrong Password") {
+    if(response.body=="rpc error: code = Unknown desc = email does not exist") {
       setState(() {
         loading = !loading;
-        _passErr = "Wrong Password";
+        _emailErr = "No account associated with this email";
       });
       return;
-    }else if(response.body=="success"){
-      Navigator.of(context).pop();
-      if(action=="unlink"){
-        showDialog(context:context, builder:(context)=>UnlinkDialog(_passController.text), barrierDismissible: true);
-      } else if(action=="change"){
-        showDialog(context:context, builder:(context)=>ChangeAccDialog(_passController.text), barrierDismissible: true);
+    }else {
+      SharedPreferences prefs= await SharedPreferences.getInstance();
+      prefs.setString('token',response.body);
+      if(prefs.getString('token')!=null&&prefs.getString('token')!=''){
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder:(context)=>EmailAuth(_emailController.text)), (route) => false);
       }
     }
   }
-
-
 }
-
-

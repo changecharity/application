@@ -9,6 +9,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'signup.dart';
 import '../paintings.dart';
 import 'homePage.dart';
+import 'forgotPass.dart';
+import '../Components/enterEmailDialog.dart';
 
 
 class Login extends StatefulWidget {
@@ -275,13 +277,18 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
     return Container(
       alignment: Alignment.centerRight,
       margin: EdgeInsets.only(right: 35, top: 0),
-      child: Text(
-        'Forgot your password?',
-        style: TextStyle(
-          fontSize: 16,
-          color: Colors.grey[600],
+      child: GestureDetector(
+        onTap:(){
+          showDialog(context:context, builder:(context)=>EnterEmail(), barrierDismissible: true);
+        },
+        child:Text(
+          'Forgot your password?',
+          style: TextStyle(
+            fontSize: 16,
+            color: Colors.grey[600],
+          ),
         ),
-      ),
+      )
     );
   }
 
@@ -475,28 +482,10 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
 
   bool _checkValidPassword(){
 
-    bool containsCap = RegExp(r"[A-Z]").hasMatch(_passController.text);
-    var containsNumb=RegExp(r"\d").hasMatch(_passController.text);
-    //regex not working for this.have to fix:
-    var containsSpecialChar=RegExp(r"^\W").hasMatch(_passController.text);
+
     if (_passController.text ==''|| _passController.text==null){
       setState((){
         _passErr="This field can't be blank";
-      });
-      return false;
-    }else if(_passController.text.length<6) {
-      setState(() {
-        _passErr = "Must be longer than 6 characters";
-      });
-      return false;
-    }else if(!containsCap){
-      setState(() {
-        _passErr="Must contain at least one capital letter";
-      });
-      return false;
-    } else if(!containsNumb){
-      setState(() {
-        _passErr="Must contain at least one number";
       });
       return false;
     }
@@ -509,7 +498,8 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
     if(!_checkValidEmail()) {
       print(_emailErr);
       return;
-    }else if(!_checkValidPassword()){
+    }
+    else if(!_checkValidPassword()){
       print(_passErr);
       return;
     }
@@ -533,7 +523,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
       break;
       case "rpc error: code = Unknown desc = Wrong Password":{
         setState((){
-          _passErr="Wrong Password";
+          _passErr="Incorrect Password";
           loading=!loading;
         });
         return;
