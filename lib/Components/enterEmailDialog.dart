@@ -233,7 +233,7 @@ class _EnterEmailState extends State<EnterEmail> with TickerProviderStateMixin{
       SharedPreferences prefs= await SharedPreferences.getInstance();
       prefs.setString('token',response.body);
       if(prefs.getString('token')!=null&&prefs.getString('token')!=''){
-        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder:(context)=>EmailAuth(_emailController.text)), (route) => false);
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder:(context)=>EmailAuth(_emailController.text, "forgotpass")), (route) => false);
       }
     }
   }

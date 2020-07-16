@@ -7,11 +7,15 @@ import 'dart:convert';
 import '../paintings.dart';
 import 'homePage.dart';
 import '../Pages/signUp.dart';
+import '../Pages/forgotPass.dart';
 
 class EmailAuth extends StatefulWidget{
 
   final emailAddress;
-  EmailAuth(this.emailAddress);
+  final action;
+
+  EmailAuth(this.emailAddress, this.action);
+
   
   @override
   _EmailAuthState createState() => _EmailAuthState();
@@ -408,8 +412,37 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin{
     return true;
   }
 
-  _verificationSuccessful() {
-    Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>HomePage()));
+
+  _verifyAndSignup() async{
+    var content='{"user_token":"$token","key":${int.parse(_pinController.text)}}';
+    var response= await http.post("https://api.changecharity.io/users/updatesignup", body:content);
+    print (response.body);
+
+    if(response.body=="rpc error: code = Unknown desc = key is incorrect"||response.body=="proto: (line 1:171): invalid value for int32 type: "){
+      setState(() {
+        loading=!loading;
+        _pinError = "Incorrect code. Please try again.";
+        return;
+      });
+    }else if(response.body=="success"){
+      Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>HomePage()));
+    }
+  }
+
+  _verifyAndEnterPass() async{
+    var content = '{"user_token": "$token", "key":${int.parse(_pinController.text)}}';
+    var response = await http.post("https://api.changecharity.io/users/validkey", body:content);
+    print(response.body);
+
+    if(response.body=="rpc error: code = Unknown desc = key is incorrect"){
+      setState(() {
+        loading=!loading;
+        _pinError = "Incorrect code. Please try again.";
+        return;
+      });
+    } else if(response.body == "success"){
+      Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>ForgotPass(int.parse(_pinController.text))));
+    }
   }
 
   _verifyAccount() async{
@@ -419,23 +452,19 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin{
         return;
       });
     }else {
-      setState((){
-        loading=!loading;
+      setState(() {
+        loading = !loading;
       });
-      var content='{"user_token":"$token","key":"${_pinController.text}"}';
-      var response= await http.post("https://api.changecharity.io/users/updatesignup", body:content);
-      print (response.body);
-
-
-      if(response.body=="rpc error: code = Unknown desc = key is incorrect"||response.body=="proto: (line 1:171): invalid value for int32 type: "){
-        setState(() {
-          loading=!loading;
-          _pinError = "Code is incorrect. Please try again.";
-          return;
-        });
-      }else if(response.body=="success"){
-        _verificationSuccessful();
+      if(widget.action=="signup"){
+        print("verifyandsignup");
+        _verifyAndSignup();
+      } else if(widget.action=="forgotpass"){
+        print("verifyandenterpass");
+        _verifyAndEnterPass();
       }
     }
+
   }
+
+
 }

@@ -601,7 +601,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
     SharedPreferences prefs=await SharedPreferences.getInstance();
     prefs.setString('token', val);
    if(prefs.getString('token')!=null&&prefs.getString('token')!=''){
-      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder:(context)=>EmailAuth(_emailController.text)), (route) => false);
+      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder:(context)=>EmailAuth(_emailController.text, "signup")), (route) => false);
     }
   }
 
