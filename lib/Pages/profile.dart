@@ -10,6 +10,7 @@ import 'package:http/http.dart' as http;
 import '../SearchPage/Search.dart';
 import '../paintings.dart';
 import '../Models/userOrgModel.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'homePage.dart';
 import 'login.dart';
 import '../Components/passwordDialog.dart';
@@ -24,7 +25,7 @@ class Profile extends StatefulWidget{
   _ProfileState createState()=>_ProfileState();
 }
 
-enum MenuOptions { signOut, changePassword, deleteAccount, about }
+enum MenuOptions { signOut, contact, about }
 
 class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
 
@@ -52,8 +53,6 @@ void initState(){
 
     _confirmLogin();
     _getInitInfo();
-
-
 
     _controller = AnimationController(vsync: this, duration: Duration(seconds:2));
 
@@ -120,6 +119,13 @@ void initState(){
           switch(result.index) {
             case 0 :
               _logout();
+              break;
+            case 1 :
+              _contactUs();
+              break;
+            case 2 :
+              _aboutDialog();
+              break;
           }
         },
         itemBuilder: (BuildContext context) => <PopupMenuEntry<MenuOptions>>[
@@ -128,12 +134,8 @@ void initState(){
             child: Text('Sign Out'),
           ),
           const PopupMenuItem<MenuOptions>(
-            value: MenuOptions.changePassword,
-            child: Text('Change Password'),
-          ),
-          const PopupMenuItem<MenuOptions>(
-            value: MenuOptions.deleteAccount,
-            child: Text('Delete Account'),
+            value: MenuOptions.contact,
+            child: Text('Contact Us'),
           ),
           const PopupMenuItem<MenuOptions>(
             value: MenuOptions.about,
@@ -646,7 +648,10 @@ void initState(){
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('token', null);
     Navigator.pushAndRemoveUntil(context, PageRouteBuilder(pageBuilder: (_, __, ___) => Login()), (route) => false);
+  }
 
+  void _contactUs() async {
+    launch('mailto:support@changecharity.io?subject=AppSupport');
   }
 
   void _returnHome() {
@@ -654,5 +659,78 @@ void initState(){
     Future<void>.delayed(Duration(milliseconds:500),(){
       Navigator.pushAndRemoveUntil(context, PageRouteBuilder(pageBuilder: (_, __, ___) => HomePage()), (route) => false);
     });
+  }
+
+  void _aboutDialog() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(15)),
+          ),
+          title: Align(
+            alignment: Alignment.center,
+            child: Text(
+              "About Change",
+              style: TextStyle(
+                fontSize: 20,
+              ),
+            ),
+          ),
+          content: Container(
+            height: 50,
+            child: Align(
+              alignment: Alignment.center,
+              child: Column(
+               children: <Widget>[
+                 Row(
+                   mainAxisAlignment: MainAxisAlignment.center,
+                   children: <Widget>[
+                     GestureDetector(
+                       onTap: () {
+                         launch("https://changecharity.io/terms-of-service");
+                       },
+                       child: Text(
+                         'Terms',
+                         style: TextStyle(
+                           fontWeight: FontWeight.bold,
+                         ),
+                       ),
+                     ),
+                     Container(
+                       child: Text(' · '),
+                     ),
+                     GestureDetector(
+                       onTap: () {
+                         launch("https://changecharity.io/privacy-policy");
+                       },
+                       child: Text(
+                         'Privacy Policy',
+                         style: TextStyle(
+                           fontWeight: FontWeight.bold,
+                         ),
+                       ),
+                     ),
+                   ],
+                 )
+               ],
+              ),
+            )
+          ),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }
