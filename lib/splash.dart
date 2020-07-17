@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Pages/login.dart';
 import 'Pages/homePage.dart';
+import 'Pages/emailAuth.dart';
+import 'Pages/forgotPass.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 
@@ -13,7 +15,9 @@ class Splash extends StatefulWidget {
 class _SplashState extends State<Splash> {
   double _width = 120;
   double _height = 130;
-  bool _initScreen;
+  //bool _initScreen;
+  String _initScreen;
+  var email;
 
   @override
   void initState() {
@@ -43,18 +47,61 @@ class _SplashState extends State<Splash> {
     );
   }
 
+   _pushRoute() {
+    switch(_initScreen){
+      case "homepage":{
+        return HomePage();
+      }
+      break;
+
+      case "authpage":{
+        return EmailAuth(email, "signup");
+      }
+      break;
+
+     case "login":{
+        return Login();
+      }
+      break;
+
+      case "forgotpage":{
+        return EmailAuth(email, "forgotpass");
+      }
+    }
+  }
+
   void _getRoute() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token");
-    _initScreen = token != null ? true : false;
+    var auth = true;
+    email = prefs.getString("signUpEmail");
+    //if token=null, login
+    //if token!=null and email!=null, email logic
+    //homepage
 
+    if(email == null) {
+      email = prefs.getString("forgotPassEmail");
+      auth = false;
+    }
+    if(token == null){
+      _initScreen="login";
+    }else if(token!=null &&email!=null){
+      if (auth) {
+        _initScreen = "authpage";
+      } else {
+        _initScreen = "forgotpage";
+      }
+    }else{
+      _initScreen="homepage";
+
+    }
 
     Future<void>.delayed(Duration(milliseconds: 600), () {
       setState(() {
         _width = 260;
       });
       Future<void>.delayed(Duration(milliseconds: 600), () {
-          Navigator.pushReplacement(context, PageRouteBuilder(pageBuilder: (_, __, ___) => _initScreen ? HomePage() : Login()));
+          Navigator.pushReplacement(context, PageRouteBuilder(pageBuilder: (_, __, ___) => _pushRoute()));
       });
     });
   }

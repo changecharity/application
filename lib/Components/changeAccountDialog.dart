@@ -254,21 +254,19 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>with SingleTickerProvi
 
   //handle showing the plaid api
   showPlaidView() {
-    bool plaidSandbox = true;
-
     Configuration configuration = Configuration(
         plaidPublicKey: '014d4f2c01905eafa07cbcd2755ef5',
         plaidBaseUrl: 'https://cdn.plaid.com/link/v2/stable/link.html',
-        plaidEnvironment: plaidSandbox ? 'sandbox' : 'production',
+        plaidEnvironment: 'development',
         environmentPlaidPathAccessToken:
         'https://sandbox.plaid.com/item/public_token/exchange',
         environmentPlaidPathStripeToken:
         'https://sandbox.plaid.com/processor/stripe/bank_account_token/create',
         plaidClientId: '',
-        secret: plaidSandbox ? '' : '',
-        clientName: 'ClientName',
+        secret: '',
+        clientName: 'Change',
         webhook: 'https://api.changecharity.io/plaidwebhook',
-        products: 'auth,income',
+        products: 'transactions',
         selectAccount: 'false');
 
     FlutterPlaidApi flutterPlaidApi = FlutterPlaidApi(configuration);
@@ -278,9 +276,16 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>with SingleTickerProvi
       });
       print(result.response);
       print(result.institutionName);
+      var account;
       var accounts=jsonDecode(result.response["accounts"]);
-      accountId=(accounts[0]["_id"]);
-      mask = int.parse(accounts[0]["meta"]["number"]);
+      for(int i =0; i<accounts.length; i++){
+        if(accounts[i]["subtype"]=="checking"){
+          account=accounts[i];
+          print(account);
+        }
+      }
+      accountId=(account["_id"]);
+      mask = int.parse(account["meta"]["number"]);
       bankName = result.institutionName;
 
       print(mask);

@@ -214,6 +214,13 @@ class _EnterEmailState extends State<EnterEmail> with TickerProviderStateMixin{
     super.dispose();
   }
 
+  void _setTime()async{
+    var timePlusThirty=DateTime.now().add(new Duration(seconds:1800));
+    SharedPreferences timePref =await SharedPreferences.getInstance();
+    timePref.setString('time', timePlusThirty.toString());
+    print(timePlusThirty.toString());
+  }
+
   _submitEmail() async{
     setState(() {
       loading=!loading;
@@ -232,7 +239,9 @@ class _EnterEmailState extends State<EnterEmail> with TickerProviderStateMixin{
     }else {
       SharedPreferences prefs= await SharedPreferences.getInstance();
       prefs.setString('token',response.body);
+      prefs.setString('forgotPassEmail', "${_emailController.text}");
       if(prefs.getString('token')!=null&&prefs.getString('token')!=''){
+        _setTime();
         Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder:(context)=>EmailAuth(_emailController.text, "forgotpass")), (route) => false);
       }
     }

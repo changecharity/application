@@ -418,7 +418,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       var content = '{"user_token":"$token", "org":$org}';
       var response = await http.post("https://api.changecharity.io/users/setorg", body:content);
       print(response.body);
-      _getOrgInfo();
+      await _getOrgInfo();
       prefs.setInt('selOrg', null);
       _showDialog();
     }
@@ -431,6 +431,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     var transContent='{"user_token":"$token", "offset":$offset}';
     var transactionResponse = await http.post("https://api.changecharity.io/users/gettransactions", body:transContent);
     if (transactionResponse.body.contains("no rows in result set")) {
+      prefs.setString('token', null);
       Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>Login()));
     }
     var transDecoded = jsonDecode(transactionResponse.body)["transactions"];

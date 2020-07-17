@@ -100,6 +100,9 @@ class _SearchState extends State<Search>{
         color: Colors.grey[500],
       ),
       onPressed: (){
+        extraDetails?setState((){
+          !extraDetails;
+        }):
         Navigator.pop(context);
       },
       splashColor: Colors.transparent,
@@ -134,7 +137,7 @@ class _SearchState extends State<Search>{
       child: !areSuggestions ? Container(color:Colors.transparent):
       ListView.builder(
         controller:_suggestionScrollController,
-        itemCount: !areSuggestions? 1: suggestions.length,
+        itemCount: !areSuggestions? 0: suggestions.length,
         itemBuilder: (context, index){
           return !areSuggestions?Container(color:Colors.transparent):
           ListTile(
@@ -162,22 +165,23 @@ class _SearchState extends State<Search>{
                 scrollDirection: Axis.vertical,
                 itemCount: orgs.length,
                 itemBuilder: (context, orgIndex) {
-                  return ListTile(
-                      leading: Container(
-                          height: 50,
-                          width: 50,
-                          child: CircleAvatar(
-                            backgroundImage: NetworkImage(
-                                "${orgs[orgIndex]["logo"]}"),
-                          )
-                      ),
-                      trailing: Icon(Icons.arrow_forward_ios),
-                      title: Text("${orgs[orgIndex]["name"]}"),
-                      subtitle: Text("Insert Slogan Here"),
-                      //isThreeLine: true,
-                      onTap: () {
+                  return Container(
+                    margin: EdgeInsets.only(top:10),
+                    child:ListTile(
+                    leading: Container(
+                      height: 50,
+                      width: 50,
+                      child: CircleAvatar(
+                        backgroundImage: NetworkImage(
+                            "${orgs[orgIndex]["logo"]}"),
+                      )
+                     ),
+                    trailing: Icon(Icons.arrow_forward_ios),
+                    title: Text("${orgs[orgIndex]["name"]}"),
+                    onTap: () {
                         showDialog(context: context, builder: (context)=>ChangeOrgDialog(orgs[orgIndex]["id"]), barrierDismissible: true );
                       }
+                    )
                   );
                 })
         )
@@ -214,14 +218,20 @@ class _SearchState extends State<Search>{
     var content = '{"user_token":"$token", "name":"${_searchController.text}", "offset":$suggestionOffset}';
     var response = await http.post("https://api.changecharity.io/users/getnames", body:content);
     setState(() {
-      suggestions=jsonDecode(response.body)["names"];
-      if(suggestions == null||suggestions.length==0){
-        areSuggestions=false;
+      if(suggestionOffset==0){
+          suggestions=jsonDecode(response.body)["names"];
       }else{
-        areSuggestions=true;
+          suggestions+=jsonDecode(response.body)["names"];
+      }
+      if(suggestions == null||suggestions.length==0){
+          areSuggestions=false;
+      }else{
+          areSuggestions=true;
       }
     });
+
     print(suggestions);
+    print(suggestions.length);
  }
 
  _searchOrgs() async{
@@ -230,15 +240,20 @@ class _SearchState extends State<Search>{
    var content = '{"user_token":"$token", "name":"$searchText", "offset":$searchOffset}';
    var response = await http.post("https://api.changecharity.io/users/searchorgs", body:content);
    setState(() {
-     orgs=jsonDecode(response.body)["orgs"];
+     if(searchOffset==0){
+       orgs=jsonDecode(response.body)["orgs"];
+     }else{
+       orgs+=jsonDecode(response.body)["orgs"];
+     }
      extraDetails=true;
-     if(orgs == null || orgs.length ==0){
+     if(orgs == null){
        areOrgs=false;
      }else{
        areOrgs=true;
      }
    });
    print(orgs);
+   print(orgs.length);
  }
 
  _searchScrollListener(){

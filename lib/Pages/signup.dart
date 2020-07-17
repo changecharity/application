@@ -554,18 +554,16 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
 
   //handles plaid view
   showPlaidView() {
-    bool plaidSandbox = true;
-
     Configuration configuration = Configuration(
         plaidPublicKey: '014d4f2c01905eafa07cbcd2755ef5',
         plaidBaseUrl: 'https://cdn.plaid.com/link/v2/stable/link.html',
-        plaidEnvironment: plaidSandbox ? 'sandbox' : 'production',
+        plaidEnvironment: 'development',
         environmentPlaidPathAccessToken:
             'https://sandbox.plaid.com/item/public_token/exchange',
         environmentPlaidPathStripeToken:
             'https://sandbox.plaid.com/processor/stripe/bank_account_token/create',
         plaidClientId: '',
-        secret: plaidSandbox ? '' : '',
+        secret: '',
         clientName: 'Change',
         webhook: 'https://api.changecharity.io/plaidwebhook',
         products: 'transactions',
@@ -600,6 +598,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
   void _saveSignUp(val) async{
     SharedPreferences prefs=await SharedPreferences.getInstance();
     prefs.setString('token', val);
+    prefs.setString('signUpEmail', "${_emailController.text}");
    if(prefs.getString('token')!=null&&prefs.getString('token')!=''){
       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder:(context)=>EmailAuth(_emailController.text, "signup")), (route) => false);
     }

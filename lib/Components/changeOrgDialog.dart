@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../Models/userOrgModel.dart';
 import '../Pages/profile.dart';
 
@@ -54,9 +55,23 @@ class _ChangeOrgDialogState extends State<ChangeOrgDialog> with TickerProviderSt
     );
   }
   Widget _orgLogo(){
-    return CircleAvatar(
-      backgroundImage: NetworkImage("$logo"),
-      radius:40
+    return Container(
+      margin:EdgeInsets.only(top:15),
+      child:logo!=null||logo!=""||logo!="https://wallpaperplay.com/walls/full/b/d/1/58065.jpg"?  Container(
+        height:100,
+        width:100,
+        child:ClipOval(
+          child: CachedNetworkImage(
+            fit: BoxFit.cover,
+            imageUrl:"$logo",
+            placeholder: (context, url) => CircularProgressIndicator(),
+            errorWidget: (context, url, error) => IconButton(
+              icon: Icon(Icons.search),
+              iconSize: 45,
+            ),
+          ),
+        )
+      ):Icon(Icons.business, size:100)
     );
   }
 
@@ -65,27 +80,29 @@ class _ChangeOrgDialogState extends State<ChangeOrgDialog> with TickerProviderSt
       margin:EdgeInsets.only(top:10, bottom:10),
       child:Text(
           '$name',
-          style: TextStyle(fontWeight:FontWeight.bold, color:Color.fromRGBO(0, 174, 229, 1), fontSize: 18)
+          style: TextStyle(fontWeight:FontWeight.bold, color:Color.fromRGBO(0, 174, 229, 1), fontSize: 24)
       )
     );
   }
 
   Widget _orgDescription(){
-    return Text(
+    return  description!=""? Text(
       '$description',
       textAlign:TextAlign.center,
-
-    );
+    ):Container();
   }
 
 
   Widget _selectOrgButtons(){
-    return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children:[
-          _optionButton("No"),
-          _optionButton("Yes")
-        ]
+    return Container(
+      margin:EdgeInsets.only(top:15),
+      child:Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children:[
+            _optionButton("No"),
+            _optionButton("Yes")
+          ]
+      )
     );
   }
 
@@ -140,9 +157,9 @@ class _ChangeOrgDialogState extends State<ChangeOrgDialog> with TickerProviderSt
             elevation:15,
             shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(20)),
             child:Container(
-                height:MediaQuery.of(context).size.height*.5,
                 padding:EdgeInsets.symmetric(vertical:20, horizontal:10),
                 child:Column(
+                  mainAxisSize:MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     _selectText(),
@@ -165,7 +182,8 @@ class _ChangeOrgDialogState extends State<ChangeOrgDialog> with TickerProviderSt
     setState(() {
       logo=jsonDecode(response.body)["logo"];
       name=jsonDecode(response.body)["name"];
-      description=jsonDecode(response.body)["description"];
+      var descDecoded=jsonDecode(response.body)["description"];
+      descDecoded==null||descDecoded==""?description="":description=description;
     });
 
 

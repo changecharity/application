@@ -8,6 +8,7 @@ import '../paintings.dart';
 import 'homePage.dart';
 import '../Pages/signUp.dart';
 import '../Pages/forgotPass.dart';
+import '../Pages/login.dart';
 
 class EmailAuth extends StatefulWidget{
 
@@ -272,7 +273,9 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin{
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Container(
-              margin: EdgeInsets.only(top:MediaQuery.of(context).size.height*.2),
+              margin:EdgeInsets.only(top: MediaQuery.of(context).viewInsets.bottom == 0
+                  ? MediaQuery.of(context).size.height>700 ? MediaQuery.of(context).size.height*.2 :MediaQuery.of(context).size.height *0.15
+                  : MediaQuery.of(context).size.height*.05),
               width:MediaQuery.of(context).size.width*.85,
               padding:EdgeInsets.fromLTRB(
                   MediaQuery.of(context).size.width*.07,
@@ -339,7 +342,7 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var time = prefs.getString('time');
     if (DateTime.now().isAfter(DateTime.parse(time))){
-      Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>SignUp()));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>Login()));
       print('time elapsed');
       return;
     }else{
@@ -356,7 +359,7 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin{
       token=prefs.getString('token');
       print(token);
       if (token==null ||token==""){
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>SignUp()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Login()));
       }
     });
 
@@ -376,7 +379,7 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin{
     if(response.body=="rpc error: code = Unknown desc = unknown token"){
       setState(() {
         resendLoading=!resendLoading;
-        Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>SignUp()));
+        //Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>SignUp()));
         _pinError="Invalid user. Please sign up";
       });
     }else if(response.body=="success:true"){
@@ -416,6 +419,7 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin{
   _verifyAndSignup() async{
     var content='{"user_token":"$token","key":${int.parse(_pinController.text)}}';
     var response= await http.post("https://api.changecharity.io/users/updatesignup", body:content);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     print (response.body);
 
     if(response.body=="rpc error: code = Unknown desc = key is incorrect"||response.body=="proto: (line 1:171): invalid value for int32 type: "){
@@ -424,7 +428,11 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin{
         _pinError = "Incorrect code. Please try again.";
         return;
       });
+    }else if(response.body.contains("invalid user token")){
+      prefs.setString('signUpEmail', null);
+      Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>Login()));
     }else if(response.body=="success"){
+      prefs.setString('signUpEmail', null);
       Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>HomePage()));
     }
   }
@@ -432,16 +440,21 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin{
   _verifyAndEnterPass() async{
     var content = '{"user_token": "$token", "key":${int.parse(_pinController.text)}}';
     var response = await http.post("https://api.changecharity.io/users/validkey", body:content);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     print(response.body);
 
-    if(response.body=="rpc error: code = Unknown desc = key is incorrect"){
+    if(response.body.contains("key is incorrect")){
       setState(() {
         loading=!loading;
         _pinError = "Incorrect code. Please try again.";
         return;
       });
-    } else if(response.body == "success"){
-      Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>ForgotPass(int.parse(_pinController.text))));
+    } else if(response.body.contains("invalid user token")){
+      prefs.setString('forgotPassEmail', null);
+      Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>Login()));
+    }else if(response.body.contains("success")){
+      prefs.setString('forgotPassEmail', null);
+      Navigator.push(context, MaterialPageRoute(builder:(context)=>ForgotPass(int.parse(_pinController.text))));
     }
   }
 

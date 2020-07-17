@@ -304,7 +304,7 @@ void initState(){
                       style:TextStyle(color:Color.fromRGBO(0, 174, 229, 1), fontSize:18, fontWeight: FontWeight.bold)
                   ):
                   Text(
-                      '${userBank.getBankName}(...${userBank.getMask=="0"||userBank.getMask==null?'0000':'${userBank.getMask}'})',
+                      '${userBank.getBankName}(...${userBank.getMask!="null"?'${userBank.getMask}':'0000'})',
                       style:TextStyle(color:Color.fromRGBO(0, 174, 229, 1), fontSize:18, fontWeight: FontWeight.bold)
                   )
               ),
@@ -596,7 +596,7 @@ void initState(){
     print(profileResponse.body);
     setState(() {
       threshold=jsonDecode(profileResponse.body)["threshold"];
-      mask = decodedMask == null ? "0000" : decodedMask;
+      mask = decodedMask; //== null ? "0000" : decodedMask;
       bankName=jsonDecode(profileResponse.body)["bankName"];
       profileLetter = decodedPL != null ? decodedPL[0] : "A";
     });
