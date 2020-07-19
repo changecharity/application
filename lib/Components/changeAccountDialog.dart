@@ -23,7 +23,7 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>with SingleTickerProvi
   String accountId;
   String bankName;
   int mask;
-  String _plaidErr='';
+  String _plaidErr=' ';
   var token;
   bool loading=false;
   Animation<Color> loadingAn;
@@ -51,7 +51,7 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>with SingleTickerProvi
             )
         ),
         Container(
-          margin: EdgeInsets.only(top:10),
+          margin: EdgeInsets.only(top:15),
           child:Text(
               'Please click on the button to enter your account information',
               textAlign: TextAlign.center,
@@ -83,9 +83,9 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>with SingleTickerProvi
             }
           },
           child: Container(
-            width: MediaQuery.of(context).size.width,
+            width: MediaQuery.of(context).size.width<550?MediaQuery.of(context).size.width*.55:MediaQuery.of(context).size.width,
             height: 60,
-            margin: EdgeInsets.only(right: 20, left: 20, ),
+            margin: EdgeInsets.only(right: 20, left: 20, top: 20 ),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.all(Radius.circular(30)),
@@ -132,7 +132,8 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>with SingleTickerProvi
       );
     } else if (plaidToken == null) {
       return Text(
-        'Link Your Bank Account',
+        'Link Your Checking Account',
+        style:TextStyle(fontSize: MediaQuery.of(context).size.width<550?10:14)
       );
     } else {
       return Text(
@@ -167,7 +168,7 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>with SingleTickerProvi
   //
   Widget _linkCont(context) {
     return Container(
-      margin: EdgeInsets.only(),
+      margin: EdgeInsets.only(top:20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
@@ -237,9 +238,10 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>with SingleTickerProvi
             elevation:15,
             shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(20)),
             child:Container(
-                height:MediaQuery.of(context).size.height*.4,
+                //height:MediaQuery.of(context).size.height*.4,
                 padding:EdgeInsets.symmetric(vertical:20, horizontal:10),
                 child:Column(
+                  mainAxisSize:MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     _accountText(),

@@ -149,7 +149,8 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
           hasFloatingPlaceholder: false,
           prefixIcon: _emailPrefix(),
         ),
-        focusNode:emailFocusNode
+        focusNode:emailFocusNode,
+        textInputAction: TextInputAction.next,
       ),
     );
   }

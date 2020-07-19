@@ -110,6 +110,7 @@ class _ForgotPassState extends State<ForgotPass> with TickerProviderStateMixin{
           suffixIcon: _passSuffix(),
         ),
         focusNode: passFocusNode,
+        textInputAction: TextInputAction.next,
       ),
     );
   }

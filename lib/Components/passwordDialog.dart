@@ -22,7 +22,7 @@ class _PwDialogState extends State<PasswordDialog> with SingleTickerProviderStat
   AnimationController loadingController;
 
   var token;
-  String _passErr="";
+  String _passErr=" ";
   var _passController=TextEditingController();
   bool obscurePass=true;
   bool loading=false;
@@ -66,7 +66,7 @@ class _PwDialogState extends State<PasswordDialog> with SingleTickerProviderStat
     return Column(
       children: <Widget>[
         Container(
-            margin: EdgeInsets.only(right: 10, left: 10),
+            margin: EdgeInsets.only(right: 10, left: 10, top:45),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.all(Radius.circular(30)),
@@ -83,7 +83,7 @@ class _PwDialogState extends State<PasswordDialog> with SingleTickerProviderStat
               obscureText: obscurePass,
               onChanged: (s){
                 setState(() {
-                  _passErr='';
+                  _passErr=' ';
                 });
               },
               onEditingComplete: (){
@@ -156,7 +156,7 @@ class _PwDialogState extends State<PasswordDialog> with SingleTickerProviderStat
 
   Widget _confirmCont(context) {
     return Container(
-      margin: EdgeInsets.only(),
+      margin: EdgeInsets.only(top: 30),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
@@ -229,9 +229,10 @@ class _PwDialogState extends State<PasswordDialog> with SingleTickerProviderStat
           elevation:15,
           shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(20)),
           child:Container(
-              height:MediaQuery.of(context).size.height*.4,
+              //height:MediaQuery.of(context).size.height*.4,
               padding:EdgeInsets.symmetric(vertical:20, horizontal:10),
               child:Column(
+                mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   _confirmText(),

@@ -144,6 +144,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
           prefixIcon: _namePrefix(),
         ),
         focusNode: nameFocusNode,
+        textInputAction:TextInputAction.next
       ),
     );
   }
@@ -190,6 +191,8 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
           prefixIcon: _emailPrefix(),
         ),
         focusNode: emailFocusNode,
+        textInputAction:TextInputAction.next
+
       ),
     );
   }
@@ -259,6 +262,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
           suffixIcon: _passSuffix(),
         ),
         focusNode: passFocusNode,
+
       ),
     );
   }

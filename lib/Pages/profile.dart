@@ -235,9 +235,9 @@ void initState(){
                         child:IndexedStack(
                           index:_widgetIndex,
                           children:<Widget>[
-                            Center(child:Text('Current Organization', style:TextStyle(fontSize:16, fontWeight: FontWeight.bold))),
-                            Center(child:Text('Your Bank Account', style:TextStyle(fontSize:16, fontWeight: FontWeight.bold))),
-                            Center(child:Text('Set Your Max', style:TextStyle(fontSize:16, fontWeight: FontWeight.bold))),
+                            Center(child:Text('Current Organization', textAlign:TextAlign.center, style:TextStyle(fontSize:16, fontWeight: FontWeight.bold))),
+                            Center(child:Text('Your Bank Account', textAlign:TextAlign.center, style:TextStyle(fontSize:16, fontWeight: FontWeight.bold))),
+                            Center(child:Text('Set Your Max', textAlign:TextAlign.center, style:TextStyle(fontSize:16, fontWeight: FontWeight.bold))),
                           ]
                         )
                       ),
@@ -289,8 +289,8 @@ void initState(){
                   ),
                   child: Center(
                       child: Icon(
-                          Icons.attach_money,
-                          size: 100,
+                          Icons.business,
+                          size: 75,
                           color:Colors.white
                       )
                   )
@@ -383,6 +383,7 @@ void initState(){
                 child:RichText(
                     text:TextSpan(
                         style:TextStyle(
+                          decoration: TextDecoration.underline,
                           color:Colors.grey[700],
                           fontSize:12,
                           fontFamily: 'Montserrat',

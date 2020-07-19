@@ -80,6 +80,7 @@ class _ChangeOrgDialogState extends State<ChangeOrgDialog> with TickerProviderSt
       margin:EdgeInsets.only(top:10, bottom:10),
       child:Text(
           '$name',
+          textAlign: TextAlign.center,
           style: TextStyle(fontWeight:FontWeight.bold, color:Color.fromRGBO(0, 174, 229, 1), fontSize: 24)
       )
     );
