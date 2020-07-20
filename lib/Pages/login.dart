@@ -297,8 +297,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
     return Align(
       alignment: Alignment.centerRight,
       child: Container(
-        alignment: Alignment.centerRight,
-        width: 250,
+        width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height > 700 ? 70 : 60,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,

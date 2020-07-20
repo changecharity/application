@@ -425,6 +425,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
   //Sign up button. Switches to loading on load
   Widget _signUpCont() {
     return Container(
+      width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.only(right: 20, top:0, bottom: 20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
