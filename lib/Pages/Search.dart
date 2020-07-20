@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-import '../Pages/login.dart';
+import 'login.dart';
 import '../SearchPage/details.dart';
 import '../Components/changeOrgDialog.dart';
 
@@ -15,13 +15,14 @@ class Search extends StatefulWidget{
 class _SearchState extends State<Search>{
 
   var suggestions=[];
-  var suggestionOffset=0;
-  var searchOffset=0;
+
   bool areSuggestions=false;
   bool areOrgs=false;
   bool extraDetails=false;
   var token;
   var orgs;
+  var suggestionOffset;
+  var searchOffset;
   final _searchController=new TextEditingController();
   String searchText;
   ScrollController _suggestionScrollController;
@@ -31,7 +32,8 @@ class _SearchState extends State<Search>{
     super.initState();
 
     _confirmLogin();
-
+    suggestionOffset=0;
+    searchOffset=0;
     //handle scroll controllers
     _suggestionScrollController=ScrollController();
     _suggestionScrollController.addListener(_suggestionScrollListener);
@@ -101,6 +103,8 @@ class _SearchState extends State<Search>{
       ),
       onPressed: (){
         extraDetails?setState((){
+          searchOffset=0;
+          suggestionOffset=0;
           !extraDetails;
         }):
         Navigator.pop(context);
@@ -236,6 +240,7 @@ class _SearchState extends State<Search>{
 
  _searchOrgs() async{
    SharedPreferences preferences=await SharedPreferences.getInstance();
+   print(searchOffset);
    token = preferences.getString('token');
    var content = '{"user_token":"$token", "name":"$searchText", "offset":$searchOffset}';
    var response = await http.post("https://api.changecharity.io/users/searchorgs", body:content);
@@ -252,6 +257,7 @@ class _SearchState extends State<Search>{
        areOrgs=true;
      }
    });
+
    print(orgs);
    print(orgs.length);
  }

@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:change/Models/userOrgModel.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-import '../SearchPage/Search.dart';
+import 'Search.dart';
 import 'profile.dart';
 import '../paintings.dart';
 import 'login.dart';
@@ -45,9 +45,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   void initState() {
     super.initState();
 
-    offset=0;
     //handle getting info
     _confirmLogin();
+    offset=0;
     _checkSelOrg();
     _getAllInfo();
 

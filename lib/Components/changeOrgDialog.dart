@@ -87,9 +87,20 @@ class _ChangeOrgDialogState extends State<ChangeOrgDialog> with TickerProviderSt
   }
 
   Widget _orgDescription(){
-    return  description!=""? Text(
-      '$description',
-      textAlign:TextAlign.center,
+    return  description!=""?
+    //SingleChildScrollView(
+      ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height*.15
+        ),
+          child:SingleChildScrollView(
+            child:Text(
+              '$description',
+              textAlign:TextAlign.center,
+              style:TextStyle(fontSize:16)
+            )
+          )
+   // )
     ):Container();
   }
 
@@ -184,7 +195,7 @@ class _ChangeOrgDialogState extends State<ChangeOrgDialog> with TickerProviderSt
       logo=jsonDecode(response.body)["logo"];
       name=jsonDecode(response.body)["name"];
       var descDecoded=jsonDecode(response.body)["description"];
-      descDecoded==null||descDecoded==""?description="":description=description;
+      descDecoded==null||descDecoded==""?description="":description=descDecoded;
     });
 
 

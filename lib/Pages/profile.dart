@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-import '../SearchPage/Search.dart';
+import 'Search.dart';
 import '../paintings.dart';
 import '../Models/userOrgModel.dart';
 import 'package:url_launcher/url_launcher.dart';

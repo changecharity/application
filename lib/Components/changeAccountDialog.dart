@@ -259,7 +259,7 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>with SingleTickerProvi
     Configuration configuration = Configuration(
         plaidPublicKey: '014d4f2c01905eafa07cbcd2755ef5',
         plaidBaseUrl: 'https://cdn.plaid.com/link/v2/stable/link.html',
-        plaidEnvironment: 'development',
+        plaidEnvironment: 'production',
         environmentPlaidPathAccessToken:
         'https://sandbox.plaid.com/item/public_token/exchange',
         environmentPlaidPathStripeToken:

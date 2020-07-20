@@ -85,6 +85,21 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin{
     );
   }
 
+
+  Widget _backButton() {
+    return Container(
+      margin: EdgeInsets.only(top: 20, left: 10),
+      alignment: Alignment.centerLeft,
+      child: IconButton(
+        icon: Icon(Icons.arrow_back),
+        iconSize: 30,
+        onPressed: () {
+          _clearSharedPrefs();
+          Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>Login()));
+        },
+      ),
+    );
+  }
   Widget _verifyText(){
     return Container(
       margin:EdgeInsets.only(top:20),
@@ -272,10 +287,11 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin{
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
+          _backButton(),
           Container(
               margin:EdgeInsets.only(top: MediaQuery.of(context).viewInsets.bottom == 0
-                  ? MediaQuery.of(context).size.height>700 ? MediaQuery.of(context).size.height*.2 :MediaQuery.of(context).size.height *0.15
-                  : MediaQuery.of(context).size.height*.05),
+                  ? MediaQuery.of(context).size.height>700 ? MediaQuery.of(context).size.height*.15 :MediaQuery.of(context).size.height *0.1
+                  : MediaQuery.of(context).size.height*.03),
               width:MediaQuery.of(context).size.width*.85,
               padding:EdgeInsets.fromLTRB(
                   MediaQuery.of(context).size.width*.07,
@@ -363,6 +379,13 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin{
       }
     });
 
+  }
+
+  _clearSharedPrefs() async{
+    SharedPreferences prefs=await SharedPreferences.getInstance();
+    prefs.setString('token', null);
+    prefs.setString('signUpEmail', null);
+    prefs.setString('forgetPassEmail', null);
   }
 
   _resend() async{
