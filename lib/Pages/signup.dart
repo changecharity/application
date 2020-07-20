@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
 import 'package:plaid/plaid.dart';
@@ -392,39 +393,28 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
               });
             },
           ),
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                _tosAccepted = !_tosAccepted;
-              });
-            },
-            child: Text(
-              'I agree to the ',
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-                _launchURL("https://changecharity.io/terms-of-service");
-              },
-            child: Text(
-                'Terms',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          Text(
-              ' and '
-          ),
-          GestureDetector(
-            onTap: () {
-              _launchURL("https://changecharity.io/privacy-policy");
-            },
-            child: Text(
-              'Privacy Policy',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
+          RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: 'I agree to the ',
+                  style: TextStyle(color: Colors.black),
+                ),
+                TextSpan(
+                  text: 'Terms',
+                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                  recognizer: TapGestureRecognizer()..onTap = () => _launchURL("https://changecharity.io/terms-of-service"),
+                ),
+                TextSpan(
+                  text: ' and ',
+                  style: TextStyle(color: Colors.black),
+                ),
+                TextSpan(
+                  text: 'Privacy Policy',
+                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                  recognizer: TapGestureRecognizer()..onTap = () => _launchURL("https://changecharity.io/privacy-policy"),
+                ),
+              ],
             ),
           ),
         ],
