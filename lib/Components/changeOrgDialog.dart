@@ -5,7 +5,6 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../Models/userOrgModel.dart';
-import '../Pages/profile.dart';
 
 
 class ChangeOrgDialog extends StatefulWidget{
@@ -66,6 +65,7 @@ class _ChangeOrgDialogState extends State<ChangeOrgDialog> with TickerProviderSt
             imageUrl:"$logo",
             placeholder: (context, url) => CircularProgressIndicator(),
             errorWidget: (context, url, error) => IconButton(
+              onPressed:(){},
               icon: Icon(Icons.search),
               iconSize: 45,
             ),

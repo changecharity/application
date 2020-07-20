@@ -242,7 +242,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
        height: MediaQuery.of(context).size.height * .42,
        alignment: Alignment.center,
        child:Text(
-           'You have no transactions at this time.'
+           'You have no transactions at this time. Check back in a few days.',
+           textAlign: TextAlign.center,
        )
      );
     }

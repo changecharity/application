@@ -385,7 +385,7 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin{
     SharedPreferences prefs=await SharedPreferences.getInstance();
     prefs.setString('token', null);
     prefs.setString('signUpEmail', null);
-    prefs.setString('forgetPassEmail', null);
+    prefs.setString('forgotPassEmail', null);
   }
 
   _resend() async{

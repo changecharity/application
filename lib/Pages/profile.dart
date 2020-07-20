@@ -230,7 +230,7 @@ void initState(){
                               _widgetIndex--;
                             });
                           }
-                      ):IconButton(icon:Icon(Icons.arrow_back_ios, size:16, color:Colors.transparent)),
+                      ):IconButton(onPressed:(){}, icon:Icon(Icons.arrow_back_ios, size:16, color:Colors.transparent)),
                       Expanded(
                         child:IndexedStack(
                           index:_widgetIndex,
@@ -252,7 +252,7 @@ void initState(){
                               _widgetIndex++;
                             });
                           }
-                      ):IconButton(icon:Icon(Icons.arrow_forward_ios, size:16, color:Colors.transparent)),
+                      ):IconButton(onPressed:(){},icon:Icon(Icons.arrow_forward_ios, size:16, color:Colors.transparent)),
                     ],
                   ),
                   IndexedStack(
