@@ -170,6 +170,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         elevation: 0,
                         child: Icon(
                           Icons.search,
+                          color: Colors.white,
                           size: 60,
                         ),
                       ),
