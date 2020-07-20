@@ -164,10 +164,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       fit: BoxFit.cover,
                       imageUrl: userOrg.getOrgImg,
                       placeholder: (context, url) => CircularProgressIndicator(),
-                      errorWidget: (context, url, error) => IconButton(
-                        icon: Icon(Icons.search),
-                        iconSize: 60,
+                      errorWidget: (context, url, error) => RaisedButton(
+                        color: Color.fromRGBO(0, 174, 229, 1),
                         onPressed: () => Navigator.push(context, MaterialPageRoute(builder:(context)=>Search())),
+                        elevation: 0,
+                        child: Icon(
+                          Icons.search,
+                          size: 60,
+                        ),
                       ),
                     ),
                   ),
@@ -504,8 +508,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     var mask = decodedMask == null ? "0000" : decodedMask;
     var bankName=jsonDecode(profileResponse.body)["bankName"];
     var profileLetter = decodedPL != null ? decodedPL[0] : "A";
-    var threshold=jsonDecode(profileResponse.body)["threshold"];
-
     //notify provider of mask and bankName
     context.read<UserBankModel>().notify(mask, bankName, profileLetter);
   }
@@ -536,11 +538,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             ),
           ),
           content: Container(
-            height: 50,
+            height: 100,
             child: Align(
               alignment: Alignment.center,
               child: Column(
                 children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(top: 20),
+                  ),
                   Text(
                     "You have selected:",
                     textAlign: TextAlign.center,
@@ -551,12 +556,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   Padding(
                     padding: EdgeInsets.only(bottom: 10),
                   ),
-                  Text(
-                    "${context.watch<UserOrgModel>().getUserOrg}",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                  Expanded(
+                    child: Text(
+                      "${context.watch<UserOrgModel>().getUserOrg}",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ],
