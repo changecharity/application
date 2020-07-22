@@ -122,7 +122,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           child: Consumer<UserBankModel>(
             builder: (context, userBank, child){
               return Text(
-                userBank.getPfLetter,
+                userBank.getPfLetter.toUpperCase(),
                 style:TextStyle(fontSize: 24, color:Colors.white, fontWeight: FontWeight.bold),
               );
             },

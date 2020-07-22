@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'Pages/login.dart';
 import 'Pages/homePage.dart';
 import 'Pages/emailAuth.dart';
-import 'Pages/forgotPass.dart';
+import 'Pages/linkBank.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 
@@ -15,8 +15,8 @@ class Splash extends StatefulWidget {
 class _SplashState extends State<Splash> {
   double _width = 120;
   double _height = 130;
-  //bool _initScreen;
   String _initScreen;
+  String _linkBank;
   var email;
 
   @override
@@ -48,7 +48,8 @@ class _SplashState extends State<Splash> {
   }
 
    _pushRoute() {
-    switch(_initScreen){
+     switch(_initScreen){
+
       case "homepage":{
         return HomePage();
       }
@@ -67,6 +68,10 @@ class _SplashState extends State<Splash> {
       case "forgotpage":{
         return EmailAuth(email, "forgotpass");
       }
+
+      case "linkbank":{
+        return LinkBank(_linkBank);
+      }
     }
   }
 
@@ -75,6 +80,7 @@ class _SplashState extends State<Splash> {
     var token = prefs.getString("token");
     var auth = true;
     email = prefs.getString("signUpEmail");
+    _linkBank = prefs.getString("linkBank");
     //if token=null, login
     //if token!=null and email!=null, email logic
     //homepage
@@ -91,9 +97,10 @@ class _SplashState extends State<Splash> {
       } else {
         _initScreen = "forgotpage";
       }
-    }else{
+    } else if (token!=null &&_linkBank!=null){
+      _initScreen="linkbank";
+    } else {
       _initScreen="homepage";
-
     }
 
     Future<void>.delayed(Duration(milliseconds: 600), () {

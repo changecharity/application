@@ -25,22 +25,20 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
   AnimationController loadingController;
   double drawTime = 0.0;
   double drawDuration = 1.8;
-  String plaidToken;
-  String accountId;
-  String bankName;
-  int mask;
 
   final _nameController= TextEditingController();
   final _passController= TextEditingController();
   final _emailController= TextEditingController();
+  final _confirmPassController= TextEditingController();
   final nameFocusNode=FocusNode();
   final emailFocusNode=FocusNode();
   final passFocusNode=FocusNode();
+  final confirmPassFocusNode=FocusNode();
   final tosFocusNode=FocusNode();
   String _nameErr='';
   String _passErr='';
+  String _confirmPassErr = '';
   String _emailErr='';
-  String _plaidErr='';
   bool obscurePass=true;
   bool loading=false;
   bool _tosAccepted = false;
@@ -96,7 +94,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
 
   //Sign Up
   Widget _signUpText() {
-    if(MediaQuery.of(context).size.height < 700 && MediaQuery.of(context).viewInsets.bottom != 0) {
+    if(MediaQuery.of(context).viewInsets.bottom != 0) {
       return Text("");
     }
     return Container(
@@ -117,7 +115,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
     return Container(
       margin: EdgeInsets.only(right: 20, left: 20, top: MediaQuery.of(context).viewInsets.bottom == 0
           ? MediaQuery.of(context).size.height>700 ? 80 :MediaQuery.of(context).size.height *0.06
-          : 20),
+          : 0),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.all(Radius.circular(30)),
@@ -192,8 +190,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
           prefixIcon: _emailPrefix(),
         ),
         focusNode: emailFocusNode,
-        textInputAction:TextInputAction.next
-
+        textInputAction:TextInputAction.next,
       ),
     );
   }
@@ -254,7 +251,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
           });
         },
         onEditingComplete: (){
-          FocusScope.of(context).nextFocus();
+          FocusScope.of(context).requestFocus(confirmPassFocusNode);
         },
         decoration: InputDecoration(
           labelText: "Password",
@@ -263,10 +260,48 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
           suffixIcon: _passSuffix(),
         ),
         focusNode: passFocusNode,
-
+        textInputAction:TextInputAction.next
       ),
     );
   }
+
+  //password input
+  Widget _confirmPassInput() {
+    return Container(
+      margin: EdgeInsets.only(right: 20, left: 20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.all(Radius.circular(30)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey[350],
+            blurRadius: 20.0,
+            offset: Offset.fromDirection(0.9),
+          ),
+        ],
+      ),
+      child: TextField(
+        controller:_confirmPassController,
+        obscureText: obscurePass,
+        onChanged: (s){
+          setState(() {
+            _confirmPassErr='';
+          });
+        },
+        onEditingComplete: (){
+          FocusScope.of(context).nextFocus();
+        },
+        decoration: InputDecoration(
+          labelText: "Confirm Password",
+          hasFloatingPlaceholder: false,
+          prefixIcon: _passPrefix(),
+          suffixIcon: _passSuffix(),
+        ),
+        focusNode: confirmPassFocusNode,
+      ),
+    );
+  }
+
 
   Widget _passPrefix() {
     return Container(
@@ -297,82 +332,6 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
 
       ),
     );
-  }
-
-  //Plaid button-directs to plaid api
-  Widget _plaidButton() {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          FocusScope.of(context).unfocus();
-          _plaidErr='';
-        });
-        if (plaidToken == null || plaidToken == '') {
-          showPlaidView();
-          Future.delayed(const Duration(milliseconds: 500), () {
-            setState(() {
-              plaidToken = '';
-            });
-          });
-        }
-      },
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        height: 60,
-        margin: EdgeInsets.only(right: 20, left: 20),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(30)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey[350],
-              blurRadius: 20.0,
-              offset: Offset.fromDirection(0.9),
-            ),
-          ],
-        ),
-        child: Row(
-          children: <Widget>[
-            _linkIcon(),
-            _plaidStatus(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _linkIcon() {
-    return Container(
-      margin: EdgeInsets.only(left: 25, right: 15),
-      child: Icon(
-        Icons.link,
-        size: 20,
-        color: Colors.black,
-      ),
-    );
-  }
-
-  //Changes on account connection or disconnect
-  Widget _plaidStatus() {
-    if (plaidToken != '' && plaidToken != null) {
-      return Text(
-        'Connected',
-        style: TextStyle(
-          color: Colors.green,
-        ),
-      );
-    } else if (plaidToken == null) {
-      return Text(
-        'Link Your Bank Account',
-      );
-    } else {
-      return Text(
-        'Not Connected',
-        style: TextStyle(
-          color: Colors.red,
-        ),
-      );
-    }
   }
 
   Widget _tosPrivacyCont() {
@@ -524,8 +483,8 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                         _errCont(_emailErr),
                         _passInput(),
                         _errCont(_passErr),
-                        _plaidButton(),
-                        _errCont(_plaidErr),
+                        _confirmPassInput(),
+                        _errCont(_confirmPassErr),
                         _tosPrivacyCont(),
                         _signUpCont(),
                       ],
@@ -545,47 +504,6 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
     controller.dispose();
     loadingController.dispose();
     super.dispose();
-  }
-
-  //handles plaid view
-  showPlaidView() {
-    Configuration configuration = Configuration(
-        plaidPublicKey: '014d4f2c01905eafa07cbcd2755ef5',
-        plaidBaseUrl: 'https://cdn.plaid.com/link/v2/stable/link.html',
-        plaidEnvironment: 'production',
-        environmentPlaidPathAccessToken:
-            'https://sandbox.plaid.com/item/public_token/exchange',
-        environmentPlaidPathStripeToken:
-            'https://sandbox.plaid.com/processor/stripe/bank_account_token/create',
-        plaidClientId: '',
-        secret: '',
-        clientName: 'Change',
-        webhook: 'https://api.changecharity.io/plaidwebhook',
-        products: 'transactions',
-        selectAccount: 'false');
-
-    FlutterPlaidApi flutterPlaidApi = FlutterPlaidApi(configuration);
-    flutterPlaidApi.launch(context, (Result result) {
-      setState(() {
-        plaidToken = result.token;
-      });
-      print(result.response);
-      print(result.institutionName);
-      var account;
-      var accounts=jsonDecode(result.response["accounts"]);
-      for(int i =0; i<accounts.length; i++){
-        if(accounts[i]["subtype"]=="checking"){
-          account=accounts[i];
-          print(account);
-        }
-      }
-      accountId=(account["_id"]);
-      mask = int.parse(account["meta"]["number"]);
-      bankName = result.institutionName;
-
-      print(mask);
-      print(result.token);
-    }, stripeToken: false);
   }
 
   //uses SharedPreferences to set token on sign up.
@@ -666,32 +584,26 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
         _passErr="Must contain at least one number";
       });
       return false;
-    }
-    return true;
-
-  }
-
-  //throws error if plaid is not connected
-  bool _checkValidPlaid(){
-    if(plaidToken==null|| plaidToken==''){
+    } else if(_passController.text != _confirmPassController.text) {
       setState(() {
-        _plaidErr="You must link a bank";
+        _confirmPassErr= "Passwords do not match";
       });
       return false;
     }
     return true;
+
   }
 
   //called on click of sign up button. checks email, password, and plaid before making api call and signing up.
   //if sign up is successful, api sends back token which gets stored in shared preferences
   _signUp()async{
-    if(!_checkValidName() || !_checkValidEmail() || !_checkValidPassword() || !_checkValidPlaid()){
+    if(!_checkValidName() || !_checkValidEmail() || !_checkValidPassword()){
       return;
     }else{
       setState(() {
         loading=!loading;
       });
-      var content='{"legal_name":"${_nameController.text}","email":"${_emailController.text}","password":"${_passController.text}", "plaid_public_token":"$plaidToken", "plaid_account_id":"$accountId", "mask":$mask, "bank_name":"$bankName"}';
+      var content='{"legal_name":"${_nameController.text}","email":"${_emailController.text}","password":"${_passController.text}"}';
       var response= await http.post("https://api.changecharity.io/users/signup", body:content).timeout(Duration(seconds: 7));
 
       print(response.body);
@@ -702,13 +614,14 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
           loading=!loading;
         });
         return;
-      } else if(response.body.startsWith("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9")&&plaidToken!=null&&plaidToken!=''){
+      } else if(response.body.startsWith("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9")){
         _saveSignUp(response.body);
         _setTime();
         print("successful");
       }
     }
   }
+
   _launchURL(String url) async {
     if (await canLaunch(url)) {
       await launch(url);

@@ -1,12 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
 import '../paintings.dart';
-import 'homePage.dart';
-import '../Pages/signUp.dart';
+import 'linkBank.dart';
+import '../Pages/orgSelected.dart';
 import '../Pages/forgotPass.dart';
 import '../Pages/login.dart';
 
@@ -322,7 +323,6 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin{
 
   @override
     Widget build(BuildContext context) {
-      // TODO: implement build
       return Material(
         child:GestureDetector(
           onTap:(){
@@ -456,7 +456,18 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin{
       Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>Login()));
     }else if(response.body=="success"){
       prefs.setString('signUpEmail', null);
-      Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>HomePage()));
+      prefs.setString('linkBank', "");
+      if(prefs.getInt('selOrg') != null) {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>OrgSelected()));
+      } else {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>LinkBank("")));
+      }
+    } else {
+      setState(() {
+        loading=!loading;
+        _pinError = "Unknown Error, try again";
+        return;
+      });
     }
   }
 
@@ -499,8 +510,5 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin{
         _verifyAndEnterPass();
       }
     }
-
   }
-
-
 }

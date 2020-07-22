@@ -14,7 +14,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'homePage.dart';
 import 'login.dart';
 import '../Components/passwordDialog.dart';
-//import 'package:provider/provider.dart';
 import '../Models/userBankModel.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
@@ -172,7 +171,7 @@ void initState(){
               child:Consumer<UserBankModel>(
                 builder: (context, userBank, child) {
                   return Text(
-                    userBank.getPfLetter,
+                    userBank.getPfLetter.toUpperCase(),
                     style:TextStyle(
                       color:Colors.white,
                       fontSize:40,
