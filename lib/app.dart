@@ -2,9 +2,6 @@ import 'package:change/Pages/orgSelected.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'splash.dart';
-import 'Pages/login.dart';
-import 'Pages/orgSelected.dart';
-
 class Change extends StatefulWidget{
   @override
   _ChangeState createState() => _ChangeState();

@@ -215,6 +215,7 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
       child: Container(
         margin: EdgeInsets.only(
           left: 40,
+          right: 40,
           top: 2,
           bottom: 3,
         ),
@@ -223,6 +224,7 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
           style: TextStyle(
             color: Colors.red,
             fontWeight: FontWeight.bold,
+            letterSpacing: 0.8,
           ),
         ),
       ),
@@ -437,6 +439,7 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
     } else {
       setState(() {
         loading = false;
+        _plaidErr = 'There was an error linking your bank account at this time. Either try a different account, or try to re-link this account in a few hours';
       });
     }
   }

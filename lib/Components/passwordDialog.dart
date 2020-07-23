@@ -88,6 +88,7 @@ class _PwDialogState extends State<PasswordDialog> with SingleTickerProviderStat
               },
               onEditingComplete: (){
                 FocusScope.of(context).unfocus();
+                _validPassAndAction(widget.action);
               },
               autofillHints: [AutofillHints.password],
               decoration: InputDecoration(

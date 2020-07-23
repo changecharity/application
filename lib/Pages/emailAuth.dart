@@ -225,27 +225,24 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin{
   }
 
   Widget _verify(){
-    if(MediaQuery.of(context).size.height > 700){
-      return Padding(
-        padding:EdgeInsets.only(top:30, right:MediaQuery.of(context).size.width*.075, bottom:20),
-        child:Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 10),
-              child: Text(
-                'Verify',
-                style: TextStyle(
-                  fontSize: 35,
-                ),
+    return Padding(
+      padding:EdgeInsets.only(top:30, right:MediaQuery.of(context).size.width*.075, bottom:20),
+      child:Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 10),
+            child: MediaQuery.of(context).size.height > 700 ? Text(
+              'Verify',
+              style: TextStyle(
+                fontSize: 35,
               ),
-            ),
-            _verifyButton()
-          ],
-        ),
-      );
-    }
-    return Container();
+            ) : Text(""),
+          ),
+          _verifyButton()
+        ],
+      ),
+    );
   }
 
   Widget _verifyButton(){

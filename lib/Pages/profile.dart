@@ -509,7 +509,7 @@ void initState(){
                         child:Slider(
                           value: threshold.toDouble(),
                           onChanged:(newMax){
-                            _sliderController.value = (newMax * 2 - 100) / 100;
+                            _sliderController.value = (newMax * 2 - 100) / 100 + (newMax == 50 ? 0.01 : 0);
                             setState(() {
                               threshold=newMax.toInt();
                             });
@@ -614,7 +614,7 @@ void initState(){
       mask = decodedMask; //== null ? "0000" : decodedMask;
       bankName=jsonDecode(profileResponse.body)["bankName"];
       profileLetter = decodedPL != null ? decodedPL[0] : "A";
-      _sliderController.value=(threshDecode * 2 - 100)/ 100;
+      _sliderController.value=(threshDecode * 2 - 100)/ 100 + (threshDecode == 50 ? 0.01 : 0);
     });
 
     print(threshold);

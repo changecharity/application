@@ -105,20 +105,16 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   Widget _accountIcon(){
     return Container(
-      margin: EdgeInsets.only(top: 20, left: 10),
+      margin: EdgeInsets.only(top: 20, left: 20),
       alignment: Alignment.centerLeft,
-      child: GestureDetector(
-        onTap:(){
-          Navigator.push(context, MaterialPageRoute(builder:(context)=>Profile()));
-        },
-        child:Container(
-          height:50,
-          width:50,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: Color.fromRGBO(0, 174, 229, 1),
-            shape: BoxShape.circle,
-          ),
+      child: Container(
+        width: 50,
+        height: 50,
+        child: RaisedButton(
+          color: Color.fromRGBO(0, 174, 229, 1),
+          onPressed: (){
+            Navigator.push(context, MaterialPageRoute(builder:(context)=>Profile()));
+          },
           child: Consumer<UserBankModel>(
             builder: (context, userBank, child){
               return Text(

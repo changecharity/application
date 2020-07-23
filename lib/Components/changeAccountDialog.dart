@@ -23,7 +23,7 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>with SingleTickerProvi
   String accountId;
   String bankName;
   int mask;
-  String _plaidErr=' ';
+  String _plaidErr='';
   var token;
   bool loading=false;
   Animation<Color> loadingAn;
@@ -151,6 +151,7 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>with SingleTickerProvi
       child: Container(
         margin: EdgeInsets.only(
           left: 40,
+          right: 40,
           top: 2,
           bottom: 3,
         ),
@@ -158,6 +159,7 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>with SingleTickerProvi
           _plaidErr,
           style: TextStyle(
             color: Colors.red,
+            letterSpacing: 0.8,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -323,7 +325,6 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>with SingleTickerProvi
     var response = await http.post("https://api.changecharity.io/users/updatebankacc", body: content);
 
     print(response.body);
-
     if (response.body.contains('rpc error: code = Unknown desc = {"code":"bank_account_exists","doc_url":"https://stripe.com/docs/error-codes/bank-account-exists')){
       setState(() {
         loading=!loading;
@@ -336,6 +337,11 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>with SingleTickerProvi
       context.read<UserBankModel>().notify(mask.toString(), bankName, pfL);
 
       Navigator.of(context).pop();
+    } else {
+      setState(() {
+        loading=!loading;
+        _plaidErr = "There was an error linking your bank account at this time. Either try a different account, or try to re-link this account in a few hours";
+      });
     }
   }
 
