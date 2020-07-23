@@ -88,20 +88,24 @@ class _ChangeOrgDialogState extends State<ChangeOrgDialog> with TickerProviderSt
 
   Widget _orgDescription(){
     return  description!=""?
-    //SingleChildScrollView(
-      ConstrainedBox(
-        constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height*.15
-        ),
+      Padding(
+        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height*.2
+          ),
           child:SingleChildScrollView(
             child:Text(
               '$description',
-              textAlign:TextAlign.center,
-              style:TextStyle(fontSize:16)
-            )
-          )
-   // )
-    ):Container();
+              textAlign:TextAlign.justify,
+              style:TextStyle(
+                fontSize:16,
+                wordSpacing: 2,
+              ),
+            ),
+          ),
+    ),
+      ):Container();
   }
 
 
@@ -159,27 +163,26 @@ class _ChangeOrgDialogState extends State<ChangeOrgDialog> with TickerProviderSt
   }
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return GestureDetector(
         onTap:() {
           FocusScope.of(context).unfocus();
         },
         child:Dialog(
-            backgroundColor: Colors.grey[100],
-            elevation:15,
-            shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(20)),
-            child:Container(
-                padding:EdgeInsets.symmetric(vertical:20, horizontal:10),
-                child:Column(
-                  mainAxisSize:MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    _selectText(),
-                    _orgInfo(),
-                    _selectOrgButtons()
-                  ],
-                )
+          backgroundColor: Colors.grey[100],
+          elevation:15,
+          shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(20)),
+          child:Container(
+            padding:EdgeInsets.symmetric(vertical:20, horizontal:10),
+            child:Column(
+              mainAxisSize:MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                _selectText(),
+                _orgInfo(),
+                _selectOrgButtons()
+              ],
             )
+          )
         )
     );
 }

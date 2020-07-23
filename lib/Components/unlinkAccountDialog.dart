@@ -19,12 +19,15 @@ class _UnlinkDialogState extends State<UnlinkDialog>{
   var token;
 
   Widget _unlinkText(){
-    return Text(
-      'Are you sure you want to unlink your bank account?',
-      style:TextStyle(
-        fontSize:20
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 15),
+      child: Text(
+        'Are you sure you want to unlink your bank account?',
+        style:TextStyle(
+          fontSize:20
+        ),
+        textAlign: TextAlign.center,
       ),
-      textAlign: TextAlign.center,
     );
   }
 

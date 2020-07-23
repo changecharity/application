@@ -128,6 +128,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
         ],
       ),
       child: TextField(
+        autofillHints: [AutofillHints.name],
         controller:_nameController,
         onChanged: (s){
           setState(() {
@@ -175,6 +176,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
         ],
       ),
       child: TextField(
+        autofillHints: [AutofillHints.email],
         controller:_emailController,
         onChanged: (s){
           setState(() {
@@ -243,6 +245,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
         ],
       ),
       child: TextField(
+        autofillHints: [AutofillHints.newPassword],
         controller:_passController,
         obscureText: obscurePass,
         onChanged: (s){
@@ -281,6 +284,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
         ],
       ),
       child: TextField(
+        autofillHints: [AutofillHints.newPassword],
         controller:_confirmPassController,
         obscureText: obscurePass,
         onChanged: (s){
@@ -473,21 +477,23 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                 child: SlideTransition(
                   position: animationB,
                   child: SingleChildScrollView(
-                    child: Column(
-                      children: <Widget>[
-                        _backButton(),
-                        _signUpText(),
-                        _nameInput(),
-                        _errCont(_nameErr),
-                        _emailInput(),
-                        _errCont(_emailErr),
-                        _passInput(),
-                        _errCont(_passErr),
-                        _confirmPassInput(),
-                        _errCont(_confirmPassErr),
-                        _tosPrivacyCont(),
-                        _signUpCont(),
-                      ],
+                    child: AutofillGroup(
+                      child: Column(
+                        children: <Widget>[
+                          _backButton(),
+                          _signUpText(),
+                          _nameInput(),
+                          _errCont(_nameErr),
+                          _emailInput(),
+                          _errCont(_emailErr),
+                          _passInput(),
+                          _errCont(_passErr),
+                          _confirmPassInput(),
+                          _errCont(_confirmPassErr),
+                          _tosPrivacyCont(),
+                          _signUpCont(),
+                        ],
+                      ),
                     ),
                   ),
                 ),

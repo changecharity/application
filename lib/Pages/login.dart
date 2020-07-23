@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/services.dart';
 
 import 'package:flutter/cupertino.dart';
@@ -135,6 +136,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
         ],
       ),
       child: TextField(
+        autofillHints: [AutofillHints.email],
         controller: _emailController,
         onChanged: (s) {
           setState(() {
@@ -202,6 +204,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
         ],
       ),
       child: TextField(
+        autofillHints: [AutofillHints.password],
         obscureText: obscurePass,
         controller: _passController,
         onChanged: (s) {
@@ -425,19 +428,21 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                 height: MediaQuery.of(context).size.height,
                 child: SlideTransition(
                   position: animation,
-                  child: Column(
-                    children: <Widget>[
-                      SlideTransition(child: _helloContainer(), position: animationD),
-                      _messageContainer(),
-                      _emailInput(),
-                      _emailErrCont(),
-                      _passInput(),
-                      _passErrCont(),
-                      _forgotPass(),
-                      _signinContainer(),
-                      Expanded(child: Text(""),),
-                      _createText(),
-                    ],
+                  child: AutofillGroup(
+                    child: Column(
+                      children: <Widget>[
+                        SlideTransition(child: _helloContainer(), position: animationD),
+                        _messageContainer(),
+                        _emailInput(),
+                        _emailErrCont(),
+                        _passInput(),
+                        _passErrCont(),
+                        _forgotPass(),
+                        _signinContainer(),
+                        Expanded(child: Text(""),),
+                        _createText(),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -500,61 +505,82 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
 
   }
 
-  _submit() async{
-  print(_emailController.text);
-    if(!_checkValidEmail()) {
+  _submit() async {
+    print(_emailController.text);
+    if (!_checkValidEmail()) {
       print(_emailErr);
       return;
     }
-    else if(!_checkValidPassword()){
+    else if (!_checkValidPassword()) {
       print(_passErr);
       return;
     }
 
     setState(() {
-      loading=!loading;
+      loading = !loading;
       print("loading");
     });
 
-    var content = '{"email": "${_emailController.text}", "password":"${_passController.text}"}';
-    var response = await http.post("https://api.changecharity.io/users/login", body:content).catchError((e) => print("error is $e"));
-    print(response.body);
-    switch(response.body){
-      case "rpc error: code = Unknown desc = Wrong Email":{
-        setState((){
-          _emailErr="An account with this email does not exist";
-          loading=!loading;
-        });
-        return ;
+    var content = '{"email": "${_emailController
+        .text}", "password":"${_passController.text}"}';
+    try {
+      var response = await http.post(
+          "https://api.changecharity.io/users/login", body: content)
+          .catchError((e) => print("error is $e"));
+      print(response.body);
+      switch (response.body) {
+        case "rpc error: code = Unknown desc = Wrong Email":
+          {
+            setState(() {
+              _emailErr = "An account with this email does not exist";
+              loading = !loading;
+            });
+            return;
+          }
+          break;
+        case "rpc error: code = Unknown desc = Wrong Password":
+          {
+            setState(() {
+              _passErr = "Incorrect Password";
+              loading = !loading;
+            });
+            return;
+          }
+          break;
       }
-      break;
-      case "rpc error: code = Unknown desc = Wrong Password":{
-        setState((){
-          _passErr="Incorrect Password";
-          loading=!loading;
+
+      if (response.body.startsWith("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9")) {
+        _saveLogin(response.body);
+        _saveEmailAddress(_emailController.text);
+        print("successful");
+      } else if (response.body.contains("invalid character")) {
+        setState(() {
+          _emailErr = "Please remove any tabs";
+          loading = !loading;
         });
-        return;
+      } else {
+        setState(() {
+          loading = !loading;
+        });
       }
-      break;
-    }
 
-    if(response.body.startsWith("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9")){
-      _saveLogin(response.body);
-      _saveEmailAddress(_emailController.text);
-      print("successful");
-    } else if (response.body.contains("invalid character")){
-      setState((){
-        _emailErr="Please remove any tabs";
-        loading=!loading;
+      print(response.body);
+    } on TimeoutException catch(err) {
+      print(err);
+      setState(() {
+        loading = !loading;
       });
-    } else {
-      setState((){
-        loading=!loading;
+    } on SocketException catch(err) {
+      print(err);
+      setState(() {
+        loading = !loading;
+      });
+    } on NoSuchMethodError catch(err) {
+      print(err);
+      setState(() {
+        loading = !loading;
       });
     }
-
-    print(response.body);
-
   }
 }
 

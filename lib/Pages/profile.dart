@@ -26,12 +26,15 @@ class Profile extends StatefulWidget{
 
 enum MenuOptions { signOut, contact, about }
 
-class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
+class _ProfileState extends State<Profile> with TickerProviderStateMixin{
 
   AnimationController _controller;
+  AnimationController _sliderController;
   Animation<Offset> _topDown;
   Animation<Offset> _bottomUp;
   Animation<Offset>_rightToLeft;
+  ColorTween _colorTween;
+  Animation<Color> _sliderAnimation;
 
   String token;
   var threshold=100;
@@ -54,6 +57,7 @@ void initState(){
     _getInitInfo();
 
     _controller = AnimationController(vsync: this, duration: Duration(seconds:2));
+    _sliderController = AnimationController(vsync: this, duration: Duration(seconds:1));
 
     _topDown = Tween<Offset>(
       begin: Offset(-1.0, -2.0),
@@ -82,12 +86,17 @@ void initState(){
     )
     );
 
+    _colorTween = ColorTween(
+      begin: Colors.red[600],
+      end: Color.fromRGBO(0,174,229,1),
+    );
+
+    _sliderAnimation = _colorTween.animate(_sliderController);
+
     Future<void>.delayed(Duration(milliseconds:1000),(){
       _controller.forward();
 
     });
-
-
 
   }
 
@@ -481,44 +490,49 @@ void initState(){
                   ),
                 ),
                 Expanded(
-                    child:SliderTheme(
-                      data:SliderThemeData(
-                        thumbColor: Color.fromRGBO(0,174,229,1),
-                        overlayShape: RoundSliderOverlayShape(overlayRadius: 0),
-                        thumbShape:RoundSliderThumbShape(enabledThumbRadius: 10),
-                        trackHeight: sliderChanging?10:4,
-                        activeTrackColor:Color.fromRGBO(0,174,229,1),
-                        inactiveTrackColor:Color.fromRGBO(0,174,229,.3),
-                        showValueIndicator:ShowValueIndicator.never,
-                        activeTickMarkColor: Colors.transparent,
-                        inactiveTickMarkColor: Colors.transparent,
-                        disabledActiveTickMarkColor: Colors.black,
-                        disabledInactiveTickMarkColor: Colors.black,
+                    child:AnimatedBuilder(
+                      animation: _sliderAnimation,
+                      builder: (context, child) => SliderTheme(
+                        data:SliderThemeData(
+                          thumbColor: _sliderAnimation.value,
+                          overlayShape: RoundSliderOverlayShape(overlayRadius: 0),
+                          thumbShape:RoundSliderThumbShape(enabledThumbRadius: 10),
+                          trackHeight: sliderChanging?10:4,
+                          activeTrackColor:_sliderAnimation.value,
+                          inactiveTrackColor:_sliderAnimation.value.withOpacity(0.3),
+                          showValueIndicator:ShowValueIndicator.never,
+                          activeTickMarkColor: Colors.transparent,
+                          inactiveTickMarkColor: Colors.transparent,
+                          disabledActiveTickMarkColor: Colors.black,
+                          disabledInactiveTickMarkColor: Colors.black,
+                        ),
+                        child:Slider(
+                          value: threshold.toDouble(),
+                          onChanged:(newMax){
+                            _sliderController.value = (newMax * 2 - 100) / 100;
+                            setState(() {
+                              threshold=newMax.toInt();
+                            });
+                          },
+                          onChangeStart:(s){
+                            setState(() {
+                              sliderChanging=!sliderChanging;
+                            });
+                          },
+                          onChangeEnd:(s){
+                            setState(() {
+                              sliderChanging=!sliderChanging;
+                              _setThreshold();
+                            });
+                          },
+                          min:50,
+                          max:100,
+                          divisions:10,
+                        ),
                       ),
-                      child:Slider(
-                        value: threshold.toDouble(),
-                        onChanged:(newMax){
-                          setState(() {
-                            threshold=newMax.toInt();
-                          });
-                        },
-                        onChangeStart:(s){
-                          setState(() {
-                            sliderChanging=!sliderChanging;
-                          });
-                        },
-                        onChangeEnd:(s){
-                          setState(() {
-                            sliderChanging=!sliderChanging;
-                            _setThreshold();
-                          });
-                        },
-                        min:50,
-                        max:100,
-                        divisions:10,
+
                       ),
-                    )
-                ),
+                    ),
                 Text(
                   '\$1',
                   style: TextStyle(
@@ -593,12 +607,14 @@ void initState(){
     var profileResponse = await http.post("https://api.changecharity.io/users/getprofile", body:content);
     var decodedMask = jsonDecode(profileResponse.body)["mask"].toString();
     var decodedPL = jsonDecode(profileResponse.body)["legalName"];
+    var threshDecode = jsonDecode(profileResponse.body)["threshold"];
     print(profileResponse.body);
     setState(() {
-      threshold=jsonDecode(profileResponse.body)["threshold"];
+      threshold=threshDecode;
       mask = decodedMask; //== null ? "0000" : decodedMask;
       bankName=jsonDecode(profileResponse.body)["bankName"];
       profileLetter = decodedPL != null ? decodedPL[0] : "A";
+      _sliderController.value=(threshDecode * 2 - 100)/ 100;
     });
 
     print(threshold);

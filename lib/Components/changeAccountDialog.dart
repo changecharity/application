@@ -46,14 +46,14 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>with SingleTickerProvi
         Text(
             'Bank Information',
             style:TextStyle(
-                fontSize: 24,
+                fontSize: 20,
                 fontWeight:FontWeight.bold
             )
         ),
         Container(
-          margin: EdgeInsets.only(top:15),
+          margin: EdgeInsets.fromLTRB(20,25,20,0),
           child:Text(
-              'Please click on the button to enter your account information',
+              'Please click on the button below and enter your account details',
               textAlign: TextAlign.center,
               style:TextStyle(
                 fontSize: 14,
@@ -83,9 +83,9 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>with SingleTickerProvi
             }
           },
           child: Container(
-            width: MediaQuery.of(context).size.width<550?MediaQuery.of(context).size.width*.55:MediaQuery.of(context).size.width,
+            width: MediaQuery.of(context).size.width * 0.9,
             height: 60,
-            margin: EdgeInsets.only(right: 20, left: 20, top: 20 ),
+            margin: EdgeInsets.only(right: 5, left: 5, top: 40 ),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.all(Radius.circular(30)),
@@ -112,10 +112,10 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>with SingleTickerProvi
 
   Widget _linkIcon() {
     return Container(
-      margin: EdgeInsets.only(left: 25, right: 15),
+      margin: EdgeInsets.only(left: 20, right: 10),
       child: Icon(
         Icons.link,
-        size: 20,
+        size: 22,
         color: Colors.black,
       ),
     );
@@ -133,7 +133,7 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>with SingleTickerProvi
     } else if (plaidToken == null) {
       return Text(
         'Link Your Checking Account',
-        style:TextStyle(fontSize: MediaQuery.of(context).size.width<550?10:14)
+        style:TextStyle(fontSize:12)
       );
     } else {
       return Text(
@@ -174,12 +174,12 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>with SingleTickerProvi
         children: <Widget>[
           Container(
             margin: EdgeInsets.symmetric(horizontal: 10),
-            child: Text(
-              'Link Account',
-              style: TextStyle(
-                fontSize: 20,
-              ),
-            ),
+//            child: Text(
+//              'Link Account',
+//              style: TextStyle(
+//                fontSize: 20,
+//              ),
+//            ),
           ),
           _linkButton(context)
         ],

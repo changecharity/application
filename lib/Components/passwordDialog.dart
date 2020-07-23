@@ -45,14 +45,14 @@ class _PwDialogState extends State<PasswordDialog> with SingleTickerProviderStat
         Text(
             'Password Confirmation',
             style:TextStyle(
-                fontSize: 24,
+                fontSize: 20,
                 fontWeight:FontWeight.bold
             )
         ),
         Container(
-          margin: EdgeInsets.only(top:10),
+          margin: EdgeInsets.fromLTRB(30,20,30,0),
           child:Text(
-              'Please confirm your password to continue:',
+              'Please confirm your Change Charity account password to continue:',
               style:TextStyle(
                 fontSize: 14,
               )
@@ -66,7 +66,7 @@ class _PwDialogState extends State<PasswordDialog> with SingleTickerProviderStat
     return Column(
       children: <Widget>[
         Container(
-            margin: EdgeInsets.only(right: 10, left: 10, top:45),
+            margin: EdgeInsets.only(right: 2, left: 2, top:45),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.all(Radius.circular(30)),
@@ -89,6 +89,7 @@ class _PwDialogState extends State<PasswordDialog> with SingleTickerProviderStat
               onEditingComplete: (){
                 FocusScope.of(context).unfocus();
               },
+              autofillHints: [AutofillHints.password],
               decoration: InputDecoration(
                 labelText: "Password",
                 hasFloatingPlaceholder: false,
@@ -104,7 +105,7 @@ class _PwDialogState extends State<PasswordDialog> with SingleTickerProviderStat
 
   Widget _passPrefix() {
     return Container(
-      margin: EdgeInsets.only(left: 15, right: 15),
+      margin: EdgeInsets.only(left: 25, right: 15),
       child: Icon(
         Icons.lock,
         size: 20,
@@ -162,12 +163,12 @@ class _PwDialogState extends State<PasswordDialog> with SingleTickerProviderStat
         children: <Widget>[
           Container(
             margin: EdgeInsets.symmetric(horizontal: 10),
-            child: Text(
-              'Confirm',
-              style: TextStyle(
-                fontSize: 24,
-              ),
-            ),
+//            child: Text(
+//              'Confirm',
+//              style: TextStyle(
+//                fontSize: 24,
+//              ),
+//            ),
           ),
           _confirmButton(context)
         ],
@@ -262,10 +263,11 @@ class _PwDialogState extends State<PasswordDialog> with SingleTickerProviderStat
     var content='{"user_token":"$token", "password":"${_passController.text}"}';
     var response=await http.post("https://api.changecharity.io/users/validpass", body:content);
     print(response.body);
-
+    setState(() {
+      loading = !loading;
+    });
     if(response.body=="rpc error: code = Unknown desc = Wrong Password") {
       setState(() {
-        loading = !loading;
         _passErr = "Wrong Password";
       });
       return;

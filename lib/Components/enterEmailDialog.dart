@@ -34,12 +34,12 @@ class _EnterEmailState extends State<EnterEmail> with TickerProviderStateMixin{
         Text(
             'Forgot Password?',
             style:TextStyle(
-                fontSize: 24,
+                fontSize: 20,
                 fontWeight:FontWeight.bold
             )
         ),
         Container(
-          margin: EdgeInsets.only(top:10),
+          margin: EdgeInsets.only(top:20,left: 20,right: 20),
           child:Text(
               'Please enter your email address to continue:',
               style:TextStyle(
@@ -55,7 +55,7 @@ class _EnterEmailState extends State<EnterEmail> with TickerProviderStateMixin{
     return Column(
       children: <Widget>[
         Container(
-            margin: EdgeInsets.only(right: 10, left: 10),
+            margin: EdgeInsets.only(right: 5, left: 5),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.all(Radius.circular(30)),
@@ -77,6 +77,7 @@ class _EnterEmailState extends State<EnterEmail> with TickerProviderStateMixin{
               onEditingComplete: (){
                 FocusScope.of(context).unfocus();
               },
+              autofillHints: [AutofillHints.email],
               decoration: InputDecoration(
                 labelText: "Email",
                 hasFloatingPlaceholder: false,
@@ -91,7 +92,7 @@ class _EnterEmailState extends State<EnterEmail> with TickerProviderStateMixin{
 
   Widget _emailIcon() {
     return Container(
-      margin: EdgeInsets.only(left: 15, right: 15),
+      margin: EdgeInsets.only(left: 25, right: 15),
       child: Icon(
         Icons.email,
         size: 20,
@@ -130,12 +131,6 @@ class _EnterEmailState extends State<EnterEmail> with TickerProviderStateMixin{
         children: <Widget>[
           Container(
             margin: EdgeInsets.symmetric(horizontal: 10),
-            child: Text(
-              'Submit',
-              style: TextStyle(
-                fontSize: 24,
-              ),
-            ),
           ),
           _submitButton(context)
         ],
@@ -222,6 +217,13 @@ class _EnterEmailState extends State<EnterEmail> with TickerProviderStateMixin{
   }
 
   _submitEmail() async{
+    if (_emailController.value.text == "") {
+      setState(() {
+        _emailErr = 'Please enter your email';
+      });
+      return;
+    }
+
     setState(() {
       loading=!loading;
     });

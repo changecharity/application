@@ -147,9 +147,16 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         children: <Widget>[
           Consumer<UserOrgModel>(
             builder:(context, userOrg, child){
-              return Text(
-                '${userOrg.getUserOrg}',
-                style:TextStyle(color:Colors.black, fontSize:18, fontWeight: FontWeight.bold),
+              return GestureDetector(
+                onTap: (){
+                  if (userOrg.getUserOrg == "Choose Your Org"){
+                    Navigator.push(context, MaterialPageRoute(builder:(context)=>Search()));
+                  }
+                },
+                child: Text(
+                  '${userOrg.getUserOrg}',
+                  style:TextStyle(color:Colors.black, fontSize:18, fontWeight: FontWeight.bold),
+                ),
               );
             }
           ),
@@ -246,8 +253,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
        width: MediaQuery.of(context).size.width,
        height: MediaQuery.of(context).size.height * .42,
        alignment: Alignment.center,
-       child:Text(
-           'You have no transactions at this time. Check back in a few days.',
+       child:Text( context.watch<UserBankModel>().getBankName != "" &&  context.watch<UserBankModel>().getBankName != null ? 'You have no transactions at this time. Check back in a few days' : "You must link your bank account to begin donating.",
            textAlign: TextAlign.center,
        )
      );
@@ -510,6 +516,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     var bankName=jsonDecode(profileResponse.body)["bankName"];
     var profileLetter = decodedPL != null ? decodedPL[0] : "A";
     //notify provider of mask and bankName
+
     context.read<UserBankModel>().notify(mask, bankName, profileLetter);
   }
 
