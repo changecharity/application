@@ -89,7 +89,7 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
     _plaidLink = PlaidLink(
       clientName: "Change Client",
       publicKey: "014d4f2c01905eafa07cbcd2755ef5",
-      env: EnvOption.sandbox,
+      env: EnvOption.production,
       products: <ProductOption>[
         ProductOption.transactions,
       ],
