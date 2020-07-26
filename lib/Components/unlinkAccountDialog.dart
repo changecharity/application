@@ -2,7 +2,7 @@ import'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
-
+import 'package:global_configuration/global_configuration.dart';
 import '../Models/userBankModel.dart';
 
 class UnlinkDialog extends StatefulWidget {
@@ -15,7 +15,7 @@ class UnlinkDialog extends StatefulWidget {
 }
 
 class _UnlinkDialogState extends State<UnlinkDialog>{
-
+  GlobalConfiguration cfg = new GlobalConfiguration();
   var token;
 
   Widget _unlinkText(){
@@ -113,7 +113,7 @@ class _UnlinkDialogState extends State<UnlinkDialog>{
 
     var content = '{"user_token":"$token", "password":"${widget.password}"}';
     var response = await http.post(
-        "https://api.changecharity.io/users/deletebankacc", body: content);
+        "${cfg.getString("host")}/users/deletebankacc", body: content);
 
     print(response.body);
     if (response.body == "success") {

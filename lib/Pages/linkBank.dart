@@ -1,19 +1,17 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:global_configuration/global_configuration.dart';
 import 'package:http/http.dart' as http;
 import 'homePage.dart';
 import '../paintings.dart';
-import 'package:plaid/plaid.dart';
-
+import 'package:plaid_flutter/plaid_flutter.dart';
 
 class LinkBank extends StatefulWidget{
   final org;
-
   LinkBank(this.org);
 
   @override
@@ -40,6 +38,9 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
   int id;
   int mask;
   bool loading = false;
+
+  GlobalConfiguration cfg = new GlobalConfiguration();
+  PlaidLink _plaidLink;
 
   void initState(){
     super.initState();
@@ -85,6 +86,32 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
       _controller.forward();
     });
 
+    _plaidLink = PlaidLink(
+      clientName: "Change Client",
+      publicKey: "014d4f2c01905eafa07cbcd2755ef5",
+      env: EnvOption.sandbox,
+      products: <ProductOption>[
+        ProductOption.transactions,
+      ],
+      language: "en",
+      countryCodes: ['US'],
+      onAccountLinked: (publicToken, metadata) => _onSuccess(publicToken, metadata),
+      onAccountLinkError: (error, metadata) {
+        print("onAccountLinkError: $error metadata: $metadata");
+        setState(() {
+          _plaidErr = "An error occurred. Please contact us for more assistance.";
+        });
+      },
+      onEvent: (event, metadata) {
+        print("onEvent: $event metadata: $metadata");
+      },
+      onExit: (metadata) {
+        print("onExit: $metadata");
+        setState(() {
+          _plaidErr = "Please link a bank account";
+        });
+      },
+    );
   }
 
   Widget _secureText() {
@@ -139,7 +166,9 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
           _plaidErr='';
         });
         if (plaidToken == null || plaidToken == '') {
-          showPlaidView();
+          _plaidLink.open(
+            // publicToken: "...",
+          );
           Future.delayed(const Duration(milliseconds: 500), () {
             setState(() {
               plaidToken = '';
@@ -365,47 +394,6 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
     super.dispose();
   }
 
-  //handles plaid view
-  showPlaidView() {
-    Configuration configuration = Configuration(
-        plaidPublicKey: '014d4f2c01905eafa07cbcd2755ef5',
-        plaidBaseUrl: 'https://cdn.plaid.com/link/v2/stable/link.html',
-        plaidEnvironment: 'production',
-        environmentPlaidPathAccessToken:
-        'https://sandbox.plaid.com/item/public_token/exchange',
-        environmentPlaidPathStripeToken:
-        'https://sandbox.plaid.com/processor/stripe/bank_account_token/create',
-        plaidClientId: '',
-        secret: '',
-        clientName: 'Change',
-        webhook: 'https://api.changecharity.io/plaidwebhook',
-        products: 'transactions',
-        selectAccount: 'false');
-
-    FlutterPlaidApi flutterPlaidApi = FlutterPlaidApi(configuration);
-    flutterPlaidApi.launch(context, (Result result) {
-      setState(() {
-        plaidToken = result.token;
-      });
-      print(result.response);
-      print(result.institutionName);
-      var account;
-      var accounts=jsonDecode(result.response["accounts"]);
-      for(int i =0; i<accounts.length; i++){
-        if(accounts[i]["subtype"]=="checking"){
-          account=accounts[i];
-          print(account);
-        }
-      }
-      accountId=(account["_id"]);
-      mask = int.parse(account["meta"]["number"]);
-      bankName = result.institutionName;
-
-      print(mask);
-      print(result.token);
-    }, stripeToken: false);
-  }
-
   bool _checkPlaid() {
     if (plaidToken == '' || plaidToken == null) {
       setState(() {
@@ -428,7 +416,7 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
     SharedPreferences prefs=await SharedPreferences.getInstance();
     token=prefs.getString('token');
     var content = '{"user_token":"$token", "plaid_public_token":"$plaidToken", "plaid_account_id":"$accountId", "mask":$mask, "bank_name":"$bankName"}';
-    var response = await http.post("https://api.changecharity.io/users/updatebankacc", body: content);
+    var response = await http.post("${cfg.getString("host")}/users/updatebankacc", body: content);
     if (response.body == "success") {
       setState(() {
         loading = false;
@@ -450,4 +438,26 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
     Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>HomePage()));
   }
 
+   _onSuccess (publicToken, metadata) {
+    var account;
+    var accounts=metadata["accounts"];
+
+    for(int i=0; i<accounts.length; i++){
+      if(accounts[i]["subtype"]=="checking"){
+        account=accounts[i];
+        print(account);
+      }
+    }
+
+    print(metadata.toString());
+
+    setState(() {
+      plaidToken = publicToken;
+    });
+    accountId=(account["id"]);
+    mask = int.parse(account["mask"]);
+    bankName = metadata["institution_name"];
+
+    print("$accountId, $mask, $bankName");
+  }
 }

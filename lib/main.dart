@@ -4,7 +4,7 @@ import 'app.dart';
 import 'package:change/Models/userOrgModel.dart';
 import 'package:change/Models/userBankModel.dart';
 
-void main() {
+void main(){
   runApp(
     MultiProvider(
       providers: [

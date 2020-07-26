@@ -10,6 +10,7 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:change/Models/userOrgModel.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:global_configuration/global_configuration.dart';
 
 import 'Search.dart';
 import 'profile.dart';
@@ -41,6 +42,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   Money monthTotal;
   Money weekTotal;
   Currency usdCurrency=Currency.create('USD', 2);
+  GlobalConfiguration cfg = new GlobalConfiguration();
 
   void initState() {
     super.initState();
@@ -424,7 +426,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     if (org != null) {
       print("org selected is ${org.toString()}");
       var content = '{"user_token":"$token", "org":$org}';
-      var response = await http.post("https://api.changecharity.io/users/setorg", body:content);
+      var response = await http.post("${cfg.getString("host")}/users/setorg", body:content);
       print(response.body);
       await _getOrgInfo();
       prefs.setInt('selOrg', null);
@@ -437,7 +439,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token');
     var transContent='{"user_token":"$token", "offset":$offset}';
-    var transactionResponse = await http.post("https://api.changecharity.io/users/gettransactions", body:transContent);
+    var transactionResponse = await http.post("${cfg.getString("host")}/users/gettransactions", body:transContent);
     if (transactionResponse.body.contains("no rows in result set")) {
       prefs.setString('token', null);
       Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>Login()));
@@ -468,7 +470,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token');
     var totalContent='{"user_token":"$token"}';
-    var totalResponse = await http.post("https://api.changecharity.io/users/getuserstotals", body:totalContent);
+    var totalResponse = await http.post("${cfg.getString("host")}/users/getuserstotals", body:totalContent);
     setState(() {
       jsonDecode(totalResponse.body)["monthlyTotal"]==null?monthTotal=Money.fromInt(0, usdCurrency):monthTotal=Money.fromInt(int.parse(jsonDecode(totalResponse.body)["monthlyTotal"]), usdCurrency);
       jsonDecode(totalResponse.body)["weeklyTotal"]==null?weekTotal=Money.fromInt(0, usdCurrency):weekTotal=Money.fromInt(int.parse(jsonDecode(totalResponse.body)["weeklyTotal"]), usdCurrency);
@@ -483,7 +485,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token');
     var orgContent='{"user_token":"$token"}';
-    var orgResponse = await http.post("https://api.changecharity.io/users/getusersorginfo", body:orgContent);
+    var orgResponse = await http.post("${cfg.getString("host")}/users/getusersorginfo", body:orgContent);
     print(orgResponse.body);
     if(orgResponse.body.contains("no rows in result")) {
       setState(() {
@@ -505,7 +507,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token');
     var content='{"user_token":"$token"}';
-    var profileResponse = await http.post("https://api.changecharity.io/users/getprofile", body:content);
+    var profileResponse = await http.post("${cfg.getString("host")}/users/getprofile", body:content);
     var decodedMask = jsonDecode(profileResponse.body)["mask"].toString();
     var decodedPL = jsonDecode(profileResponse.body)["legalName"];
     var mask = decodedMask == null ? "0000" : decodedMask;

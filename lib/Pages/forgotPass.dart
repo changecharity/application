@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:global_configuration/global_configuration.dart';
 import 'signup.dart';
 import '../paintings.dart';
 import 'login.dart';
@@ -26,6 +27,7 @@ class _ForgotPassState extends State<ForgotPass> with TickerProviderStateMixin{
   bool loading=false;
   final passFocusNode=FocusNode();
   final confirmFocusNode=FocusNode();
+  GlobalConfiguration cfg = new GlobalConfiguration();
 
   AnimationController _loadingController;
   Animation<Color> _loadingAn;
@@ -402,7 +404,7 @@ class _ForgotPassState extends State<ForgotPass> with TickerProviderStateMixin{
 
 
       var content='{"user_token":"$token", "password":"${_passController.text}", "key":${widget.pin}}';
-      var response = await http.post("https://api.changecharity.io/users/forgotpass", body:content);
+      var response = await http.post("${cfg.getString("host")}/users/forgotpass", body:content);
       print(response.body);
       if(response.body.contains("success")){
         Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>Login()));

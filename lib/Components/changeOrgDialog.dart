@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:global_configuration/global_configuration.dart';
 import '../Models/userOrgModel.dart';
 
 
@@ -13,7 +14,6 @@ class ChangeOrgDialog extends StatefulWidget{
 
   final int id;
   ChangeOrgDialog(this.id);
-
 }
 
 class _ChangeOrgDialogState extends State<ChangeOrgDialog> with TickerProviderStateMixin{
@@ -22,7 +22,7 @@ class _ChangeOrgDialogState extends State<ChangeOrgDialog> with TickerProviderSt
   var name="";
   var logo="https://wallpaperplay.com/walls/full/b/d/1/58065.jpg";
   var description="";
-
+  GlobalConfiguration cfg = new GlobalConfiguration();
 
   void initState(){
     super.initState();
@@ -192,7 +192,7 @@ class _ChangeOrgDialogState extends State<ChangeOrgDialog> with TickerProviderSt
     SharedPreferences prefs=await SharedPreferences.getInstance();
     token=prefs.getString('token');
     var content='{"user_token":"$token", "org":${widget.id}}';
-    var response=await http.post("https://api.changecharity.io/users/getorginfo", body:content);
+    var response=await http.post("${cfg.getString("host")}/users/getorginfo", body:content);
     print(response.body);
     setState(() {
       logo=jsonDecode(response.body)["logo"];
@@ -209,7 +209,7 @@ class _ChangeOrgDialogState extends State<ChangeOrgDialog> with TickerProviderSt
     SharedPreferences prefs=await SharedPreferences.getInstance();
     token=prefs.getString('token');
     var content = '{"user_token":"$token", "org":${widget.id}}';
-    var response = await http.post("https://api.changecharity.io/users/setorg", body:content);
+    var response = await http.post("${cfg.getString("host")}/users/setorg", body:content);
     print(response.body);
     context.read<UserOrgModel>().notify(name, logo);
     var count=0;

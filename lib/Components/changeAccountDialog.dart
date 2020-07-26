@@ -1,9 +1,9 @@
 import 'dart:async';
-import 'dart:convert';
+
 import'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:plaid/plaid.dart';
+import 'package:plaid_flutter/plaid_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../Models/userBankModel.dart';
@@ -29,6 +29,8 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>with SingleTickerProvi
   Animation<Color> loadingAn;
   AnimationController loadingController;
 
+  PlaidLink _plaidLink;
+
   void initState(){
     super.initState();
 
@@ -38,6 +40,33 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>with SingleTickerProvi
         ColorTween(begin: Colors.lightBlue[200], end: Colors.lightBlue[600]));
 
     loadingController.repeat();
+
+    _plaidLink = PlaidLink(
+      clientName: "Change Client",
+      publicKey: "014d4f2c01905eafa07cbcd2755ef5",
+      env: EnvOption.production,
+      products: <ProductOption>[
+        ProductOption.transactions,
+      ],
+      language: "en",
+      countryCodes: ['US'],
+      onAccountLinked: (publicToken, metadata) => _onSuccess(publicToken, metadata),
+      onAccountLinkError: (error, metadata) {
+        print("onAccountLinkError: $error metadata: $metadata");
+        setState(() {
+          _plaidErr = "An error occurred. Please contact us for more assistance.";
+        });
+      },
+      onEvent: (event, metadata) {
+        print("onEvent: $event metadata: $metadata");
+      },
+      onExit: (metadata) {
+        print("onExit: $metadata");
+        setState(() {
+          _plaidErr = "Please link a bank account";
+        });
+      },
+    );
   }
 
   Widget _accountText(){
@@ -74,7 +103,9 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>with SingleTickerProvi
               _plaidErr='';
             });
             if (plaidToken == null || plaidToken == '') {
-              showPlaidView();
+              _plaidLink.open(
+                // publicToken: "...",
+              );
               Future.delayed(const Duration(milliseconds: 500), () {
                 setState(() {
                   plaidToken = '';
@@ -230,7 +261,6 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>with SingleTickerProvi
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return GestureDetector(
         onTap:() {
           FocusScope.of(context).unfocus();
@@ -254,47 +284,6 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>with SingleTickerProvi
             )
         )
     );
-  }
-
-  //handle showing the plaid api
-  showPlaidView() {
-    Configuration configuration = Configuration(
-        plaidPublicKey: '014d4f2c01905eafa07cbcd2755ef5',
-        plaidBaseUrl: 'https://cdn.plaid.com/link/v2/stable/link.html',
-        plaidEnvironment: 'production',
-        environmentPlaidPathAccessToken:
-        'https://sandbox.plaid.com/item/public_token/exchange',
-        environmentPlaidPathStripeToken:
-        'https://sandbox.plaid.com/processor/stripe/bank_account_token/create',
-        plaidClientId: '',
-        secret: '',
-        clientName: 'Change',
-        webhook: 'https://api.changecharity.io/plaidwebhook',
-        products: 'transactions',
-        selectAccount: 'false');
-
-    FlutterPlaidApi flutterPlaidApi = FlutterPlaidApi(configuration);
-    flutterPlaidApi.launch(context, (Result result) {
-      setState(() {
-        plaidToken = result.token;
-      });
-      print(result.response);
-      print(result.institutionName);
-      var account;
-      var accounts=jsonDecode(result.response["accounts"]);
-      for(int i =0; i<accounts.length; i++){
-        if(accounts[i]["subtype"]=="checking"){
-          account=accounts[i];
-          print(account);
-        }
-      }
-      accountId=(account["_id"]);
-      mask = int.parse(account["meta"]["number"]);
-      bankName = result.institutionName;
-
-      print(mask);
-      print(result.token);
-    }, stripeToken: false);
   }
 
   bool _checkValidPlaid(){
@@ -345,4 +334,26 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>with SingleTickerProvi
     }
   }
 
+  _onSuccess (publicToken, metadata) {
+    var account;
+    var accounts=metadata["accounts"];
+
+    for(int i=0; i<accounts.length; i++){
+      if(accounts[i]["subtype"]=="checking"){
+        account=accounts[i];
+        print(account);
+      }
+    }
+
+    print(metadata.toString());
+
+    setState(() {
+      plaidToken = publicToken;
+    });
+    accountId=(account["id"]);
+    mask = int.parse(account["mask"]);
+    bankName = metadata["institution_name"];
+
+    print("$accountId, $mask, $bankName");
+  }
 }

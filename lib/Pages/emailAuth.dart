@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -10,6 +8,8 @@ import 'linkBank.dart';
 import '../Pages/orgSelected.dart';
 import '../Pages/forgotPass.dart';
 import '../Pages/login.dart';
+import 'package:global_configuration/global_configuration.dart';
+import 'package:global_configuration/global_configuration.dart';
 
 class EmailAuth extends StatefulWidget{
 
@@ -39,7 +39,7 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin{
   bool missingChar=false;
   bool loading=false;
   bool resendLoading = false;
-
+  GlobalConfiguration cfg = new GlobalConfiguration();
 
   void initState(){
     super.initState();
@@ -396,7 +396,7 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin{
     });
 
     var content='{"user_token":"$token"}';
-    var response = await http.post("https://api.changecharity.io/users/resendemailkey", body:content);
+    var response = await http.post("${cfg.getString("host")}/users/resendemailkey", body:content);
 
     print(response.body);
     if(response.body=="rpc error: code = Unknown desc = unknown token"){
@@ -441,7 +441,7 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin{
 
   _verifyAndSignup() async{
     var content='{"user_token":"$token","key":${int.parse(_pinController.text)}}';
-    var response= await http.post("https://api.changecharity.io/users/updatesignup", body:content);
+    var response= await http.post("${cfg.getString("host")}/users/updatesignup", body:content);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     print (response.body);
 
@@ -473,7 +473,7 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin{
 
   _verifyAndEnterPass() async{
     var content = '{"user_token": "$token", "key":${int.parse(_pinController.text)}}';
-    var response = await http.post("https://api.changecharity.io/users/validkey", body:content);
+    var response = await http.post("${cfg.getString("host")}/users/validkey", body:content);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     print(response.body);
 

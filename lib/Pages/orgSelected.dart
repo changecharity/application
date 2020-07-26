@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:global_configuration/global_configuration.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -23,8 +24,9 @@ class _OrgSelectedState extends State<OrgSelected> with TickerProviderStateMixin
   Animation<Offset> _bottomUp;
   Animation<Offset>_leftToRight;
   Animation<Color> _animationC;
-
   AnimationController controllerC;
+
+  GlobalConfiguration cfg = new GlobalConfiguration();
 
   String token;
   String name = "";
@@ -273,7 +275,7 @@ class _OrgSelectedState extends State<OrgSelected> with TickerProviderStateMixin
     int org = preferences.getInt('selOrg');
     var content = '{"user_token":"$token", "org": $org}';
     var response = await http.post(
-        "https://api.changecharity.io/users/getorginfo", body: content);
+        "${cfg.getString("host")}/users/getorginfo", body: content);
     print(response.body);
     setState(() {
       name = jsonDecode(response.body)["name"];
@@ -289,7 +291,7 @@ class _OrgSelectedState extends State<OrgSelected> with TickerProviderStateMixin
     SharedPreferences prefs=await SharedPreferences.getInstance();
     token=prefs.getString('token');
     var content = '{"user_token":"$token", "org":$id}';
-    var response = await http.post("https://api.changecharity.io/users/setorg", body:content);
+    var response = await http.post("${cfg.getString("host")}/users/setorg", body:content);
     print(response.body);
     prefs.setInt('selOrg', null);
     setState(() {

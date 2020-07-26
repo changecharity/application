@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import '../Pages/emailAuth.dart';
+import 'package:global_configuration/global_configuration.dart';
 
 class EnterEmail extends StatefulWidget{
   _EnterEmailState createState()=> _EnterEmailState();
@@ -15,7 +16,7 @@ class _EnterEmailState extends State<EnterEmail> with TickerProviderStateMixin{
   String _emailErr="";
   var _emailController=TextEditingController();
   bool loading=false;
-
+  GlobalConfiguration cfg = new GlobalConfiguration();
 
   void initState(){
     super.initState();
@@ -77,7 +78,7 @@ class _EnterEmailState extends State<EnterEmail> with TickerProviderStateMixin{
               onEditingComplete: (){
                 FocusScope.of(context).unfocus();
               },
-              autofillHints: [AutofillHints.email],
+//              autofillHints: [AutofillHints.email],
               decoration: InputDecoration(
                 labelText: "Email",
                 hasFloatingPlaceholder: false,
@@ -229,7 +230,7 @@ class _EnterEmailState extends State<EnterEmail> with TickerProviderStateMixin{
     });
 
     var content='{"email":"${_emailController.text}"}';
-    var response=await http.post("https://api.changecharity.io/users/sendforgotpass", body:content);
+    var response=await http.post("${cfg.getString("host")}/users/sendforgotpass", body:content);
     print(response.body);
 
     if(response.body=="rpc error: code = Unknown desc = email does not exist") {

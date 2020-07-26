@@ -16,6 +16,7 @@ import 'login.dart';
 import '../Components/passwordDialog.dart';
 import '../Models/userBankModel.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:global_configuration/global_configuration.dart';
 
 
 class Profile extends StatefulWidget{
@@ -46,6 +47,8 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
   bool showMenu=false;
   var _selection;
   var password;
+
+  GlobalConfiguration cfg = new GlobalConfiguration();
 
   String selectedOrg;
   String selectedOrgImg='https://wallpaperplay.com/walls/full/b/d/1/58065.jpg';
@@ -415,6 +418,7 @@ void initState(){
         return Text(
           //if selected org is not null, there was no image saved in provider and we called api which filled selectedOrg
             selectedOrg!=null?selectedOrg:'${userOrg.getUserOrg}',
+          textAlign: TextAlign.center,
           style:TextStyle(
             color:Color.fromRGBO(0, 174, 229, 1),
             fontSize:18,
@@ -604,7 +608,7 @@ void initState(){
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token');
     var content='{"user_token":"$token"}';
-    var profileResponse = await http.post("https://api.changecharity.io/users/getprofile", body:content);
+    var profileResponse = await http.post("${cfg.getString("host")}/users/getprofile", body:content);
     var decodedMask = jsonDecode(profileResponse.body)["mask"].toString();
     var decodedPL = jsonDecode(profileResponse.body)["legalName"];
     var threshDecode = jsonDecode(profileResponse.body)["threshold"];
@@ -631,7 +635,7 @@ void initState(){
       SharedPreferences prefs = await SharedPreferences.getInstance();
       token = prefs.getString('token');
       var orgContent='{"user_token":"$token"}';
-      var orgResponse = await http.post("https://api.changecharity.io/users/getusersorginfo", body:orgContent);
+      var orgResponse = await http.post("${cfg.getString("host")}/users/getusersorginfo", body:orgContent);
       setState(() {
         selectedOrg=jsonDecode(orgResponse.body)["name"];
         selectedOrgImg=jsonDecode(orgResponse.body)["logoLocation"];
@@ -656,7 +660,7 @@ void initState(){
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token');
     var content='{"user_token":"$token", "threshold":"${threshold.toInt()}"}';
-    await http.post("https://api.changecharity.io/users/updatethreshold", body:content);
+    await http.post("${cfg.getString("host")}/users/updatethreshold", body:content);
     print(threshold);
   }
 

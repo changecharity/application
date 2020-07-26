@@ -1,11 +1,9 @@
-import 'dart:async';
-import 'dart:convert';
 import'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'unlinkAccountDialog.dart';
 import 'changeAccountDialog.dart';
-
+import 'package:global_configuration/global_configuration.dart';
 
 class PasswordDialog extends StatefulWidget {
   @override
@@ -17,7 +15,6 @@ class PasswordDialog extends StatefulWidget {
 }
 
 class _PwDialogState extends State<PasswordDialog> with SingleTickerProviderStateMixin{
-
   Animation<Color> loadingAn;
   AnimationController loadingController;
 
@@ -26,7 +23,7 @@ class _PwDialogState extends State<PasswordDialog> with SingleTickerProviderStat
   var _passController=TextEditingController();
   bool obscurePass=true;
   bool loading=false;
-
+  GlobalConfiguration cfg = new GlobalConfiguration();
 
   void initState(){
     super.initState();
@@ -90,7 +87,7 @@ class _PwDialogState extends State<PasswordDialog> with SingleTickerProviderStat
                 FocusScope.of(context).unfocus();
                 _validPassAndAction(widget.action);
               },
-              autofillHints: [AutofillHints.password],
+//              autofillHints: [AutofillHints.password],
               decoration: InputDecoration(
                 labelText: "Password",
                 hasFloatingPlaceholder: false,
@@ -221,7 +218,6 @@ class _PwDialogState extends State<PasswordDialog> with SingleTickerProviderStat
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return GestureDetector(
       onTap:() {
         FocusScope.of(context).unfocus();
@@ -262,7 +258,7 @@ class _PwDialogState extends State<PasswordDialog> with SingleTickerProviderStat
     token = prefs.getString('token');
     print(token);
     var content='{"user_token":"$token", "password":"${_passController.text}"}';
-    var response=await http.post("https://api.changecharity.io/users/validpass", body:content);
+    var response=await http.post("${cfg.getString("host")}/users/validpass", body:content);
     print(response.body);
     setState(() {
       loading = !loading;

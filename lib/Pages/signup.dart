@@ -1,10 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
-import 'package:plaid/plaid.dart';
+import 'package:global_configuration/global_configuration.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -42,6 +40,8 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
   bool obscurePass=true;
   bool loading=false;
   bool _tosAccepted = false;
+
+  GlobalConfiguration cfg = new GlobalConfiguration();
 
   void initState() {
     super.initState();
@@ -128,7 +128,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
         ],
       ),
       child: TextField(
-        autofillHints: [AutofillHints.name],
+//        autofillHints: [AutofillHints.name],
         controller:_nameController,
         onChanged: (s){
           setState(() {
@@ -176,7 +176,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
         ],
       ),
       child: TextField(
-        autofillHints: [AutofillHints.email],
+//        autofillHints: [AutofillHints.email],
         controller:_emailController,
         onChanged: (s){
           setState(() {
@@ -245,7 +245,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
         ],
       ),
       child: TextField(
-        autofillHints: [AutofillHints.newPassword],
+//        autofillHints: [AutofillHints.newPassword],
         controller:_passController,
         obscureText: obscurePass,
         onChanged: (s){
@@ -284,7 +284,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
         ],
       ),
       child: TextField(
-        autofillHints: [AutofillHints.newPassword],
+//        autofillHints: [AutofillHints.newPassword],
         controller:_confirmPassController,
         obscureText: obscurePass,
         onChanged: (s){
@@ -477,7 +477,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                 child: SlideTransition(
                   position: animationB,
                   child: SingleChildScrollView(
-                    child: AutofillGroup(
+//                    child: AutofillGroup(
                       child: Column(
                         children: <Widget>[
                           _backButton(),
@@ -494,7 +494,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                           _signUpCont(),
                         ],
                       ),
-                    ),
+//                    ),
                   ),
                 ),
               ),
@@ -610,7 +610,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
         loading=!loading;
       });
       var content='{"legal_name":"${_nameController.text}","email":"${_emailController.text}","password":"${_passController.text}"}';
-      var response= await http.post("https://api.changecharity.io/users/signup", body:content).timeout(Duration(seconds: 7));
+      var response= await http.post("${cfg.getString("host")}/users/signup", body:content).timeout(Duration(seconds: 7));
 
       print(response.body);
 

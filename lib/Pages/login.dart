@@ -10,8 +10,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'signup.dart';
 import '../paintings.dart';
 import 'homePage.dart';
-import 'forgotPass.dart';
 import '../Components/enterEmailDialog.dart';
+import 'package:global_configuration/global_configuration.dart';
 
 
 class Login extends StatefulWidget {
@@ -20,6 +20,8 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> with TickerProviderStateMixin {
+  GlobalConfiguration cfg = new GlobalConfiguration();
+
   Animation<Offset> animation;
   Animation<Offset> animationB;
   Animation<Offset> animationD;
@@ -136,7 +138,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
         ],
       ),
       child: TextField(
-        autofillHints: [AutofillHints.email],
+//        autofillHints: [AutofillHints.email],
         controller: _emailController,
         onChanged: (s) {
           setState(() {
@@ -204,7 +206,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
         ],
       ),
       child: TextField(
-        autofillHints: [AutofillHints.password],
+//        autofillHints: [AutofillHints.password],
         obscureText: obscurePass,
         controller: _passController,
         onChanged: (s) {
@@ -428,7 +430,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                 height: MediaQuery.of(context).size.height,
                 child: SlideTransition(
                   position: animation,
-                  child: AutofillGroup(
+//                  child: AutofillGroup(
                     child: Column(
                       children: <Widget>[
                         SlideTransition(child: _helloContainer(), position: animationD),
@@ -443,7 +445,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                         _createText(),
                       ],
                     ),
-                  ),
+//                  ),
                 ),
               ),
             ),
@@ -524,8 +526,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
     var content = '{"email": "${_emailController
         .text}", "password":"${_passController.text}"}';
     try {
-      var response = await http.post(
-          "https://api.changecharity.io/users/login", body: content)
+      var response = await http.post("${cfg.getString("host")}/users/login", body: content)
           .catchError((e) => print("error is $e"));
       print(response.body);
       switch (response.body) {

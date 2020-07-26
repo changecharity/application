@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:global_configuration/global_configuration.dart';
 import 'package:http/http.dart' as http;
 import 'login.dart';
 import '../Components/changeOrgDialog.dart';
@@ -12,9 +13,7 @@ class Search extends StatefulWidget{
 }
 
 class _SearchState extends State<Search>{
-
   var suggestions=[];
-
   bool areSuggestions=false;
   bool areOrgs=false;
   bool extraDetails=false;
@@ -26,6 +25,7 @@ class _SearchState extends State<Search>{
   String searchText;
   ScrollController _suggestionScrollController;
   ScrollController _searchScrollController;
+  GlobalConfiguration cfg = new GlobalConfiguration();
 
   void initState(){
     super.initState();
@@ -219,7 +219,7 @@ class _SearchState extends State<Search>{
     SharedPreferences preferences=await SharedPreferences.getInstance();
     token = preferences.getString('token');
     var content = '{"user_token":"$token", "name":"${_searchController.text}", "offset":$suggestionOffset}';
-    var response = await http.post("https://api.changecharity.io/users/getnames", body:content);
+    var response = await http.post("${cfg.getString("host")}/users/getnames", body:content);
     setState(() {
       if(suggestionOffset==0){
           suggestions=jsonDecode(response.body)["names"];
@@ -242,7 +242,7 @@ class _SearchState extends State<Search>{
    print(searchOffset);
    token = preferences.getString('token');
    var content = '{"user_token":"$token", "name":"$searchText", "offset":$searchOffset}';
-   var response = await http.post("https://api.changecharity.io/users/searchorgs", body:content);
+   var response = await http.post("${cfg.getString("host")}/users/searchorgs", body:content);
    setState(() {
      if(searchOffset==0){
        orgs=jsonDecode(response.body)["orgs"];
