@@ -9,7 +9,6 @@ import '../Pages/orgSelected.dart';
 import '../Pages/forgotPass.dart';
 import '../Pages/login.dart';
 import 'package:global_configuration/global_configuration.dart';
-import 'package:global_configuration/global_configuration.dart';
 
 class EmailAuth extends StatefulWidget{
 

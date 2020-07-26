@@ -167,7 +167,7 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
         });
         if (plaidToken == null || plaidToken == '') {
           _plaidLink.open(
-            // publicToken: "...",
+//             publicToken: "",
           );
           Future.delayed(const Duration(milliseconds: 500), () {
             setState(() {

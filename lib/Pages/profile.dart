@@ -45,7 +45,6 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
   var _widgetIndex=0;
   var profileLetter='';
   bool showMenu=false;
-  var _selection;
   var password;
 
   GlobalConfiguration cfg = new GlobalConfiguration();
@@ -126,7 +125,6 @@ void initState(){
         color:Colors.grey[100],
         icon:Icon(Icons.more_vert, size:30),
         onSelected: (MenuOptions result) {
-          setState(() { _selection = result;});
           switch(result.index) {
             case 0 :
               _logout();
@@ -653,6 +651,7 @@ void initState(){
 
   Future<bool> _onWillPop() async {
     _returnHome();
+    return true;
   }
 
   //call on end of slider change to set user's max threshold

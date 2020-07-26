@@ -85,7 +85,7 @@ class _SearchState extends State<Search>{
         },
         decoration:InputDecoration(
             labelText:'Search',
-            hasFloatingPlaceholder: false,
+            floatingLabelBehavior: FloatingLabelBehavior.never,
             prefixIcon: _backSearch(),
             suffixIcon: _clearSearch(),
         ),
@@ -104,7 +104,7 @@ class _SearchState extends State<Search>{
         extraDetails?setState((){
           searchOffset=0;
           suggestionOffset=0;
-          !extraDetails;
+          extraDetails = !extraDetails;
         }):
         Navigator.pop(context);
       },

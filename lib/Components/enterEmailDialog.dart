@@ -81,7 +81,7 @@ class _EnterEmailState extends State<EnterEmail> with TickerProviderStateMixin{
 //              autofillHints: [AutofillHints.email],
               decoration: InputDecoration(
                 labelText: "Email",
-                hasFloatingPlaceholder: false,
+                floatingLabelBehavior: FloatingLabelBehavior.never,
                 prefixIcon: _emailIcon(),
               ),
             )

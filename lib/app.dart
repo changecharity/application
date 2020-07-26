@@ -32,7 +32,7 @@ ThemeData _lightTheme() {
     textSelectionColor: Colors.lightBlueAccent[100],
     errorColor: Colors.redAccent,
     inputDecorationTheme: InputDecorationTheme(
-      hasFloatingPlaceholder: false,
+      floatingLabelBehavior: FloatingLabelBehavior.never,
       filled: false,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.all(Radius.circular(30)),
@@ -89,17 +89,17 @@ ThemeData _lightTheme() {
 
 TextTheme _lightTextTheme(TextTheme base) {
   return base.copyWith(
-    headline: base.headline.copyWith(
+    headline5: base.headline5.copyWith(
       fontWeight: FontWeight.w500,
     ),
-    title: base.title.copyWith(
+    headline6: base.headline6.copyWith(
         fontSize: 18.0
     ),
     caption: base.caption.copyWith(
       fontWeight: FontWeight.w400,
       fontSize: 12.0,
     ),
-    body2: base.body2.copyWith(
+    bodyText1: base.bodyText1.copyWith(
       fontWeight: FontWeight.w500,
       fontSize: 16.0,
     ),

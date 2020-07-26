@@ -150,7 +150,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
         },
         decoration: InputDecoration(
           labelText: "Email",
-          hasFloatingPlaceholder: false,
+          floatingLabelBehavior: FloatingLabelBehavior.never,
           prefixIcon: _emailPrefix(),
         ),
         focusNode:emailFocusNode,
@@ -220,7 +220,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
         },
         decoration: InputDecoration(
           labelText: "Password",
-          hasFloatingPlaceholder: false,
+          floatingLabelBehavior: FloatingLabelBehavior.never,
           prefixIcon: _passPrefix(),
           suffixIcon: _passSuffix(),
         ),

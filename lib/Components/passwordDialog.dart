@@ -90,7 +90,7 @@ class _PwDialogState extends State<PasswordDialog> with SingleTickerProviderStat
 //              autofillHints: [AutofillHints.password],
               decoration: InputDecoration(
                 labelText: "Password",
-                hasFloatingPlaceholder: false,
+                floatingLabelBehavior: FloatingLabelBehavior.never,
                 prefixIcon: _passPrefix(),
                 suffixIcon: _passSuffix(),
               ),

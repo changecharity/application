@@ -1,7 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
 
 class UserBankModel extends ChangeNotifier{
   String _mask="";

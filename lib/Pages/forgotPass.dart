@@ -107,7 +107,7 @@ class _ForgotPassState extends State<ForgotPass> with TickerProviderStateMixin{
         },
         decoration: InputDecoration(
           labelText: "Password",
-          hasFloatingPlaceholder: false,
+          floatingLabelBehavior: FloatingLabelBehavior.never,
           prefixIcon: _passPrefix(),
           suffixIcon: _passSuffix(),
         ),
@@ -147,7 +147,7 @@ class _ForgotPassState extends State<ForgotPass> with TickerProviderStateMixin{
         },
         decoration: InputDecoration(
           labelText: "Confirm Password",
-          hasFloatingPlaceholder: false,
+          floatingLabelBehavior: FloatingLabelBehavior.never,
           prefixIcon: _passPrefix(),
           suffixIcon: _passSuffix2(),
         ),
@@ -352,7 +352,7 @@ class _ForgotPassState extends State<ForgotPass> with TickerProviderStateMixin{
     bool containsCap = RegExp(r"[A-Z]").hasMatch(_passController.text);
     var containsNumb=RegExp(r"\d").hasMatch(_passController.text);
     //regex not working for this.have to fix:
-    var containsSpecialChar=RegExp(r"^\W").hasMatch(_passController.text);
+//    var containsSpecialChar=RegExp(r"^\W").hasMatch(_passController.text);
     if (_passController.text ==''|| _passController.text==null){
       setState((){
         _passErr="This field can't be blank";
