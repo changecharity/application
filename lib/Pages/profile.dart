@@ -651,7 +651,7 @@ void initState(){
 
   Future<bool> _onWillPop() async {
     _returnHome();
-    return true;
+    return false;
   }
 
   //call on end of slider change to set user's max threshold
