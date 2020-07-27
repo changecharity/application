@@ -1,5 +1,5 @@
 name: change
-description: A new Flutter application.
+description: Help make the world a more giving place.
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -11,7 +11,7 @@ description: A new Flutter application.
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.1.8+18
+version: 1.1.9+19
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
@@ -33,6 +33,7 @@ dependencies:
   provider: ^4.1.2
   plaid_flutter: ^0.3.0
   global_configuration: ^1.5.0
+  flutter_swiper: ^1.1.6
 
 dev_dependencies:
   flutter_test:
@@ -62,6 +63,9 @@ flutter:
   assets:
 #  - images/logo-circle.png
   - images/logo-circle.png
+  - images/clip-waiting.png
+  - images/clip-online-shopping.png
+  - images/clip-internet-security.png
   - assets/cfg/
 #  - images/a_dot_ham.jpeg
 

@@ -4,6 +4,7 @@ import 'Pages/login.dart';
 import 'Pages/homePage.dart';
 import 'Pages/emailAuth.dart';
 import 'Pages/linkBank.dart';
+import 'Pages/welcomePage.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:global_configuration/global_configuration.dart';
@@ -74,6 +75,10 @@ class _SplashState extends State<Splash> {
       case "linkbank":{
         return LinkBank(_linkBank);
       }
+
+       case "welcome":{
+         return WelcomePage();
+       }
     }
   }
 
@@ -82,18 +87,19 @@ class _SplashState extends State<Splash> {
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token");
+    var newUser = prefs.getBool("newUser");
     var auth = true;
     email = prefs.getString("signUpEmail");
     _linkBank = prefs.getString("linkBank");
+
     //if token=null, login
     //if token!=null and email!=null, email logic
     //homepage
-
     if(email == null) {
       email = prefs.getString("forgotPassEmail");
       auth = false;
     }
-    if(token == null){
+    if(token == null && newUser != null){
       _initScreen="login";
     }else if(token!=null &&email!=null){
       if (auth) {
@@ -103,6 +109,8 @@ class _SplashState extends State<Splash> {
       }
     } else if (token!=null &&_linkBank!=null){
       _initScreen="linkbank";
+    } else if(newUser == null){
+      _initScreen="welcome";
     } else {
       _initScreen="homepage";
     }
