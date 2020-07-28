@@ -17,7 +17,8 @@ import '../Components/passwordDialog.dart';
 import '../Models/userBankModel.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:global_configuration/global_configuration.dart';
-
+import 'package:sleek_circular_slider/sleek_circular_slider.dart';
+import 'package:money2/money2.dart';
 
 class Profile extends StatefulWidget{
 
@@ -37,6 +38,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
   ColorTween _colorTween;
   Animation<Color> _sliderAnimation;
 
+  Currency usdCurrency=Currency.create('USD', 2);
   String token;
   var threshold=100;
   String mask;
@@ -46,6 +48,11 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
   var profileLetter='';
   bool showMenu=false;
   var password;
+
+  bool _switchVal = false;
+  int _monthLimit;
+  Money _monthLimitMoney;
+  int _initialSliderVal = 3000;
 
   GlobalConfiguration cfg = new GlobalConfiguration();
 
@@ -247,10 +254,11 @@ void initState(){
                             Center(child:Text('Current Organization', textAlign:TextAlign.center, style:TextStyle(fontSize:16, fontWeight: FontWeight.bold))),
                             Center(child:Text('Your Bank Account', textAlign:TextAlign.center, style:TextStyle(fontSize:16, fontWeight: FontWeight.bold))),
                             Center(child:Text('Set Your Max', textAlign:TextAlign.center, style:TextStyle(fontSize:16, fontWeight: FontWeight.bold))),
+                            Center(child:Text('Set Your Monthly Limit', textAlign:TextAlign.center, style:TextStyle(fontSize:16, fontWeight: FontWeight.bold))),
                           ]
                         )
                       ),
-                      _widgetIndex!=2?IconButton(
+                      _widgetIndex!=3?IconButton(
                           icon: Icon(Icons.arrow_forward_ios),
                           color:Colors.black,
                           iconSize: 16,
@@ -269,7 +277,8 @@ void initState(){
                     children: <Widget>[
                       _currentOrgContent(),
                       _bankContent(),
-                      _sliderContent()
+                      _sliderContent(),
+                      _monthlyLimitContent()
                     ],
                   ),
                 ]
@@ -551,8 +560,105 @@ void initState(){
     );
   }
 
+  Widget _monthlyLimitContent(){
+    return Container(
+      alignment:Alignment.topCenter,
+      child:Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          _centerContent(),
+          _sometimesToggle(),
+        ],
+      ),
+    );
+  }
 
+  Widget _centerContent() {
+    return AnimatedCrossFade(
+      duration: Duration(milliseconds: 200),
+      crossFadeState: _switchVal ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+      firstChild: _setLimit(),
+      secondChild: _onOffToggle(),
+    );
+  }
 
+  Widget _setLimit() {
+    return Container(
+      height: 120,
+      alignment: Alignment.bottomCenter,
+      margin:EdgeInsets.fromLTRB(0,10,0,0),
+      padding: EdgeInsets.fromLTRB(0,0,0,0),
+      child: SleekCircularSlider(
+        min: 15,
+        max: 50,
+        initialValue: _initialSliderVal / 100,
+        appearance: CircularSliderAppearance(
+          customColors: CustomSliderColors(
+            progressBarColor: Color.fromRGBO(0, 174, 229, 1),
+            trackColor: Colors.lightBlue[200],
+            shadowColor: Color.fromRGBO(0, 174, 229, 1),
+          ),
+        ),
+        onChange: (double value) {
+          setState(() {
+            _monthLimitMoney = Money.fromInt((value.floor() * 100).toInt(), usdCurrency);
+          });
+          // callback providing a value while its being changed (with a pan gesture)
+        },
+        onChangeEnd: (double endValue) {
+          setState(() {
+            _monthLimit = (endValue.floor() * 100).toInt();
+          });
+          _setMonthlyLimit();
+        },
+        innerWidget: (double value) {
+          return Align(
+            alignment: Alignment.center,
+            child: Text("$_monthLimitMoney"),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _sometimesToggle() {
+    return AnimatedCrossFade(
+      duration: Duration(milliseconds: 300),
+      crossFadeState: !_switchVal ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+      firstChild: Container(),
+      secondChild: _onOffToggle(),
+    );
+  }
+
+  Widget _onOffToggle() {
+    return Container(
+      margin: EdgeInsets.only(top: _switchVal ? 0 : 40),
+      child: Column(
+        children: <Widget>[
+          Transform.scale(
+            scale: _switchVal ? 1 : 1.5,
+            child: Switch(
+              value: _switchVal,
+              onChanged: (s){
+                setState(() {
+                  _switchVal = s;
+                  if(!s) {
+                    _monthLimit = 0;
+                  } else {
+                    _monthLimit = 3000;
+                  }
+                });
+                _setMonthlyLimit();
+              },
+              inactiveTrackColor: Colors.grey[300],
+              inactiveThumbColor: Colors.grey[500],
+            ),
+          ),
+          !_switchVal ? Text("Turned off") : Container(),
+        ],
+      ),
+    );
+  }
 
   @override
   void dispose() {
@@ -607,21 +713,25 @@ void initState(){
     token = prefs.getString('token');
     var content='{"user_token":"$token"}';
     var profileResponse = await http.post("${cfg.getString("host")}/users/getprofile", body:content);
-    var decodedMask = jsonDecode(profileResponse.body)["mask"].toString();
-    var decodedPL = jsonDecode(profileResponse.body)["legalName"];
-    var threshDecode = jsonDecode(profileResponse.body)["threshold"];
+    var decodedResponse = jsonDecode(profileResponse.body);
+    var decodedMask = decodedResponse["mask"].toString();
+    var decodedPL = decodedResponse["legalName"];
+    var threshDecode = decodedResponse["threshold"];
+
     print(profileResponse.body);
     setState(() {
       threshold=threshDecode;
       mask = decodedMask; //== null ? "0000" : decodedMask;
-      bankName=jsonDecode(profileResponse.body)["bankName"];
+      bankName=decodedResponse["bankName"];
       profileLetter = decodedPL != null ? decodedPL[0] : "A";
       _sliderController.value=(threshDecode * 2 - 100)/ 100 + (threshDecode == 50 ? 0.01 : 0);
+      _switchVal = decodedResponse["monthlyLimit"] == null || decodedResponse["monthlyLimit"] == 0 ? false : true;
+      _initialSliderVal = decodedResponse["monthlyLimit"] == null || decodedResponse["monthlyLimit"] == 0 ? 3000 : decodedResponse["monthlyLimit"];
     });
 
     print(threshold);
     print(mask);
-    print(bankName);
+    print( decodedResponse["monthlyLimit"]);
 
     //notify provider of mask and bankName
     context.read<UserBankModel>().notify(mask, bankName, profileLetter);
@@ -662,6 +772,13 @@ void initState(){
     await http.post("${cfg.getString("host")}/users/updatethreshold", body:content);
     print(threshold);
   }
+
+  _setMonthlyLimit() async{
+    var content='{"user_token":"$token", "monthly_limit":$_monthLimit}';
+    await http.post("${cfg.getString("host")}/users/updatemonthlylimit", body:content);
+    print(_monthLimit);
+  }
+
 
   void _logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

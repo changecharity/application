@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'splash.dart';
-//import 'Pages/linkBank.dart';
 
 class Change extends StatefulWidget{
   @override
