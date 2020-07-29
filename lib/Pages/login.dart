@@ -8,11 +8,12 @@ import 'package:flutter/animation.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'signup.dart';
-import '../paintings.dart';
 import 'homePage.dart';
 import '../Components/enterEmailDialog.dart';
 import 'package:global_configuration/global_configuration.dart';
-
+import 'package:change_charity_components/text_field.dart';
+import 'package:change_charity_components/submit_row.dart';
+import 'package:change_charity_components/paintings.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -124,158 +125,35 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
   }
 
   Widget _emailInput() {
-    return Container(
-      margin: EdgeInsets.only(right: 20, left: 20, top: MediaQuery.of(context).size.height > 700 ? 50 : 20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.all(Radius.circular(30)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey[350],
-            blurRadius: 20.0,
-            offset: Offset.fromDirection(0.9),
-          ),
-        ],
-      ),
-      child: TextField(
-//        autofillHints: [AutofillHints.email],
-        controller: _emailController,
-        onChanged: (s) {
-          setState(() {
-            _emailErr = '';
-          });
-        },
-        onEditingComplete: (){
-            emailFocusNode.nextFocus();
-        },
-        decoration: InputDecoration(
-          labelText: "Email",
-          floatingLabelBehavior: FloatingLabelBehavior.never,
-          prefixIcon: _emailPrefix(),
-        ),
-        focusNode:emailFocusNode,
-        textInputAction: TextInputAction.next,
-      ),
-    );
-  }
-
-  Widget _emailPrefix() {
-    return Container(
-      margin: EdgeInsets.only(left: 25, right: 15),
-      child: Icon(
-        Icons.email,
-        size: 20,
-        color: Colors.black,
-      ),
-    );
-  }
-
-  Widget _emailErrCont() {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Container(
-        margin: EdgeInsets.only(
-          left: 40,
-          top: 2,
-          bottom: 3,
-        ),
-        height: 25,
-        child: Text(
-          _emailErr,
-          style: TextStyle(
-            color: Colors.red,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
+    return ChangeTextInput(
+      controller: _emailController,
+      focusNode: emailFocusNode,
+      hintText: "Email",
+      prefixIcon: Icons.mail,
+      errMsg: _emailErr,
+      errFunc: (String s) {
+        setState(() {
+          _emailErr = s;
+        });
+      },
     );
   }
 
   Widget _passInput() {
-    return Container(
-      margin: EdgeInsets.only(right: 20, left: 20, top: 0, bottom: 0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.all(Radius.circular(30)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey[350],
-            blurRadius: 20.0,
-            offset: Offset.fromDirection(0.9),
-          ),
-        ],
-      ),
-      child: TextField(
-//        autofillHints: [AutofillHints.password],
-        obscureText: obscurePass,
-        controller: _passController,
-        onChanged: (s) {
-          setState(() {
-            _passErr = '';
-          });
-        },
-        onEditingComplete:(){
-          FocusScope.of(context).unfocus();
-          _submit();
-        },
-        decoration: InputDecoration(
-          labelText: "Password",
-          floatingLabelBehavior: FloatingLabelBehavior.never,
-          prefixIcon: _passPrefix(),
-          suffixIcon: _passSuffix(),
-        ),
-        focusNode:passFocusNode
-      ),
-    );
-  }
-
-  Widget _passPrefix() {
-    return Container(
-      margin: EdgeInsets.only(left: 25, right: 15),
-      child: Icon(
-        Icons.lock,
-        size: 20,
-        color: Colors.black,
-      ),
-    );
-  }
-
-  Widget _passSuffix() {
-    return Container(
-      margin: EdgeInsets.only(left: 15, right: 25),
-      child: IconButton(
-        onPressed:(){
-          setState(() {
-            obscurePass=!obscurePass;
-          });
-        },
-        icon:Icon(
-          obscurePass ? Icons.visibility : Icons.visibility_off,
-          size: 20,
-          color: Colors.black,
-        )
-
-      ),
-    );
-  }
-
-  Widget _passErrCont() {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Container(
-        margin: EdgeInsets.only(
-          left: 40,
-          top: 2,
-          bottom: 3,
-        ),
-        child: Text(
-          _passErr,
-          style: TextStyle(
-            color: Colors.red,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
+    return ChangeTextInput(
+      controller: _passController,
+      focusNode: passFocusNode,
+      hintText: "Password",
+      prefixIcon: Icons.lock,
+      errMsg: _passErr,
+      isPassword: true,
+      last: true,
+      errFunc: (String s) {
+        setState(() {
+          _passErr = s;
+        });
+      },
+      lastFunc: _submit,
     );
   }
 
@@ -299,77 +177,12 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
   }
 
   Widget _signinContainer() {
-    return Align(
-      alignment: Alignment.centerRight,
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height > 700 ? 70 : 60,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            _signInEnterText(),
-            _signinButton(),
-          ],
-        ),
-      ),
+    return ChangeSubmitRow(
+      animation: animationC,
+      loading: loading,
+      text: MediaQuery.of(context).size.height > 700 ? "Sign In" : '',
+      onClick: _submit,
     );
-  }
-
-  Widget _signInEnterText() {
-    if(MediaQuery.of(context).size.height > 700) {
-      return Container(
-        margin: EdgeInsets.fromLTRB(10,10,10,0),
-        child: Text(
-          'Sign In',
-          style: TextStyle(
-            fontSize: 33,
-          ),
-        ),
-      );
-    } else {
-      return Container();
-    }
-  }
-
-  Widget _signinButton() {
-    if (loading) {
-      return Container(
-        margin: EdgeInsets.fromLTRB(32, 0, 32, 0),
-        child: CircularProgressIndicator(
-          valueColor: animationC,
-        ),
-      );
-    } else {
-      return Container(
-        margin: EdgeInsets.fromLTRB(0,10,20,0),
-        child: RaisedButton(
-          onPressed: () {
-            FocusScope.of(context).unfocus();
-            _submit();
-          },
-          padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
-          elevation: 10,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(60))),
-          child: Ink(
-            width: 90,
-            height: 50,
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Colors.lightBlue[400], Colors.lightBlue[300]],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
-                borderRadius: BorderRadius.circular(30.0)),
-            child: Icon(
-              Icons.arrow_forward,
-              color: Colors.white,
-              size: 30,
-            ),
-          ),
-        ),
-      );
-    }
   }
 
   Widget _createText() {
@@ -425,7 +238,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
           child: SlideTransition(
             position: animationB,
             child: CustomPaint(
-              painter: LoginPaint(),
+              painter: ChangeLoginPaint(),
               child: Container(
                 height: MediaQuery.of(context).size.height,
                 child: SlideTransition(
@@ -435,10 +248,9 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                       children: <Widget>[
                         SlideTransition(child: _helloContainer(), position: animationD),
                         _messageContainer(),
+                        Container(height: 50,),
                         _emailInput(),
-                        _emailErrCont(),
                         _passInput(),
-                        _passErrCont(),
                         _forgotPass(),
                         _signinContainer(),
                         Expanded(child: Text(""),),

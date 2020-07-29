@@ -1,3 +1,5 @@
+import 'package:change_charity_components/paintings.dart';
+import 'package:change_charity_components/submit_row.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +8,7 @@ import 'package:global_configuration/global_configuration.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../paintings.dart';
+import 'package:change_charity_components/text_field.dart';
 import 'emailAuth.dart';
 
 
@@ -112,229 +114,65 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
   }
 
   Widget _nameInput() {
-    return Container(
-      margin: EdgeInsets.only(right: 20, left: 20, top: MediaQuery.of(context).viewInsets.bottom == 0
-          ? MediaQuery.of(context).size.height>700 ? 80 :MediaQuery.of(context).size.height *0.06
-          : 0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.all(Radius.circular(30)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey[350],
-            blurRadius: 20.0,
-            offset: Offset.fromDirection(0.9),
-          ),
-        ],
-      ),
-      child: TextField(
-//        autofillHints: [AutofillHints.name],
-        controller:_nameController,
-        onChanged: (s){
-          setState(() {
-            _nameErr='';
-          });
-        },
-        onEditingComplete: (){
-          nameFocusNode.nextFocus();
-        },
-        decoration: InputDecoration(
-          labelText: "Legal Name",
-          floatingLabelBehavior: FloatingLabelBehavior.never,
-          prefixIcon: _namePrefix(),
-        ),
-        focusNode: nameFocusNode,
-        textInputAction:TextInputAction.next
-      ),
+    return ChangeTextInput(
+      controller: _nameController,
+      focusNode: nameFocusNode,
+      hintText: 'Legal Name',
+      prefixIcon: Icons.person,
+      errMsg: _nameErr,
+      errFunc: (s){
+        setState(() {
+          _nameErr = s;
+        });
+      },
     );
   }
 
-  Widget _namePrefix() {
-    return Container(
-      margin: EdgeInsets.only(left: 25, right: 15),
-      child: Icon(
-        Icons.person,
-        size: 20,
-        color: Colors.black,
-      ),
-    );
-  }
-
-  //email input
   Widget _emailInput() {
-    return Container(
-      margin: EdgeInsets.only(right: 20, left: 20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.all(Radius.circular(30)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey[350],
-            blurRadius: 20.0,
-            offset: Offset.fromDirection(0.9),
-          ),
-        ],
-      ),
-      child: TextField(
-//        autofillHints: [AutofillHints.email],
-        controller:_emailController,
-        onChanged: (s){
-          setState(() {
-            _emailErr='';
-          });
-        },
-        onEditingComplete: (){
-          emailFocusNode.nextFocus();
-        },
-        decoration: InputDecoration(
-          labelText: "Email",
-          floatingLabelBehavior: FloatingLabelBehavior.never,
-          prefixIcon: _emailPrefix(),
-        ),
-        focusNode: emailFocusNode,
-        textInputAction:TextInputAction.next,
-      ),
+    return ChangeTextInput(
+      controller: _emailController,
+      focusNode: emailFocusNode,
+      hintText: 'Email',
+      prefixIcon: Icons.mail,
+      errMsg: _emailErr,
+      errFunc: (s){
+        setState(() {
+          _emailErr = s;
+        });
+      },
     );
   }
 
-  Widget _emailPrefix() {
-    return Container(
-      margin: EdgeInsets.only(left: 25, right: 15),
-      child: Icon(
-        Icons.email,
-        size: 20,
-        color: Colors.black,
-      ),
-    );
-  }
-
-  //error container to use for email, pass, or plaid
-  Widget _errCont(String error) {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Container(
-        margin: EdgeInsets.only(
-          left: 40,
-          top: 2,
-          bottom: 3,
-        ),
-        child: Text(
-           error,
-          style: TextStyle(
-            color: Colors.red,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-    );
-  }
-
-  //password input
   Widget _passInput() {
-    return Container(
-      margin: EdgeInsets.only(right: 20, left: 20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.all(Radius.circular(30)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey[350],
-            blurRadius: 20.0,
-            offset: Offset.fromDirection(0.9),
-          ),
-        ],
-      ),
-      child: TextField(
-//        autofillHints: [AutofillHints.newPassword],
-        controller:_passController,
-        obscureText: obscurePass,
-        onChanged: (s){
-          setState(() {
-            _passErr='';
-          });
-        },
-        onEditingComplete: (){
-          FocusScope.of(context).requestFocus(confirmPassFocusNode);
-        },
-        decoration: InputDecoration(
-          labelText: "Password",
-          floatingLabelBehavior: FloatingLabelBehavior.never,
-          prefixIcon: _passPrefix(),
-          suffixIcon: _passSuffix(),
-        ),
-        focusNode: passFocusNode,
-        textInputAction:TextInputAction.next
-      ),
+    return ChangeTextInput(
+      controller: _passController,
+      focusNode: passFocusNode,
+      isPassword: true,
+      hintText: 'Password',
+      prefixIcon: Icons.lock,
+      errMsg: _passErr,
+      errFunc: (s){
+        setState(() {
+          _passErr = s;
+        });
+      },
     );
   }
 
-  //password input
   Widget _confirmPassInput() {
-    return Container(
-      margin: EdgeInsets.only(right: 20, left: 20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.all(Radius.circular(30)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey[350],
-            blurRadius: 20.0,
-            offset: Offset.fromDirection(0.9),
-          ),
-        ],
-      ),
-      child: TextField(
-//        autofillHints: [AutofillHints.newPassword],
-        controller:_confirmPassController,
-        obscureText: obscurePass,
-        onChanged: (s){
-          setState(() {
-            _confirmPassErr='';
-          });
-        },
-        onEditingComplete: (){
-          FocusScope.of(context).nextFocus();
-        },
-        decoration: InputDecoration(
-          labelText: "Confirm Password",
-          floatingLabelBehavior: FloatingLabelBehavior.never,
-          prefixIcon: _passPrefix(),
-          suffixIcon: _passSuffix(),
-        ),
-        focusNode: confirmPassFocusNode,
-      ),
-    );
-  }
-
-
-  Widget _passPrefix() {
-    return Container(
-      margin: EdgeInsets.only(left: 25, right: 15),
-      child: Icon(
-        Icons.lock,
-        size: 20,
-        color: Colors.black,
-      ),
-    );
-  }
-
-  //visibility suffix
-  Widget _passSuffix() {
-    return Container(
-      margin: EdgeInsets.only(left: 15, right: 25),
-      child: IconButton(
-        onPressed:(){
-          setState(() {
-            obscurePass=!obscurePass;
-          });
-        },
-        icon:Icon(
-          obscurePass?Icons.visibility:Icons.visibility_off,
-          size: 20,
-          color: Colors.black,
-        )
-
-      ),
+    return ChangeTextInput(
+      controller: _confirmPassController,
+      focusNode: confirmPassFocusNode,
+      isPassword: true,
+      last: true,
+      hintText: 'Confirm Password',
+      prefixIcon: Icons.lock,
+      errMsg: _confirmPassErr,
+      errFunc: (s){
+        setState(() {
+          _confirmPassErr = s;
+        });
+      },
     );
   }
 
@@ -387,75 +225,11 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
 
   //Sign up button. Switches to loading on load
   Widget _signUpCont() {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      margin: EdgeInsets.only(right: 20, top:0, bottom: 20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          _signUpEnterText(),
-          _signUpButton(),
-        ],
-      ),
-    );
-  }
-
-  Widget _signUpEnterText() {
-    if(MediaQuery.of(context).size.height > 700) {
-      return Container(
-        margin: EdgeInsets.symmetric(horizontal: 10),
-        child: Text(
-          'Sign Up',
-          style: TextStyle(
-            fontSize: 35,
-          ),
-        ),
-      );
-    } else {
-      return Container();
-    }
-  }
-
-  Widget _signUpButton(){
-    if(loading){
-      return Container(
-          margin: EdgeInsets.fromLTRB(32, 0, 32, 0),
-          child:CircularProgressIndicator(
-          valueColor:loadingAn,
-        )
-      );
-    }
-    return Container(
-      child: RaisedButton(
-        onPressed: (){
-          if(_tosAccepted) {
-            FocusScope.of(context).unfocus();
-            _signUp();
-          } else {
-            tosFocusNode.hasFocus;
-          }
-        },
-        padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
-        elevation: _tosAccepted ? 10 : 0,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(60))),
-        child: Ink(
-          width: 100,
-          height: 50,
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: _tosAccepted ? [Colors.lightBlue[400], Colors.lightBlue[300]] : [Colors.grey[400], Colors.grey[400]],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
-              borderRadius: BorderRadius.circular(30.0)),
-          child: Icon(
-            Icons.arrow_forward,
-            color: Colors.white,
-            size: 30,
-          ),
-        ),
-      ),
+    return ChangeSubmitRow(
+      animation: loadingAn,
+      loading: loading,
+      onClick: _signUp,
+      text: MediaQuery.of(context).size.height > 700 ? "Sign Up" : '',
     );
   }
 
@@ -471,7 +245,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
           child: SlideTransition(
             position: animation,
             child: CustomPaint(
-              painter: SignUpPaint(),
+              painter: ChangeSignUpPaint(),
               child: Container(
                 height: MediaQuery.of(context).size.height,
                 child: SlideTransition(
@@ -482,14 +256,13 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                         children: <Widget>[
                           _backButton(),
                           _signUpText(),
+                          Container(height: MediaQuery.of(context).viewInsets.bottom == 0
+                              ? MediaQuery.of(context).size.height>700 ? 60 : MediaQuery.of(context).size.height *0.05
+                              : 0,),
                           _nameInput(),
-                          _errCont(_nameErr),
                           _emailInput(),
-                          _errCont(_emailErr),
                           _passInput(),
-                          _errCont(_passErr),
                           _confirmPassInput(),
-                          _errCont(_confirmPassErr),
                           _tosPrivacyCont(),
                           _signUpCont(),
                         ],
