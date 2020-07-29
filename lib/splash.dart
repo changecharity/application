@@ -9,7 +9,6 @@ import 'package:flutter/services.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:global_configuration/global_configuration.dart';
 
-
 class Splash extends StatefulWidget {
   @override
   _SplashState createState() => _SplashState();
@@ -84,8 +83,8 @@ class _SplashState extends State<Splash> {
 
   void _getRoute() async {
     await GlobalConfiguration().loadFromAsset("config");
-
     SharedPreferences prefs = await SharedPreferences.getInstance();
+
     var token = prefs.getString("token");
     var newUser = prefs.getBool("newUser");
     var auth = true;

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:change_charity_components/change_charity_components.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
@@ -8,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:http/http.dart' as http;
-import '../paintings.dart';
 import 'linkBank.dart';
 
 
@@ -134,77 +134,12 @@ class _OrgSelectedState extends State<OrgSelected> with TickerProviderStateMixin
   }
 
   Widget _selectOrgCont() {
-    return Align(
-      alignment: Alignment.bottomRight,
-      child: Container(
-        margin: EdgeInsets.only(top: 20),
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height > 700 ? 70 : 60,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            _continueText(),
-            _continueButton(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _continueText() {
-    if(MediaQuery.of(context).size.height > 700) {
-      return Container(
-        margin: EdgeInsets.fromLTRB(10,10,10,0),
-        child: Text(
-          'Select',
-          style: TextStyle(
-            fontSize: 33,
-          ),
-        ),
-      );
-    } else {
-      return Container();
-    }
-  }
-
-  Widget _continueButton() {
-    if (loading) {
-      return Container(
-        margin: EdgeInsets.fromLTRB(42, 0, 32, 0),
-        child: CircularProgressIndicator(
-          valueColor: _animationC,
-        ),
-      );
-    } else {
-      return Container(
-        margin: EdgeInsets.fromLTRB(0,10,20,0),
-        child: RaisedButton(
-          onPressed: () {
-            _setOrg();
-          },
-          padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
-          elevation: 10,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(60))),
-          child: Ink(
-            width: 90,
-            height: 50,
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Colors.lightBlue[400], Colors.lightBlue[300]],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
-                borderRadius: BorderRadius.circular(30.0)),
-            child: Icon(
-              Icons.arrow_forward,
-              color: Colors.white,
-              size: 30,
-            ),
-          ),
-        ),
-      );
-    }
+   return ChangeSubmitRow(
+     loading: loading,
+     onClick: _setOrg,
+     text: "Select",
+     animation: _animationC,
+   );
   }
 
   Widget _skipText() {
@@ -240,7 +175,7 @@ class _OrgSelectedState extends State<OrgSelected> with TickerProviderStateMixin
         child:SlideTransition(
             position:_leftToRight,
             child:CustomPaint(
-                painter: HomePaint(),
+                painter: ChangeHomePaint(),
                 child:Container(
                   height:MediaQuery.of(context).size.height,
                   width: MediaQuery.of(context).size.width,

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:change_charity_components/change_charity_components.dart';
 import 'package:flutter/services.dart';
 
 import 'package:flutter/cupertino.dart';
@@ -14,7 +15,6 @@ import 'package:global_configuration/global_configuration.dart';
 
 import 'Search.dart';
 import 'profile.dart';
-import '../paintings.dart';
 import 'login.dart';
 import '../Models/userBankModel.dart';
 
@@ -43,6 +43,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   Money weekTotal;
   Currency usdCurrency=Currency.create('USD', 2);
   GlobalConfiguration cfg = new GlobalConfiguration();
+  bool isError = false;
 
   void initState() {
     super.initState();
@@ -106,28 +107,69 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   Widget _accountIcon(){
-    return Container(
-      margin: EdgeInsets.only(top: 20, left: 20),
-      alignment: Alignment.centerLeft,
-      child: Container(
-        width: 50,
-        height: 50,
-        child: RaisedButton(
-          color: Color.fromRGBO(0, 174, 229, 1),
-          onPressed: (){
-            Navigator.push(context, MaterialPageRoute(builder:(context)=>Profile()));
-          },
-          child: Consumer<UserBankModel>(
-            builder: (context, userBank, child){
-              return Text(
-                userBank.getPfLetter.toUpperCase(),
-                style:TextStyle(fontSize: 24, color:Colors.white, fontWeight: FontWeight.bold),
-              );
-            },
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Container(
+          margin: EdgeInsets.only(top: 20, left: 20),
+          alignment: Alignment.centerLeft,
+          child: Container(
+            width: 50,
+            height: 50,
+            child: RaisedButton(
+              color: Color.fromRGBO(0, 174, 229, 1),
+              onPressed: ()async{
+                _controller.animateBack(0, duration: Duration(milliseconds: 800));
+                await _paintController.animateBack(0,duration: Duration(milliseconds: 1000));
+                Future<void>.delayed(Duration(milliseconds: 100), (){
+                  Navigator.pushReplacement(context, PageRouteBuilder(pageBuilder: (_, __, ___) => Profile()));
+                });
+              },
+              child: Consumer<UserBankModel>(
+                builder: (context, userBank, child){
+                  return Text(
+                    userBank.getPfLetter.toUpperCase(),
+                    style:TextStyle(fontSize: 24, color:Colors.white, fontWeight: FontWeight.bold),
+                  );
+                },
+              ),
+            ),
           ),
         ),
-      ),
+        _errorButton()
+      ],
     );
+  }
+
+  Widget _errorButton() {
+    if(isError) {
+      return  Container(
+        margin: EdgeInsets.only(top: 20, right: 20),
+        alignment: Alignment.centerRight,
+        child: Container(
+          width: 50,
+          height: 50,
+          child: RaisedButton(
+              color: Colors.red[600],
+              onPressed: ()async{
+                _controller.animateBack(0, duration: Duration(milliseconds: 800));
+                await _paintController.animateBack(0,duration: Duration(milliseconds: 800));
+                Future<void>.delayed(Duration(milliseconds: 30), (){
+                  Navigator.pushReplacement(context, PageRouteBuilder(pageBuilder: (_, __, ___) => Profile()));
+                });
+              },
+              child: Transform.scale(
+                scale: 1.4,
+                child: Icon(
+                  Icons.error_outline,
+                  size: 18,
+                ),
+              )
+          ),
+        ),
+      );
+    }
+    return Container();
   }
 
 
@@ -362,13 +404,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             child:SlideTransition(
               position:_paintAnimation,
               child:CustomPaint(
-                painter:Home2Paint(),
+                painter:ChangeHomePaint(),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Column(
                       children: <Widget>[
-                        SlideTransition(position:_textAnimation, child:_accountIcon()),
+                        SlideTransition(position:_currentAnimation, child:_accountIcon()),
                         SlideTransition(position: _currentAnimation, child: _currentInfo()),
                       ],
                     ),

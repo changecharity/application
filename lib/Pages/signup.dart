@@ -8,7 +8,7 @@ import 'package:global_configuration/global_configuration.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:change_charity_components/text_field.dart';
+import 'package:change_charity_components/change_charity_components.dart';
 import 'emailAuth.dart';
 
 

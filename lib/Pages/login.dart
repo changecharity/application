@@ -11,9 +11,7 @@ import 'signup.dart';
 import 'homePage.dart';
 import '../Components/enterEmailDialog.dart';
 import 'package:global_configuration/global_configuration.dart';
-import 'package:change_charity_components/text_field.dart';
-import 'package:change_charity_components/submit_row.dart';
-import 'package:change_charity_components/paintings.dart';
+import 'package:change_charity_components/change_charity_components.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -60,6 +58,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
       parent: controller,
       curve: Curves.fastLinearToSlowEaseIn,
     ));
+
     animationB = Tween<Offset>(
       begin: Offset(1.0, 0.0),
       end: Offset(0.0, 0.0),

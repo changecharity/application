@@ -1,10 +1,11 @@
+import 'package:change_charity_components/change_charity_components.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'login.dart';
+import '../splash.dart';
 
 class WelcomePage extends StatefulWidget{
   @override
@@ -16,12 +17,17 @@ class _WelcomePageState extends State<WelcomePage> with TickerProviderStateMixin
   Animation<Offset> _buttonAnim;
   AnimationController _fadeAnimContr;
   AnimationController _imagesAnimContr;
+  Animation<Color> _loadingCon;
+
+  bool loading = false;
 
   void initState() {
     super.initState();
 
     _fadeAnimContr = AnimationController(vsync: this, duration: Duration(milliseconds: 1500));
     _imagesAnimContr = AnimationController(vsync: this, duration: Duration(milliseconds: 2000));
+    _loadingCon = _fadeAnimContr.drive(
+        ColorTween(begin: Colors.lightBlue[200], end: Colors.lightBlue[600]));
 
     _imageAnim = Tween<Offset>(
       begin:Offset(1.5, 0.0),
@@ -132,37 +138,13 @@ class _WelcomePageState extends State<WelcomePage> with TickerProviderStateMixin
             ),
             SlideTransition(
               position: _buttonAnim,
-              child: Container(
-                alignment: Alignment.centerRight,
-                margin: EdgeInsets.only(bottom: MediaQuery.of(context).size.height* 0.03, right: MediaQuery.of(context).size.width* 0.1, top: MediaQuery.of(context).size.height* 0.03),
-                child: RaisedButton(
-                  onPressed: () async {
-                    _imagesAnimContr.animateBack(0, duration: Duration(milliseconds: 800));
-                   await _fadeAnimContr.animateBack(0, duration: Duration(milliseconds: 800));
-                   SharedPreferences prefs = await SharedPreferences.getInstance();
-                   prefs.setBool("newUser", false);
-                    Navigator.pushReplacement(context, PageRouteBuilder(pageBuilder: (_, __, ___) => Login()));
-                  },
-                  padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
-                  elevation: 10,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(60))),
-                  child: Ink(
-                    width: 90,
-                    height: 50,
-                    decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [Colors.blue[900], Colors.blue[900]],
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                        ),
-                        borderRadius: BorderRadius.circular(30.0)),
-                    child: Icon(
-                      Icons.arrow_forward,
-                      color: Colors.white,
-                      size: 30,
-                    ),
-                  ),
+              child: Padding(
+                padding: EdgeInsets.only(bottom: 20),
+                child: ChangeSubmitRow(
+                  buttonColors: [Colors.blue[900], Colors.blue[900]],
+                  loading: loading,
+                  onClick: _next,
+                  animation: _loadingCon,
                 ),
               ),
             ),
@@ -172,10 +154,21 @@ class _WelcomePageState extends State<WelcomePage> with TickerProviderStateMixin
     );
   }
 
+//  [Colors.blue[900], Colors.blue[900]]
   @override
   void dispose() {
     _fadeAnimContr.dispose();
     _imagesAnimContr.dispose();
     super.dispose();
+  }
+
+  void _next () async {
+    _imagesAnimContr.animateBack(0, duration: Duration(milliseconds: 800));
+    await _fadeAnimContr.animateBack(0, duration: Duration(milliseconds: 800));
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool("newUser", false);
+    Future<void>.delayed(Duration(milliseconds: 100), (){
+      Navigator.pushReplacement(context, PageRouteBuilder(pageBuilder: (_, __, ___) => Splash()));
+    });
   }
 }

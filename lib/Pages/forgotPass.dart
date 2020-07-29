@@ -1,10 +1,10 @@
+import 'package:change_charity_components/change_charity_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'signup.dart';
-import '../paintings.dart';
 import 'login.dart';
 
 class ForgotPass extends StatefulWidget{
@@ -78,201 +78,41 @@ class _ForgotPassState extends State<ForgotPass> with TickerProviderStateMixin{
   }
 
   Widget _passInput() {
-    return Container(
-      margin: EdgeInsets.only(top:30),
-      width:MediaQuery.of(context).size.width*.75,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.all(Radius.circular(30)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey[350],
-            blurRadius: 20.0,
-            offset: Offset.fromDirection(0.9),
-          ),
-        ],
-      ),
-      child: TextField(
-        controller:_passController,
-        obscureText: obscurePass,
-        onChanged: (s){
-          setState(() {
-            _passErr='';
-          });
-        },
-        onSubmitted: (s){
-          setState(() {
-            FocusScope.of(context).requestFocus(confirmFocusNode);
-          });
-        },
-        decoration: InputDecoration(
-          labelText: "Password",
-          floatingLabelBehavior: FloatingLabelBehavior.never,
-          prefixIcon: _passPrefix(),
-          suffixIcon: _passSuffix(),
-        ),
-        focusNode: passFocusNode,
-        textInputAction: TextInputAction.next,
-      ),
-    );
+   return ChangeTextInput(
+     controller: _passController,
+     errMsg: _passErr,
+     focusNode: passFocusNode,
+     isPassword: true,
+     prefixIcon: Icons.lock,
+     hintText: 'Password',
+     errFunc: (s){
+       setState(() {
+         _passErr = s;
+       });
+     },
+   );
   }
 
   Widget _confirmPassInput() {
-    return Container(
-      //padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-      margin: EdgeInsets.only(top:30),
-      width:MediaQuery.of(context).size.width*.75,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.all(Radius.circular(30)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey[350],
-            blurRadius: 20.0,
-            offset: Offset.fromDirection(0.9),
-          ),
-        ],
-      ),
-      child: TextField(
-        controller:_confirmController,
-        obscureText: obscurePass2,
-        onChanged: (s){
-          setState(() {
-            _passErr='';
-          });
-        },
-        onEditingComplete: (){
-          FocusScope.of(context).unfocus();
-          _resetPass();
-        },
-        decoration: InputDecoration(
-          labelText: "Confirm Password",
-          floatingLabelBehavior: FloatingLabelBehavior.never,
-          prefixIcon: _passPrefix(),
-          suffixIcon: _passSuffix2(),
-        ),
-        focusNode: confirmFocusNode,
-      ),
-    );
-  }
-
-  Widget _passPrefix() {
-    return Container(
-      margin: EdgeInsets.only(left: 25, right: 15),
-      child: Icon(
-        Icons.lock,
-        size: 20,
-        color: Colors.black,
-      ),
-    );
-  }
-
-  //visibility suffix
-  Widget _passSuffix() {
-    return Container(
-      margin: EdgeInsets.only(right: 25),
-      child: IconButton(
-          onPressed:(){
-            setState(() {
-              obscurePass=!obscurePass;
-            });
-          },
-          icon:Icon(
-            obscurePass?Icons.visibility:Icons.visibility_off,
-            size: 20,
-            color: Colors.black,
-          )
-
-      ),
-    );
-  }
-  Widget _passSuffix2() {
-    return Container(
-      margin: EdgeInsets.only(right: 25),
-      child: IconButton(
-          onPressed:(){
-            setState(() {
-              obscurePass2=!obscurePass2;
-            });
-          },
-          icon:Icon(
-            obscurePass2?Icons.visibility:Icons.visibility_off,
-            size: 20,
-            color: Colors.black,
-          )
-      ),
-    );
-  }
-
-  Widget _errorCont(){
-    return Container(
-      margin:EdgeInsets.only(top:10),
-      child: Text(
-          _passErr,
-          textAlign:TextAlign.center,
-          style:TextStyle(color:Colors.red)
-      ),
+    return ChangeTextInput(
+      controller: _confirmController,
+      focusNode: confirmFocusNode,
+      isPassword: true,
+      prefixIcon: Icons.lock,
+      hintText: 'Confirm Password',
+      last: true,
+      lastFunc: _resetPass,
     );
   }
 
   Widget _reset(){
-    return Padding(
-      padding:EdgeInsets.only(top:30, right:MediaQuery.of(context).size.width*.075, bottom:20),
-      child:Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 10),
-            child: Text(
-              'Reset',
-              style: TextStyle(
-                fontSize: 35,
-              ),
-            ),
-          ),
-          _resetButton()
-        ],
-      ),
+    return ChangeSubmitRow(
+      onClick: _resetPass,
+      animation: _loadingAn,
+      loading: loading,
+      text: MediaQuery.of(context).size.height > 700 ? "Reset" : "",
     );
   }
-
-  Widget _resetButton(){
-    if(loading){
-      return Container(
-          margin: EdgeInsets.fromLTRB(32, 0, 32, 0),
-          child:CircularProgressIndicator(
-            valueColor:_loadingAn,
-          )
-      );
-    }
-    return Container(
-      child: RaisedButton(
-        onPressed: () {
-          FocusScope.of(context).unfocus();
-          _resetPass();
-        },
-        padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
-        elevation: 10,
-        child: Ink(
-          width: 100,
-          height: 50,
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Colors.lightBlue[400], Colors.lightBlue[300]],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
-              borderRadius: BorderRadius.circular(30.0)),
-          child: Icon(
-            Icons.arrow_forward,
-            color: Colors.white,
-            size: 30,
-          ),
-        ),
-      ),
-    );
-  }
-
 
   Widget _mainBodyContainer(){
     return Container(
@@ -282,30 +122,26 @@ class _ForgotPassState extends State<ForgotPass> with TickerProviderStateMixin{
             Container(
                 margin: EdgeInsets.only(top: MediaQuery.of(context).viewInsets.bottom == 0
                   ? MediaQuery.of(context).size.height>700 ? MediaQuery.of(context).size.height*.2 :MediaQuery.of(context).size.height *0.15
-                  : MediaQuery.of(context).size.height*.05),
+                  : MediaQuery.of(context).size.height*.01),
                 width:MediaQuery.of(context).size.width*.85,
-                padding:EdgeInsets.fromLTRB(
-                    MediaQuery.of(context).size.width*.07,
-                    40,
-                    MediaQuery.of(context).size.width*.07,
-                    50
-                ),
+                padding:EdgeInsets.fromLTRB(0, 40, 0, 20),
                 decoration:BoxDecoration(
                     color:Colors.grey[100],
                     borderRadius:BorderRadius.circular(15),
                     boxShadow: [BoxShadow(color:Colors.grey, offset:Offset.fromDirection(.9),blurRadius:10)]
                 ),
                 child:Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                    children:[
-                      _passIcon(),
-                      _forgotPassText(),
-                      _passInput(),
-                      _confirmPassInput(),
-                      _errorCont(),
-                    ]
-                )
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children:[
+                    _passIcon(),
+                    _forgotPassText(),
+                    Container(height: 30,),
+                    _passInput(),
+                    _confirmPassInput(),
+                  ],
+                ),
             ),
+            Container(height: MediaQuery.of(context).size.height * 0.02,),
             _reset(),
           ],
         )
@@ -319,16 +155,15 @@ class _ForgotPassState extends State<ForgotPass> with TickerProviderStateMixin{
         onTap:(){
           FocusScope.of(context).unfocus();
         },
-          child:SafeArea(
-              child:CustomPaint(
-                  painter: HomePaint(),
-                  child: SingleChildScrollView(
-                      child:_mainBodyContainer()
-                  )
-              )
-          )
-      )
-
+        child:SafeArea(
+          child:CustomPaint(
+            painter: ChangeBankPaint(),
+            child: SingleChildScrollView(
+                child:_mainBodyContainer()
+            ),
+          ),
+        ),
+      ),
     );
   }
 

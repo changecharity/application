@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:change_charity_components/change_charity_components.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +8,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:http/http.dart' as http;
 import 'homePage.dart';
-import '../paintings.dart';
 import 'package:plaid_flutter/plaid_flutter.dart';
 
 class LinkBank extends StatefulWidget{
@@ -146,10 +146,10 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
 
   Widget _reasonText() {
     return Container(
-      margin: EdgeInsets.fromLTRB(45, MediaQuery.of(context).size.height*0.08,45,0),
+      margin: EdgeInsets.fromLTRB(60, MediaQuery.of(context).size.height*0.08,60,0),
       child: Text(
-        'To start donating${widget.org != "" ? ' to the ' +  widget.org : ''}, you must link your bank account',
-        textAlign: TextAlign.center,
+        'To start donating${widget.org != "" ? ' to the ' +  widget.org : ''}, you must link your bank account.',
+        textAlign: TextAlign.justify,
         style: TextStyle(
           fontSize: 20,
           wordSpacing: 2,
@@ -261,73 +261,12 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
   }
 
   Widget _submitCont() {
-    return Align(
-      alignment: Alignment.bottomRight,
-      child: Container(
-        margin: EdgeInsets.only(top: 20, bottom: 30),
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height > 700 ? 70 : 60,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            _continueText(),
-            _continueButton(),
-          ],
-        ),
-      ),
+    return ChangeSubmitRow(
+      loading: loading,
+      onClick: _linkAccount,
+      text: "Submit",
+      animation: _animationC,
     );
-  }
-
-  Widget _continueText() {
-    return Container(
-      margin: EdgeInsets.fromLTRB(10,10,10,0),
-      child: Text(
-        'Submit',
-        style: TextStyle(
-          fontSize: 33,
-        ),
-      ),
-    );
-  }
-
-  Widget _continueButton() {
-    if (loading) {
-      return Container(
-        margin: EdgeInsets.fromLTRB(42, 0, 32, 0),
-        child: CircularProgressIndicator(
-          valueColor: _animationC,
-        ),
-      );
-    } else {
-      return Container(
-        margin: EdgeInsets.fromLTRB(0,10,20,0),
-        child: RaisedButton(
-          onPressed: () {
-            _linkAccount();
-          },
-          padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
-          elevation: 10,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(60))),
-          child: Ink(
-            width: 90,
-            height: 50,
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Colors.lightBlue[400], Colors.lightBlue[300]],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
-                borderRadius: BorderRadius.circular(30.0)),
-            child: Icon(
-              Icons.arrow_forward,
-              color: Colors.white,
-              size: 30,
-            ),
-          ),
-        ),
-      );
-    }
   }
 
   Widget _skipText() {
@@ -363,7 +302,7 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
         child:SlideTransition(
             position:_rightToLeft,
             child:CustomPaint(
-                painter: SearchPaint(),
+                painter: ChangeBankPaint(),
                 child:Container(
                   height:MediaQuery.of(context).size.height,
                   width: MediaQuery.of(context).size.width,

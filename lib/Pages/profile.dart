@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:async';
 
+import 'package:change_charity_components/change_charity_components.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,6 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'Search.dart';
-import '../paintings.dart';
 import '../Models/userOrgModel.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'homePage.dart';
@@ -65,7 +65,7 @@ void initState(){
     _confirmLogin();
     _getInitInfo();
 
-    _controller = AnimationController(vsync: this, duration: Duration(seconds:2));
+    _controller = AnimationController(vsync: this, duration: Duration(milliseconds:2000));
     _sliderController = AnimationController(vsync: this, duration: Duration(seconds:1));
 
     _topDown = Tween<Offset>(
@@ -102,9 +102,8 @@ void initState(){
 
     _sliderAnimation = _colorTween.animate(_sliderController);
 
-    Future<void>.delayed(Duration(milliseconds:1000),(){
+    Future<void>.delayed(Duration(milliseconds:100),(){
       _controller.forward();
-
     });
 
   }
@@ -675,7 +674,7 @@ void initState(){
           child:SlideTransition(
             position:_rightToLeft,
             child:CustomPaint(
-              painter: ProfilePaint(),
+              painter: ChangeProfilePaint(),
               child:Container(
                 height:MediaQuery.of(context).size.height,
 //                margin:EdgeInsets.only(bottom:MediaQuery.of(context).size.height*.10),

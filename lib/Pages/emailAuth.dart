@@ -1,9 +1,9 @@
+import 'package:change_charity_components/change_charity_components.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import '../paintings.dart';
 import 'linkBank.dart';
 import '../Pages/orgSelected.dart';
 import '../Pages/forgotPass.dart';
@@ -224,61 +224,12 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin{
   }
 
   Widget _verify(){
-    return Padding(
-      padding:EdgeInsets.only(top:30, right:MediaQuery.of(context).size.width*.075, bottom:20),
-      child:Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 10),
-            child: MediaQuery.of(context).size.height > 700 ? Text(
-              'Verify',
-              style: TextStyle(
-                fontSize: 35,
-              ),
-            ) : Text(""),
-          ),
-          _verifyButton()
-        ],
-      ),
-    );
-  }
-
-  Widget _verifyButton(){
-    if(loading){
-      return Container(
-          margin: EdgeInsets.fromLTRB(32, 0, 32, 0),
-          child:CircularProgressIndicator(
-            valueColor:_loadingAn,
-          )
-      );
-    }
-    return Container(
-      child: RaisedButton(
-        onPressed: () {
-          FocusScope.of(context).unfocus();
-          _verifyAccount();
-        },
-        padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
-        elevation: 10,
-        child: Ink(
-          width: 100,
-          height: 50,
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Colors.lightBlue[400], Colors.lightBlue[300]],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
-              borderRadius: BorderRadius.circular(30.0)),
-          child: Icon(
-            Icons.arrow_forward,
-            color: Colors.white,
-            size: 30,
-          ),
-        ),
-      ),
-    );
+   return ChangeSubmitRow(
+     loading: loading,
+     animation: _loadingAn,
+     onClick: _verifyAccount,
+     text: MediaQuery.of(context).size.height > 700 ? "Verify" : '',
+   );
   }
 
   Widget _mainBodyContainer(){
@@ -314,6 +265,7 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin{
                   ]
               )
           ),
+          Container(height: 20,),
           _verify(),
         ],
       )
@@ -331,7 +283,7 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin{
               child:SlideTransition(
                   position:_paintAn,
                   child:CustomPaint(
-                      painter:HomePaint(),
+                      painter:ChangeBankPaint(),
                       child: SlideTransition(
                           position:_bodyAn,
                           child: SingleChildScrollView(

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:plaid_flutter/plaid_flutter.dart';
 import 'package:provider/provider.dart';
-
+import 'package:change_charity_components/change_charity_components.dart';
 import '../Models/userBankModel.dart';
 
 class ChangeAccDialog extends StatefulWidget {
@@ -136,7 +136,7 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>with SingleTickerProvi
             ),
           ),
         ),
-        _plaidErr==null||_plaidErr==''?Container():_errorContainer(),
+        _errorContainer(),
       ],
     );
   }
@@ -198,64 +198,11 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>with SingleTickerProvi
     );
   }
 
-  //
-  Widget _linkCont(context) {
-    return Container(
-      margin: EdgeInsets.only(top:20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 10),
-//            child: Text(
-//              'Link Account',
-//              style: TextStyle(
-//                fontSize: 20,
-//              ),
-//            ),
-          ),
-          _linkButton(context)
-        ],
-      ),
-    );
-  }
-
-  Widget _linkButton(context){
-    if(loading){
-      return Container(
-          margin: EdgeInsets.fromLTRB(32, 0, 32, 0),
-          child:CircularProgressIndicator(
-            valueColor:loadingAn,
-          )
-      );
-    }
-    return Container(
-      child: RaisedButton(
-        onPressed: (){
-          FocusScope.of(context).unfocus();
-          _changeAccount();
-        },
-        padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
-        elevation: 10,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(60))),
-        child: Ink(
-          width: 90,
-          height: 40,
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Colors.lightBlue[400], Colors.lightBlue[300]],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
-              borderRadius: BorderRadius.circular(30.0)),
-          child: Icon(
-            Icons.arrow_forward,
-            color: Colors.white,
-            size: 30,
-          ),
-        ),
-      ),
+  Widget _confirmCont() {
+    return ChangeSubmitRow(
+      animation: loadingAn,
+      onClick: _changeAccount,
+      loading: loading,
     );
   }
 
@@ -278,7 +225,7 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>with SingleTickerProvi
                   children: <Widget>[
                     _accountText(),
                     _plaidButton(),
-                    _linkCont(context)
+                    _confirmCont(),
                   ],
                 )
             )
