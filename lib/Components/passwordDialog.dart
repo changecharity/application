@@ -68,6 +68,7 @@ class _PwDialogState extends State<PasswordDialog> with SingleTickerProviderStat
       prefixIcon: Icons.lock,
       isPassword: true,
       hintText: "Password",
+      autofillHint: AutofillHints.password,
       last: true,
       lastFunc: _validPassAndAction,
       errMsg: _passErr,

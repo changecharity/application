@@ -61,6 +61,7 @@ class _EnterEmailState extends State<EnterEmail> with TickerProviderStateMixin{
       errMsg: _emailErr,
       hintText: "Email",
       prefixIcon: Icons.mail,
+      autofillHint: AutofillHints.email,
       last: true,
       lastFunc: _submitEmail,
       errFunc: (s){

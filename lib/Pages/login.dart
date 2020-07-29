@@ -130,6 +130,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
       hintText: "Email",
       prefixIcon: Icons.mail,
       errMsg: _emailErr,
+      autofillHint: AutofillHints.email,
       errFunc: (String s) {
         setState(() {
           _emailErr = s;
@@ -147,6 +148,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
       errMsg: _passErr,
       isPassword: true,
       last: true,
+      autofillHint: AutofillHints.password,
       errFunc: (String s) {
         setState(() {
           _passErr = s;
@@ -242,7 +244,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                 height: MediaQuery.of(context).size.height,
                 child: SlideTransition(
                   position: animation,
-//                  child: AutofillGroup(
+                  child: AutofillGroup(
                     child: Column(
                       children: <Widget>[
                         SlideTransition(child: _helloContainer(), position: animationD),
@@ -256,7 +258,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                         _createText(),
                       ],
                     ),
-//                  ),
+                  ),
                 ),
               ),
             ),

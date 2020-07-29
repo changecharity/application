@@ -80,6 +80,7 @@ class _ForgotPassState extends State<ForgotPass> with TickerProviderStateMixin{
   Widget _passInput() {
    return ChangeTextInput(
      controller: _passController,
+     autofillHint: AutofillHints.newPassword,
      errMsg: _passErr,
      focusNode: passFocusNode,
      isPassword: true,
@@ -96,6 +97,7 @@ class _ForgotPassState extends State<ForgotPass> with TickerProviderStateMixin{
   Widget _confirmPassInput() {
     return ChangeTextInput(
       controller: _confirmController,
+      autofillHint: AutofillHints.newPassword,
       focusNode: confirmFocusNode,
       isPassword: true,
       prefixIcon: Icons.lock,

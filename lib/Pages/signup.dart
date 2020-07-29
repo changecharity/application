@@ -117,6 +117,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
     return ChangeTextInput(
       controller: _nameController,
       focusNode: nameFocusNode,
+      autofillHint: AutofillHints.name,
       hintText: 'Legal Name',
       prefixIcon: Icons.person,
       errMsg: _nameErr,
@@ -131,6 +132,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
   Widget _emailInput() {
     return ChangeTextInput(
       controller: _emailController,
+      autofillHint: AutofillHints.email,
       focusNode: emailFocusNode,
       hintText: 'Email',
       prefixIcon: Icons.mail,
@@ -147,6 +149,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
     return ChangeTextInput(
       controller: _passController,
       focusNode: passFocusNode,
+      autofillHint: AutofillHints.newPassword,
       isPassword: true,
       hintText: 'Password',
       prefixIcon: Icons.lock,
@@ -162,6 +165,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
   Widget _confirmPassInput() {
     return ChangeTextInput(
       controller: _confirmPassController,
+      autofillHint: AutofillHints.newPassword,
       focusNode: confirmPassFocusNode,
       isPassword: true,
       last: true,
@@ -251,7 +255,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                 child: SlideTransition(
                   position: animationB,
                   child: SingleChildScrollView(
-//                    child: AutofillGroup(
+                    child: AutofillGroup(
                       child: Column(
                         children: <Widget>[
                           _backButton(),
@@ -267,7 +271,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                           _signUpCont(),
                         ],
                       ),
-//                    ),
+                    ),
                   ),
                 ),
               ),
