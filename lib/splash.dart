@@ -9,9 +9,6 @@ import 'package:flutter/services.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:global_configuration/global_configuration.dart';
 
-import 'Pages/orgSelected.dart';
-
-
 class Splash extends StatefulWidget {
   @override
   _SplashState createState() => _SplashState();
@@ -58,7 +55,6 @@ class _SplashState extends State<Splash> {
      switch(_initScreen){
 
       case "homepage":{
-        return OrgSelected();
         return HomePage();
       }
       break;
