@@ -122,9 +122,13 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
         children: [
           Icon(
               Icons.lock,
+            color: Colors.black,
           ),
           Text(
             'Secure',
+            style: TextStyle(
+              color: Colors.black,
+            ),
           ),
         ],
       ),
@@ -181,11 +185,11 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
         height: 60,
         margin: EdgeInsets.only(right: 20, left: 20, top: MediaQuery.of(context).size.height * 0.1),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color:  MediaQuery.of(context).platformBrightness == Brightness.light ? Colors.white : Colors.black,
           borderRadius: BorderRadius.all(Radius.circular(30)),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey[350],
+              color: MediaQuery.of(context).platformBrightness == Brightness.light ?  Colors.grey[350] : Colors.grey[600],
               blurRadius: 20.0,
               offset: Offset.fromDirection(0.9),
             ),
@@ -207,7 +211,6 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
       child: Icon(
         Icons.link,
         size: 20,
-        color: Colors.black,
       ),
     );
   }

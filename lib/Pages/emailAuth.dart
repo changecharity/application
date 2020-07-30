@@ -108,13 +108,13 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin{
         children:[
           Text(
             'Verify Email',
-            style:TextStyle(color:Colors.black, fontSize:24, fontWeight:FontWeight.bold),
+            style:TextStyle(fontSize:24, fontWeight:FontWeight.bold),
           ),
           Container(
             margin:EdgeInsets.only(top:10),
             child:Text(
               'Please enter the 6 digit code sent to ${widget.emailAddress}',
-              style:TextStyle(color:Colors.black, fontSize:14)
+              style:TextStyle(fontSize:14)
             )
           )
         ]
@@ -251,9 +251,14 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin{
                   50
               ),
               decoration:BoxDecoration(
-                  color:Colors.grey[100],
+                  color: MediaQuery.of(context).platformBrightness == Brightness.light ? Colors.grey[100] : Colors.grey[900],
                   borderRadius:BorderRadius.circular(15),
-                  boxShadow: [BoxShadow(color:Colors.grey, offset:Offset.fromDirection(.9),blurRadius:10)]
+                  boxShadow: [
+                    BoxShadow(
+                      color:Colors.grey,
+                      offset:Offset.fromDirection(.9),
+                      blurRadius:10,
+                    )]
               ),
               child:Column(
                   children:[

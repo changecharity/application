@@ -182,7 +182,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
 
   Widget _tosPrivacyCont() {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+      margin: EdgeInsets.only(left: 30),
       child: Row(
         children: [
           Checkbox(
@@ -200,23 +200,27 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
           ),
           RichText(
             text: TextSpan(
+              style: TextStyle(
+                color: MediaQuery.of(context).platformBrightness == Brightness.light ? Colors.black : Colors.white,
+              ),
               children: [
                 TextSpan(
                   text: 'I agree to the ',
-                  style: TextStyle(color: Colors.black),
+                  recognizer: TapGestureRecognizer()..onTap = () {
+                    setState(() {_tosAccepted = !_tosAccepted;});
+                  },
                 ),
                 TextSpan(
                   text: 'Terms',
-                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontWeight: FontWeight.bold),
                   recognizer: TapGestureRecognizer()..onTap = () => _launchURL("https://changecharity.io/terms-of-service"),
                 ),
                 TextSpan(
                   text: ' and ',
-                  style: TextStyle(color: Colors.black),
                 ),
                 TextSpan(
                   text: 'Privacy Policy',
-                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontWeight: FontWeight.bold),
                   recognizer: TapGestureRecognizer()..onTap = () => _launchURL("https://changecharity.io/privacy-policy"),
                 ),
               ],

@@ -224,11 +224,13 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final bool isLight =  MediaQuery.of(context).platformBrightness == Brightness.light;
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      systemNavigationBarColor: Colors.grey[50],
-      systemNavigationBarIconBrightness: Brightness.dark,
+      systemNavigationBarColor: isLight ? Colors.grey[50] : Colors.grey[850],
+      systemNavigationBarIconBrightness: isLight ? Brightness.dark : Brightness.light,
       statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.dark,
+      statusBarIconBrightness: isLight ? Brightness.dark : Brightness.light,
+      statusBarBrightness: isLight ? Brightness.dark : Brightness.light,
     ));
     return Material(
       child:GestureDetector(

@@ -63,13 +63,13 @@ class _ForgotPassState extends State<ForgotPass> with TickerProviderStateMixin{
             children:[
               Text(
                 'Reset Password',
-                style:TextStyle(color:Colors.black, fontSize:28, fontWeight:FontWeight.bold),
+                style:TextStyle( fontSize:28, fontWeight:FontWeight.bold),
               ),
               Container(
                   margin:EdgeInsets.only(top:10),
                   child:Text(
                       'Please enter your new password',
-                      style:TextStyle(color:Colors.black, fontSize:16)
+                      style:TextStyle(fontSize:16)
                   )
               )
             ]
@@ -128,7 +128,7 @@ class _ForgotPassState extends State<ForgotPass> with TickerProviderStateMixin{
                 width:MediaQuery.of(context).size.width*.85,
                 padding:EdgeInsets.fromLTRB(0, 40, 0, 20),
                 decoration:BoxDecoration(
-                    color:Colors.grey[100],
+                    color: MediaQuery.of(context).platformBrightness == Brightness.light ? Colors.grey[100] : Colors.grey[900],
                     borderRadius:BorderRadius.circular(15),
                     boxShadow: [BoxShadow(color:Colors.grey, offset:Offset.fromDirection(.9),blurRadius:10)]
                 ),

@@ -151,7 +151,6 @@ class _ChangeOrgDialogState extends State<ChangeOrgDialog> with TickerProviderSt
                   option,
                   textAlign: TextAlign.center,
                   style:TextStyle(
-                      color: Colors.white,
                       fontSize: 24,
                       fontWeight: FontWeight.bold
                   )
@@ -168,7 +167,6 @@ class _ChangeOrgDialogState extends State<ChangeOrgDialog> with TickerProviderSt
           FocusScope.of(context).unfocus();
         },
         child:Dialog(
-          backgroundColor: Colors.grey[100],
           elevation:15,
           shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(20)),
           child:Container(

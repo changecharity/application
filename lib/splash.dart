@@ -9,6 +9,9 @@ import 'package:flutter/services.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:global_configuration/global_configuration.dart';
 
+import 'Pages/orgSelected.dart';
+
+
 class Splash extends StatefulWidget {
   @override
   _SplashState createState() => _SplashState();
@@ -30,14 +33,16 @@ class _SplashState extends State<Splash> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isLight =  MediaQuery.of(context).platformBrightness == Brightness.light;
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      systemNavigationBarColor: Colors.grey[50],
-      systemNavigationBarIconBrightness: Brightness.dark,
+      systemNavigationBarColor: isLight ? Colors.grey[50] : Colors.grey[850],
+      systemNavigationBarIconBrightness: isLight ? Brightness.dark : Brightness.light,
       statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.dark,
+      statusBarIconBrightness: isLight ? Brightness.dark : Brightness.light,
+      statusBarBrightness: isLight ? Brightness.dark : Brightness.light,
     ));
     return Material(
-      color: Colors.grey[50],
+      color: isLight ? Colors.grey[50] : Colors.grey[850],
       child: AnimatedContainer(
         margin: EdgeInsets.symmetric(vertical: _height, horizontal: _width),
         child: Image.asset(
@@ -53,6 +58,7 @@ class _SplashState extends State<Splash> {
      switch(_initScreen){
 
       case "homepage":{
+        return OrgSelected();
         return HomePage();
       }
       break;
@@ -84,7 +90,6 @@ class _SplashState extends State<Splash> {
   void _getRoute() async {
     await GlobalConfiguration().loadFromAsset("config");
     SharedPreferences prefs = await SharedPreferences.getInstance();
-
     var token = prefs.getString("token");
     var newUser = prefs.getBool("newUser");
     var auth = true;

@@ -118,11 +118,11 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>with SingleTickerProvi
             height: 60,
             margin: EdgeInsets.only(right: 5, left: 5, top: 40 ),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: MediaQuery.of(context).platformBrightness == Brightness.light ?  Colors.white : Colors.black,
               borderRadius: BorderRadius.all(Radius.circular(30)),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey[350],
+                  color: MediaQuery.of(context).platformBrightness == Brightness.light ? Colors.grey[350] : Colors.grey[600],
                   blurRadius: 5.0,
                   offset: Offset.fromDirection(0.9),
                 ),
@@ -147,7 +147,6 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>with SingleTickerProvi
       child: Icon(
         Icons.link,
         size: 22,
-        color: Colors.black,
       ),
     );
   }
@@ -213,7 +212,7 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>with SingleTickerProvi
           FocusScope.of(context).unfocus();
         },
         child:Dialog(
-            backgroundColor: Colors.grey[100],
+            backgroundColor: MediaQuery.of(context).platformBrightness == Brightness.light ?  Colors.grey[100] : Colors.grey[900],
             elevation:15,
             shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(20)),
             child:Container(

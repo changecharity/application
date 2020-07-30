@@ -114,7 +114,6 @@ void initState(){
       alignment: Alignment.centerLeft,
       child: IconButton(
         icon: Icon(Icons.arrow_back),
-        color:Colors.black,
         iconSize: 30,
         onPressed: () {
           _returnHome();
@@ -128,7 +127,7 @@ void initState(){
       margin: EdgeInsets.only(top: 20, right: 10),
       alignment: Alignment.centerRight,
       child: PopupMenuButton<MenuOptions>(
-        color:Colors.grey[100],
+        color: MediaQuery.of(context).platformBrightness == Brightness.light ? Colors.grey[100] : Colors.grey[900],
         icon:Icon(Icons.more_vert, size:30),
         onSelected: (MenuOptions result) {
           switch(result.index) {
@@ -200,7 +199,7 @@ void initState(){
           ),
           Text(
               'My Profile',
-              style:TextStyle(color:Colors.black, fontSize:50)
+              style:TextStyle(fontSize:50),
           ),
         ],
       )
@@ -225,9 +224,13 @@ void initState(){
               width: MediaQuery.of(context).size.width * .75,
               //height:MediaQuery.of(context).size.height*.4,
               decoration:BoxDecoration(
-                  color:Colors.grey[100],
+                  color: MediaQuery.of(context).platformBrightness == Brightness.light ? Colors.grey[100] : Colors.grey[900],
                   borderRadius: BorderRadius.circular(20),
-                  boxShadow: [BoxShadow(color:Colors.grey[300], offset:Offset.fromDirection(1), blurRadius:15)]
+                  boxShadow: [BoxShadow(
+                    color:MediaQuery.of(context).platformBrightness == Brightness.light ? Colors.grey[300] : Colors.grey[700],
+                    offset:Offset.fromDirection(1),
+                    blurRadius:15),
+                  ]
               ),
               child:Column(
                 //mainAxisAlignment: MainAxisAlignment,
@@ -237,9 +240,9 @@ void initState(){
                     //crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       _widgetIndex!=0?IconButton(
-                          icon: Icon(Icons.arrow_back_ios, color:Colors.black, size:16),
-                          highlightColor: Colors.transparent,
-                          splashColor: Colors.grey[100],
+                          icon: Icon(Icons.arrow_back_ios, size:16),
+                          splashColor:MediaQuery.of(context).platformBrightness == Brightness.light ? Colors.grey[100] : Colors.grey[900],
+                          highlightColor:MediaQuery.of(context).platformBrightness == Brightness.light ? Colors.grey[100] : Colors.grey[900],
                           onPressed:(){
                             setState(() {
                               _widgetIndex--;
@@ -259,10 +262,9 @@ void initState(){
                       ),
                       _widgetIndex!=3?IconButton(
                           icon: Icon(Icons.arrow_forward_ios),
-                          color:Colors.black,
                           iconSize: 16,
-                          splashColor: Colors.grey[100],
-                          highlightColor: Colors.grey[100],
+                          splashColor:MediaQuery.of(context).platformBrightness == Brightness.light ? Colors.grey[100] : Colors.grey[900],
+                          highlightColor:MediaQuery.of(context).platformBrightness == Brightness.light ? Colors.grey[100] : Colors.grey[900],
                           onPressed:(){
                             setState(() {
                               _widgetIndex++;
@@ -347,7 +349,7 @@ void initState(){
                     RichText(
                         text:TextSpan(
                             style:TextStyle(
-                              color:Colors.grey[700],
+                              color: MediaQuery.of(context).platformBrightness == Brightness.light ? Colors.grey[700] : Colors.grey[200],
                               fontSize:12,
                               fontFamily: 'Montserrat',
                             ),
@@ -361,7 +363,7 @@ void initState(){
                     RichText(
                         text:TextSpan(
                             style:TextStyle(
-                              color:Colors.grey[700],
+                              color: MediaQuery.of(context).platformBrightness == Brightness.light ? Colors.grey[700] : Colors.grey[200],
                               fontSize:12,
                               fontFamily: 'Montserrat',
                             ),
@@ -401,7 +403,7 @@ void initState(){
                     text:TextSpan(
                         style:TextStyle(
                           decoration: TextDecoration.underline,
-                          color:Colors.grey[700],
+                          color: MediaQuery.of(context).platformBrightness == Brightness.light ? Colors.grey[700] : Colors.grey[200],
                           fontSize:12,
                           fontFamily: 'Montserrat',
                         ),
@@ -651,6 +653,8 @@ void initState(){
               },
               inactiveTrackColor: Colors.grey[300],
               inactiveThumbColor: Colors.grey[500],
+              activeTrackColor: Colors.lightBlue[200],
+              activeColor: Colors.lightBlue[400],
             ),
           ),
           !_switchVal ? Text("Turned off") : Container(),

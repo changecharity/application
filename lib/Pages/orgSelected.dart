@@ -63,7 +63,7 @@ class _OrgSelectedState extends State<OrgSelected> with TickerProviderStateMixin
     );
 
     _leftToRight = Tween<Offset>(
-      begin:Offset(-1.0, 0.0),
+      begin:Offset(1.0, 0.0),
       end:Offset(0.0, 0.0),
     ).animate(CurvedAnimation(
       parent:_controller,

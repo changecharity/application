@@ -95,7 +95,7 @@ class _PwDialogState extends State<PasswordDialog> with SingleTickerProviderStat
         FocusScope.of(context).unfocus();
       },
       child:Dialog(
-        backgroundColor: Colors.grey[100],
+        backgroundColor: MediaQuery.of(context).platformBrightness == Brightness.light ?  Colors.grey[100] : Colors.grey[900],
         elevation:15,
         shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(20)),
         child:Container(

@@ -162,7 +162,7 @@ class _SearchState extends State<Search>{
     return !areOrgs?Container(color:Colors.transparent, padding:EdgeInsets.only(top: 30), child:Text('No organizations')):
     Expanded(
         child: Container(
-            color: Colors.grey[100],
+            color: MediaQuery.of(context).platformBrightness == Brightness.light ? Colors.grey[100] : Colors.grey[850],
             child: ListView.builder(
                 controller: _searchScrollController,
                 scrollDirection: Axis.vertical,

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:change_charity_components/change_charity_components.dart';
 import 'splash.dart';
 
 class Change extends StatefulWidget{
@@ -13,7 +14,9 @@ class _ChangeState extends State<Change>{
     return MaterialApp(
       title: 'Change',
       home: Splash(),
-      theme: lightTheme,
+      theme: ChangeTheme(isDark: false).themeData,
+      darkTheme:ChangeTheme(isDark: true).themeData,
+      themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
     );
   }

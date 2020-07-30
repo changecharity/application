@@ -179,9 +179,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       margin:EdgeInsets.only(bottom:10, top:15),
       width: MediaQuery.of(context).size.width * .75,
       decoration:BoxDecoration(
-        color:Colors.grey[100],
+        color: MediaQuery.of(context).platformBrightness == Brightness.light ? Colors.grey[100] : Colors.grey[900],
         borderRadius: BorderRadius.circular(20),
-        boxShadow: [BoxShadow(color:Colors.grey[300], offset:Offset.fromDirection(1), blurRadius:15)]
+        boxShadow: [
+          BoxShadow(
+            color:MediaQuery.of(context).platformBrightness == Brightness.light ? Colors.grey[300] : Colors.grey[600],
+            offset:Offset.fromDirection(1),
+            blurRadius:15),
+        ],
       ),
       child:Column(
         children: <Widget>[
@@ -195,7 +200,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 },
                 child: Text(
                   '${userOrg.getUserOrg}',
-                  style:TextStyle(color:Colors.black, fontSize:18, fontWeight: FontWeight.bold),
+                  style:TextStyle(fontSize:18, fontWeight: FontWeight.bold),
                 ),
               );
             }
@@ -217,7 +222,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         elevation: 0,
                         child: Icon(
                           Icons.search,
-                          color: Colors.white,
                           size: 60,
                         ),
                       ),
@@ -239,7 +243,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   ),
                   Text(
                     'Month to date',
-                    style:TextStyle(color:Colors.black)
                   )
                 ],
               ),
@@ -251,7 +254,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   ),
                   Text(
                       'Week to date',
-                      style:TextStyle(color:Colors.black)
                   )
                 ],
               ),
@@ -279,9 +281,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         height: MediaQuery.of(context).size.height > 700 ? MediaQuery.of(context).size.height * .45 : MediaQuery.of(context).size.height < 650 ? 210 : MediaQuery.of(context).size.height * .40,
         padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
         decoration: BoxDecoration(
-          color: Colors.grey[100],
+          color: MediaQuery.of(context).platformBrightness == Brightness.light ? Colors.grey[100] : Colors.grey[900],
           borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
-          boxShadow: [BoxShadow(color:Colors.grey[300], offset:Offset.fromDirection(5, 7), blurRadius: 10)]
+          boxShadow: [BoxShadow(
+              color: MediaQuery.of(context).platformBrightness == Brightness.light ? Colors.grey[300] : Colors.grey[700],
+              offset:Offset.fromDirection(5, 7),
+              blurRadius: 10),
+          ]
         ),
       child:_transactionsList()
     );
@@ -302,7 +308,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       controller: _scrollController,
       separatorBuilder: (context, i){
       return Divider(
-        color:Colors.black,
+        color:MediaQuery.of(context).platformBrightness == Brightness.light ? Colors.black : Colors.white,
         endIndent:10,
         indent:10,
         );
@@ -317,7 +323,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 height:50,
                 width:50,
                 decoration:BoxDecoration(
-                  color:Color.fromRGBO(0, 174, 229, .6),
+                  color:Color.fromRGBO(0, 174, 229, MediaQuery.of(context).platformBrightness == Brightness.light ? .6 : 1),
                   shape:BoxShape.circle,
                 ),
                 child:Center(
@@ -344,19 +350,19 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                 //width: MediaQuery.of(context).size.width*.4,
                                 child:Text(
                                   transactions[i]["name"].length<10?'${transactions[i]["name"]}':transactions[i]["amount"].toStringAsFixed(2).length>5?'${transactions[i]["name"].toString().substring(0,6)}...':'${transactions[i]["name"].toString().substring(0,10)}...',
-                                  style:TextStyle(fontSize: 16, color: Colors.black, ),
+                                  style:TextStyle(fontSize: 16, ),
                                   overflow: TextOverflow.ellipsis,
                                 )
                               ),
                               Text(
                                   '  \$${(transactions[i]["amount"]).toStringAsFixed(2)}',
-                                  style:TextStyle(fontSize: 16, color: Colors.black, )
+                                  style:TextStyle(fontSize: 16, )
                               ),
                             ],
                           ),
                           Text(
                             '${transactions[i]["dot"]}',
-                            style:TextStyle(color: Colors.grey[700])
+                            style:TextStyle(color: MediaQuery.of(context).platformBrightness == Brightness.light ? Colors.grey[700] : Colors.grey[500])
                           )
                         ],
                       ),
@@ -365,7 +371,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           children: <Widget>[
                             Text(
                               '${transactions[i]["change"]}',
-                              style: TextStyle(color:Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
+                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                             ),
                             Padding(
                               padding: const EdgeInsets.only(bottom: 2),
@@ -390,11 +396,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final bool isLight =  MediaQuery.of(context).platformBrightness == Brightness.light;
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      systemNavigationBarColor: Colors.grey[100],
+      systemNavigationBarColor: isLight ? Colors.grey[50] : Colors.grey[900],
+      systemNavigationBarIconBrightness: isLight ? Brightness.dark : Brightness.light,
       statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.dark,
-      systemNavigationBarIconBrightness: Brightness.dark,
+      statusBarIconBrightness: isLight ? Brightness.dark : Brightness.light,
+      statusBarBrightness: isLight ? Brightness.dark : Brightness.light,
     ));
     return Material(
       child: SafeArea(
