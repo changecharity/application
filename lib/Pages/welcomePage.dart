@@ -18,6 +18,7 @@ class _WelcomePageState extends State<WelcomePage> with TickerProviderStateMixin
   AnimationController _fadeAnimContr;
   AnimationController _imagesAnimContr;
   Animation<Color> _loadingCon;
+  SwiperController _swiperCont = SwiperController();
 
   bool loading = false;
 
@@ -126,11 +127,8 @@ class _WelcomePageState extends State<WelcomePage> with TickerProviderStateMixin
                           return _mainContent("none", "images/clip-online-shopping.png");
                       }
                     },
+                    controller: _swiperCont,
                     itemCount: 3,
-                    pagination: SwiperPagination(
-                      builder: new DotSwiperPaginationBuilder(
-                          color: Colors.white, activeColor: Color(0xff38547C)),
-                    ),
                     scale: 0.6,
                   ),
                 ),
@@ -141,6 +139,7 @@ class _WelcomePageState extends State<WelcomePage> with TickerProviderStateMixin
               child: Padding(
                 padding: EdgeInsets.only(bottom: 20),
                 child: ChangeSubmitRow(
+                  scale: _swiperCont.index == 3 ? 0 : 1,
                   buttonColors: [Colors.blue[900], Colors.blue[900]],
                   loading: loading,
                   onClick: _next,
@@ -163,6 +162,11 @@ class _WelcomePageState extends State<WelcomePage> with TickerProviderStateMixin
   }
 
   void _next () async {
+    var idx = _swiperCont.index;
+    _swiperCont.move(idx == null || idx == 0 ? 1 : 2 );
+    if(idx != 2) {
+      return;
+    }
     _imagesAnimContr.animateBack(0, duration: Duration(milliseconds: 800));
     await _fadeAnimContr.animateBack(0, duration: Duration(milliseconds: 800));
     SharedPreferences prefs = await SharedPreferences.getInstance();

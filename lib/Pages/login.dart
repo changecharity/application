@@ -188,7 +188,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
 
   Widget _createText() {
     return Container(
-      margin: EdgeInsets.only(top: 0, bottom: MediaQuery.of(context).size.height < 650 ? 3: 30),
+      margin: EdgeInsets.only(top: 0, bottom: MediaQuery.of(context).size.height < 700 ? 3: 30),
       alignment: Alignment.bottomCenter,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -251,7 +251,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                       children: <Widget>[
                         SlideTransition(child: _helloContainer(), position: animationD),
                         _messageContainer(),
-                        Container(height: 50,),
+                        Container(height:MediaQuery.of(context).size.height < 700 ? 10 : 50,),
                         _emailInput(),
                         _passInput(),
                         _forgotPass(),
