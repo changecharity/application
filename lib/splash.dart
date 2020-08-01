@@ -55,7 +55,6 @@ class _SplashState extends State<Splash> {
      switch(_initScreen){
 
       case "homepage":{
-        return WelcomePage();
         return HomePage();
       }
       break;
