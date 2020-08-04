@@ -20,6 +20,7 @@ import 'package:global_configuration/global_configuration.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 import 'package:money2/money2.dart';
 import '../Components/aboutDialog.dart';
+import '../Components/bankAccountsDialog.dart';
 
 class Profile extends StatefulWidget{
 
@@ -366,11 +367,17 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                 children: <Widget>[
                   GestureDetector(
                     onTap: () {
-                      print("dope");
                       if (userBank.getBankName == null) {
                         showDialog(context: context,
                             builder: (context) => PasswordDialog("change"),
                             barrierDismissible: true);
+                      } else {
+                        Navigator.of(context).push(new MaterialPageRoute<Null>(
+                            builder: (BuildContext context) {
+                              return BankAccountsDialog();
+                            },
+                            fullscreenDialog: true
+                        ));
                       }
                     },
                     child: Container(
@@ -430,7 +437,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                       )
                   ) :
                   Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         RichText(
                             text: TextSpan(
@@ -442,35 +449,17 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                                       : Colors.grey[200],
                                   fontSize: 12,
                                   fontFamily: 'Montserrat',
+                                  decoration: TextDecoration.underline,
                                 ),
-                                text: "Change Account",
+                                text: "Manage Accounts",
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
-                                    showDialog(context: context,
-                                        builder: (context) =>
-                                            PasswordDialog("change"),
-                                        barrierDismissible: true);
-                                  }
-                            )
-                        ),
-                        RichText(
-                            text: TextSpan(
-                                style: TextStyle(
-                                  color: MediaQuery
-                                      .of(context)
-                                      .platformBrightness == Brightness.light
-                                      ? Colors.grey[700]
-                                      : Colors.grey[200],
-                                  fontSize: 12,
-                                  fontFamily: 'Montserrat',
-                                ),
-                                text: "Unlink Account",
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
-                                    showDialog(context: context,
-                                        builder: (context) =>
-                                            PasswordDialog("unlink"),
-                                        barrierDismissible: true);
+                                    Navigator.of(context).push(new MaterialPageRoute<Null>(
+                                        builder: (BuildContext context) {
+                                          return BankAccountsDialog();
+                                        },
+                                        fullscreenDialog: true
+                                    ));
                                   }
                             )
                         ),
@@ -845,6 +834,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
     var decodedMask = decodedResponse["mask"].toString();
     var decodedPL = decodedResponse["legalName"];
     var threshDecode = decodedResponse["threshold"];
+    List cards = decodedResponse["cards"];
 
     print(profileResponse.body);
     setState(() {
@@ -865,9 +855,9 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
     print(threshold);
     print(mask);
     print(decodedResponse["monthlyLimit"]);
-
+    print("cards are $cards");
     //notify provider of mask and bankName
-    context.read<UserBankModel>().notify(mask, bankName, profileLetter);
+    context.read<UserBankModel>().notify(mask, bankName, profileLetter, cards);
   }
 
   //if the user provider is not filled, we have to make an api call here to get info

@@ -558,14 +558,16 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     token = prefs.getString('token');
     var content='{"user_token":"$token"}';
     var profileResponse = await http.post("${cfg.getString("host")}/users/getprofile", body:content);
-    var decodedMask = jsonDecode(profileResponse.body)["mask"].toString();
-    var decodedPL = jsonDecode(profileResponse.body)["legalName"];
+    var decodedRes =  jsonDecode(profileResponse.body);
+    var decodedMask = decodedRes["mask"].toString();
+    var decodedPL = decodedRes["legalName"];
     var mask = decodedMask == null ? "0000" : decodedMask;
-    var bankName=jsonDecode(profileResponse.body)["bankName"];
+    var bankName=decodedRes["bankName"];
     var profileLetter = decodedPL != null ? decodedPL[0] : "A";
+    List cards = decodedRes["cards"];
     //notify provider of mask and bankName
 
-    context.read<UserBankModel>().notify(mask, bankName, profileLetter);
+    context.read<UserBankModel>().notify(mask, bankName, profileLetter, cards);
   }
 
   _getAllInfo() async{

@@ -152,12 +152,10 @@ class _PwDialogState extends State<PasswordDialog> with SingleTickerProviderStat
       if(widget.action=="unlink"){
         showDialog(context:context, builder:(context)=>UnlinkDialog(_passController.text), barrierDismissible: true);
       } else if(widget.action=="change"){
-        showDialog(context:context, builder:(context)=>ChangeAccDialog(_passController.text), barrierDismissible: true);
+        showDialog(context:context, builder:(context)=>ChangeAccDialog(password: _passController.text, action: "update",), barrierDismissible: true);
       }
     }
   }
-
-
 }
 
 

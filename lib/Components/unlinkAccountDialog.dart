@@ -1,9 +1,8 @@
 import'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:provider/provider.dart';
 import 'package:global_configuration/global_configuration.dart';
-import '../Models/userBankModel.dart';
+import '../Pages/homePage.dart';
 
 class UnlinkDialog extends StatefulWidget {
   @override
@@ -117,9 +116,9 @@ class _UnlinkDialogState extends State<UnlinkDialog>{
 
     print(response.body);
     if (response.body == "success") {
-      var pfL = context.read<UserBankModel>().getPfLetter;
-      context.read<UserBankModel>().notify(null, null, pfL);
-      Navigator.of(context).pop();
+      Navigator.pushAndRemoveUntil(
+          context, PageRouteBuilder(pageBuilder: (_, __, ___) => HomePage()), (
+          route) => false);
     }
   }
 

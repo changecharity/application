@@ -4,20 +4,22 @@ import'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:plaid_flutter/plaid_flutter.dart';
-import 'package:provider/provider.dart';
 import 'package:change_charity_components/change_charity_components.dart';
-import '../Models/userBankModel.dart';
+import 'package:global_configuration/global_configuration.dart';
+import '../Pages/homePage.dart';
 
 class ChangeAccDialog extends StatefulWidget {
   @override
   _ChangeAccDialogState createState() => _ChangeAccDialogState();
 
   final String password;
-  ChangeAccDialog(this.password);
+  final String action;
+  ChangeAccDialog({this.password, this.action});
 
 }
 
 class _ChangeAccDialogState extends State<ChangeAccDialog>with SingleTickerProviderStateMixin{
+  GlobalConfiguration cfg = new GlobalConfiguration();
 
   String plaidToken;
   String accountId;
@@ -162,7 +164,7 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>with SingleTickerProvi
       );
     } else if (plaidToken == null) {
       return Text(
-        'Link Your Checking Account',
+        widget.action == "update" ? 'Link Your Checking Account' : 'Link your Credit Account',
         style:TextStyle(fontSize:12)
       );
     } else {
@@ -200,7 +202,7 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>with SingleTickerProvi
   Widget _confirmCont() {
     return ChangeSubmitRow(
       animation: loadingAn,
-      onClick: _changeAccount,
+      onClick: widget.action == "update" ? _changeAccount : _addAccount,
       loading: loading,
     );
   }
@@ -256,8 +258,9 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>with SingleTickerProvi
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token');
     print(token);
+    print(bankName);
     var content = '{"user_token":"$token", "password":"${widget.password}", "plaid_public_token":"$plaidToken", "plaid_account_id":"$accountId", "mask":$mask, "bank_name":"$bankName"}';
-    var response = await http.post("https://api.changecharity.io/users/updatebankacc", body: content);
+    var response = await http.post("${cfg.getString("host")}/users/updatebankacc", body: content);
 
     print(response.body);
     if (response.body.contains('rpc error: code = Unknown desc = {"code":"bank_account_exists","doc_url":"https://stripe.com/docs/error-codes/bank-account-exists')){
@@ -267,11 +270,9 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>with SingleTickerProvi
       });
       return;
     } else if (response.body == "success") {
-      //save bank info in provider
-      var pfL = context.read<UserBankModel>().getPfLetter;
-      context.read<UserBankModel>().notify(mask.toString(), bankName, pfL);
-
-      Navigator.of(context).pop();
+      Navigator.pushAndRemoveUntil(
+          context, PageRouteBuilder(pageBuilder: (_, __, ___) => HomePage()), (
+          route) => false);
     } else {
       setState(() {
         loading=!loading;
@@ -280,15 +281,61 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>with SingleTickerProvi
     }
   }
 
+  _addAccount() async {
+    if (!_checkValidPlaid()) {
+      print(_plaidErr);
+      return;
+    }
+
+    setState(() {
+      loading=!loading;
+    });
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    token = prefs.getString('token');
+    print(token);
+    print(bankName);
+    var content = '{"user_token":"$token", "plaid_public_token":"$plaidToken", "plaid_account_id":"$accountId", "mask":$mask, "bank_name":"$bankName"}';
+    var response = await http.post("${cfg.getString("host")}/users/addcard", body: content);
+
+    print(response.body);
+    setState(() {
+      loading = !loading;
+    });
+    if (response.body.contains('no rows in')){
+      setState(() {
+        _plaidErr = "This account is already linked";
+        plaidToken = "";
+      });
+      return;
+    } else if (response.body == "success") {
+      Navigator.pushAndRemoveUntil(
+          context, PageRouteBuilder(pageBuilder: (_, __, ___) => HomePage()), (
+          route) => false);
+    } else {
+      setState(() {
+        _plaidErr = "There was an error linking your bank account at this time. Either try a different account, or try to re-link this account in a few hours";
+        plaidToken = "";
+      });
+    }
+  }
+
   _onSuccess (publicToken, metadata) {
     var account;
     var accounts=metadata["accounts"];
+    String type = widget.action == "update" ? "checking" : "credit card";
 
     for(int i=0; i<accounts.length; i++){
-      if(accounts[i]["subtype"]=="checking"){
+      if(accounts[i]["subtype"]==type){
         account=accounts[i];
         print(account);
       }
+    }
+    if(account == null) {
+      setState(() {
+        _plaidErr = "You must link a ${widget.action == 'update' ? 'Checking' : 'Credit Card'} Account";
+      });
+      return;
     }
 
     print(metadata.toString());
@@ -300,6 +347,6 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>with SingleTickerProvi
     mask = int.parse(account["mask"]);
     bankName = metadata["institution_name"];
 
-    print("$accountId, $mask, $bankName");
+    print("data is $accountId, $mask, $bankName");
   }
 }
