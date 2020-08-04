@@ -9,6 +9,7 @@ import 'package:global_configuration/global_configuration.dart';
 import 'package:http/http.dart' as http;
 import 'homePage.dart';
 import 'package:plaid_flutter/plaid_flutter.dart';
+import '../Components/securityFaq.dart';
 
 class LinkBank extends StatefulWidget{
   final org;
@@ -263,6 +264,30 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
     );
   }
 
+  Widget _whySecure() {
+    return Container(
+      margin: EdgeInsets.only(left: 45, top: 10),
+      alignment: Alignment.centerLeft,
+      child: GestureDetector(
+        onTap: () {
+          Navigator.of(context).push(new MaterialPageRoute<Null>(
+              builder: (BuildContext context) {
+                return SecurityFAQ();
+              },
+              fullscreenDialog: true
+          ));
+        },
+        child: Text(
+          "Security Overview",
+          style: TextStyle(
+            decoration: TextDecoration.underline,
+            fontSize: 15,
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _submitCont() {
     return ChangeSubmitRow(
       loading: loading,
@@ -317,6 +342,7 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
                         _reasonText(),
                         _plaidButton(),
                         _errCont(),
+                        _whySecure(),
                         Expanded(child: Container(),),
                         SlideTransition(position:_bottomUp, child: _submitCont()),
                         Expanded(child: Container(),),
@@ -389,6 +415,13 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
         account=accounts[i];
         print(account);
       }
+    }
+
+    if(account == null) {
+      setState(() {
+        _plaidErr = "You must link a checking account";
+      });
+      return;
     }
 
     print(metadata.toString());

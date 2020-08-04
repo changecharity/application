@@ -55,6 +55,7 @@ class _SplashState extends State<Splash> {
      switch(_initScreen){
 
       case "homepage":{
+        return LinkBank("");
         return HomePage();
       }
       break;

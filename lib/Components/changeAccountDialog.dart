@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:change/Components/securityFaq.dart';
 import'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -199,9 +200,33 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>with SingleTickerProvi
     );
   }
 
+  Widget _whySecure() {
+    return Container(
+      margin: EdgeInsets.only(left: 30),
+      alignment: Alignment.centerLeft,
+      child: GestureDetector(
+        onTap: () {
+          Navigator.of(context).push(new MaterialPageRoute<Null>(
+              builder: (BuildContext context) {
+                return SecurityFAQ();
+              },
+              fullscreenDialog: true
+          ));
+        },
+        child: Text(
+          "Security Overview",
+          style: TextStyle(
+            decoration: TextDecoration.underline,
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _confirmCont() {
     return ChangeSubmitRow(
       animation: loadingAn,
+      margin: EdgeInsets.only(top: 10),
       onClick: widget.action == "update" ? _changeAccount : _addAccount,
       loading: loading,
     );
@@ -226,6 +251,7 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>with SingleTickerProvi
                   children: <Widget>[
                     _accountText(),
                     _plaidButton(),
+                    _whySecure(),
                     _confirmCont(),
                   ],
                 )
