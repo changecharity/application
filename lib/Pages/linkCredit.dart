@@ -112,7 +112,7 @@ class _LinkCreditState extends State<LinkCredit> with TickerProviderStateMixin{
     return Container(
       margin: EdgeInsets.fromLTRB(30, MediaQuery.of(context).size.height*0.04,30,0),
       child: Text(
-        'Link your credit card so you can be charged for your donations. This does not enable transaction round-ups, and you will still need to link a Credit Card Account.',
+        'Link your credit card so you can be charged for your donations.',
         textAlign: TextAlign.justify,
         style: TextStyle(
           fontSize: 20,

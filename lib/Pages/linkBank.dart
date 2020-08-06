@@ -106,7 +106,7 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
     return Container(
       margin: EdgeInsets.fromLTRB(30, MediaQuery.of(context).size.height*0.04,30,0),
       child: Text(
-        'Link your credit card account so you can have your monthly transactions be rounded up. This enables read-only access for your new transactions, and allows us to calculate your round-ups',
+        'Link your credit card account so you can have your monthly transactions be rounded up.',
         textAlign: TextAlign.left,
         style: TextStyle(
           fontSize: 20,
