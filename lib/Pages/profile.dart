@@ -21,6 +21,7 @@ import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 import 'package:money2/money2.dart';
 import '../Components/aboutDialog.dart';
 import '../Components/bankAccountsDialog.dart';
+import 'linkCredit.dart';
 
 class Profile extends StatefulWidget{
 
@@ -54,7 +55,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
   bool _switchVal = false;
   int _monthLimit;
   Money _monthLimitMoney;
-  int _initialSliderVal = 3000;
+  int _initialSliderVal = 6000;
 
   GlobalConfiguration cfg = new GlobalConfiguration();
 
@@ -304,7 +305,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                                       textAlign: TextAlign.center,
                                       style: TextStyle(fontSize: 16,
                                           fontWeight: FontWeight.bold))),
-                                  Center(child: Text('Your Bank Account',
+                                  Center(child: Text('Your Payment Settings',
                                       textAlign: TextAlign.center,
                                       style: TextStyle(fontSize: 16,
                                           fontWeight: FontWeight.bold))),
@@ -368,9 +369,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                   GestureDetector(
                     onTap: () {
                       if (userBank.getBankName == null) {
-                        showDialog(context: context,
-                            builder: (context) => PasswordDialog("change"),
-                            barrierDismissible: true);
+                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => LinkCredit()));
                       } else {
                         Navigator.of(context).push(new MaterialPageRoute<Null>(
                             builder: (BuildContext context) {
@@ -697,7 +696,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
       padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
       child: SleekCircularSlider(
         min: 15,
-        max: 50,
+        max: 200,
         initialValue: _initialSliderVal / 100,
         appearance: CircularSliderAppearance(
           customColors: CustomSliderColors(

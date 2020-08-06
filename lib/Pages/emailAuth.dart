@@ -1,10 +1,11 @@
+import 'package:change/Pages/linkCredit.dart';
 import 'package:change_charity_components/change_charity_components.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'linkBank.dart';
+import 'linkCredit.dart';
 import '../Pages/orgSelected.dart';
 import '../Pages/forgotPass.dart';
 import '../Pages/login.dart';
@@ -416,7 +417,7 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin{
       if(prefs.getInt('selOrg') != null) {
         Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>OrgSelected()));
       } else {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>LinkBank("")));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>LinkCredit()));
       }
     } else {
       setState(() {

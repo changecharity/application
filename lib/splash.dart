@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'Pages/login.dart';
 import 'Pages/homePage.dart';
 import 'Pages/emailAuth.dart';
-import 'Pages/linkBank.dart';
+import 'Pages/linkCredit.dart';
 import 'Pages/welcomePage.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -55,7 +55,6 @@ class _SplashState extends State<Splash> {
      switch(_initScreen){
 
       case "homepage":{
-        return LinkBank("");
         return HomePage();
       }
       break;
@@ -74,8 +73,8 @@ class _SplashState extends State<Splash> {
         return EmailAuth(email, "forgotpass");
       }
 
-      case "linkbank":{
-        return LinkBank(_linkBank);
+      case "linkcredit":{
+        return LinkCredit();
       }
 
        case "welcome":{
@@ -109,7 +108,7 @@ class _SplashState extends State<Splash> {
         _initScreen = "forgotpage";
       }
     } else if (token!=null &&_linkBank!=null){
-      _initScreen="linkbank";
+      _initScreen="linkcredit";
     } else if(newUser == null){
       _initScreen="welcome";
     } else {

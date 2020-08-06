@@ -14,9 +14,22 @@ class UserBankModel extends ChangeNotifier{
 
   void notify(String mask, String name, String pfLetter, List cards){
     _mask=mask;
-    _bankName=name;
+    _bankName=name == null ? null : titleCase(name);
     _pfLetter=pfLetter;
     _cards= cards == null ? [] : cards;
     notifyListeners();
   }
+}
+
+/// My way of capitalizing each word in a string.
+String titleCase(String text) {
+  if (text == null) throw ArgumentError("string: $text");
+
+  if (text.isEmpty) return text;
+
+  /// If you are careful you could use only this part of the code as shown in the second option.
+  return text
+      .split(' ')
+      .map((word) => word[0].toUpperCase() + word.substring(1))
+      .join(' ');
 }

@@ -45,30 +45,30 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>with SingleTickerProvi
     loadingController.repeat();
 
     _plaidLink = PlaidLink(
-      clientName: "Change Client",
-      publicKey: "014d4f2c01905eafa07cbcd2755ef5",
-      env: EnvOption.production,
-      products: <ProductOption>[
-        ProductOption.transactions,
-      ],
-      language: "en",
-      countryCodes: ['US'],
-      onAccountLinked: (publicToken, metadata) => _onSuccess(publicToken, metadata),
-      onAccountLinkError: (error, metadata) {
-        print("onAccountLinkError: $error metadata: $metadata");
-        setState(() {
-          _plaidErr = "An error occurred. Please contact us for more assistance.";
-        });
-      },
-      onEvent: (event, metadata) {
-        print("onEvent: $event metadata: $metadata");
-      },
-      onExit: (metadata) {
-        print("onExit: $metadata");
-        setState(() {
-          _plaidErr = "Please link a bank account";
-        });
-      },
+//      clientName: "Change Client",
+//      publicKey: "014d4f2c01905eafa07cbcd2755ef5",
+//      env: EnvOption.production,
+//      products: <ProductOption>[
+//        ProductOption.transactions,
+//      ],
+//      language: "en",
+//      countryCodes: ['US'],
+//      onAccountLinked: (publicToken, metadata) => _onSuccess(publicToken, metadata),
+//      onAccountLinkError: (error, metadata) {
+//        print("onAccountLinkError: $error metadata: $metadata");
+//        setState(() {
+//          _plaidErr = "An error occurred. Please contact us for more assistance.";
+//        });
+//      },
+//      onEvent: (event, metadata) {
+//        print("onEvent: $event metadata: $metadata");
+//      },
+//      onExit: (metadata) {
+//        print("onExit: $metadata");
+//        setState(() {
+//          _plaidErr = "Please link a bank account";
+//        });
+//      },
     );
   }
 
@@ -85,8 +85,8 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>with SingleTickerProvi
         Container(
           margin: EdgeInsets.fromLTRB(20,25,20,0),
           child:Text(
-              'Please click on the button below and enter your account details',
-              textAlign: TextAlign.center,
+              'Please click on the button below and enter your credit card account details',
+              textAlign: TextAlign.left,
               style:TextStyle(
                 fontSize: 14,
               )
@@ -263,7 +263,7 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>with SingleTickerProvi
   bool _checkValidPlaid(){
     if(plaidToken==null|| plaidToken==''){
       setState(() {
-        _plaidErr="You must link a bank";
+        _plaidErr="Click here to link your credit card account";
       });
       return false;
     }

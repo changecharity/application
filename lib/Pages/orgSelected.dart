@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:http/http.dart' as http;
-import 'linkBank.dart';
+import 'linkCredit.dart';
 
 
 class OrgSelected extends StatefulWidget{
@@ -233,13 +233,13 @@ class _OrgSelectedState extends State<OrgSelected> with TickerProviderStateMixin
       loading = false;
     });
     prefs.setString('linkBank', name);
-    Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>LinkBank(name)));
+    Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>LinkCredit()));
   }
 
   void _chooseLater() async{
     SharedPreferences prefs=await SharedPreferences.getInstance();
     prefs.setInt('selOrg', null);
-    Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>LinkBank("")));
+    Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>LinkCredit()));
   }
 
 }

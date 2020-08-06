@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:change/Pages/linkBank.dart';
 import 'package:change_charity_components/change_charity_components.dart';
-import 'package:plaid_flutter/plaid_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -10,15 +10,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:http/http.dart' as http;
 import 'homePage.dart';
+import 'package:flutter_stripe_payment/flutter_stripe_payment.dart';
 
 import '../Components/securityFaq.dart';
 
-class LinkBank extends StatefulWidget{
+class LinkCredit extends StatefulWidget{
   @override
-  _LinkBankState createState()=>_LinkBankState();
+  _LinkCreditState createState()=>_LinkCreditState();
 }
 
-class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
+class _LinkCreditState extends State<LinkCredit> with TickerProviderStateMixin{
 
   AnimationController _controller;
   Animation<Offset> _topDown;
@@ -31,8 +32,8 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
   String token;
   String name = "";
   String logo = "";
-  String plaidGenToken;
-  String plaidPublicToken;
+  String _paymentMethodId;
+  String plaidToken;
   String accountId;
   String bankName;
   String _plaidErr = '';
@@ -41,11 +42,15 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
   bool loading = false;
 
   GlobalConfiguration cfg = new GlobalConfiguration();
-  PlaidLink _plaidLinkToken;
+  final _stripePayment = FlutterStripePayment();
 
   void initState(){
     super.initState();
-    _setPlaid();
+    _stripePayment.setStripeSettings(
+        "pk_live_4emYzSEoyJOFgpVOaEqy6j2L00p4wofNb8", "{STRIPE_APPLE_PAY_MERCHANTID}");
+    _stripePayment.onCancel = () {
+      print("the payment form was cancelled");
+    };
 
     _controller = AnimationController(vsync: this, duration: Duration(seconds:2));
     controllerC = AnimationController(
@@ -87,13 +92,14 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
     Future<void>.delayed(Duration(milliseconds:1000),(){
       _controller.forward();
     });
+
   }
 
   Widget _linkBankText() {
     return Container(
       margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.03, left: 20, right: 20),
       child: Text(
-        'Connect Your Round-Up Method',
+        'Connect Your Payment Method',
         textAlign: TextAlign.center,
         style: TextStyle(
           fontSize: 30,
@@ -106,8 +112,8 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
     return Container(
       margin: EdgeInsets.fromLTRB(30, MediaQuery.of(context).size.height*0.04,30,0),
       child: Text(
-        'Link your credit card account so you can have your monthly transactions be rounded up. This enables read-only access for your new transactions, and allows us to calculate your round-ups',
-        textAlign: TextAlign.left,
+        'Link your credit card so you can be charged for your donations. This does not enable transaction round-ups, and you will still need to link a Credit Card Account.',
+        textAlign: TextAlign.justify,
         style: TextStyle(
           fontSize: 20,
           wordSpacing: 2,
@@ -119,17 +125,15 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
   Widget _plaidButton() {
     return GestureDetector(
       onTap: () {
-        if(plaidPublicToken == null || plaidPublicToken == ''){
-          if(plaidGenToken != null) {
-            _plaidLinkToken.open();
-          } else {
-            setState(() {
-              _plaidErr ='Please wait a few seconds and try again.';
-            });
-          }
+        setState(() {
+          FocusScope.of(context).unfocus();
+          _plaidErr='';
+        });
+        if (_paymentMethodId == null || _paymentMethodId == '') {
+          _openCredit();
           Future.delayed(const Duration(milliseconds: 500), () {
             setState(() {
-              plaidPublicToken = '';
+              _paymentMethodId = '';
             });
           });
         }
@@ -171,16 +175,16 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
 
   //Changes on account connection or disconnect
   Widget _plaidStatus() {
-    if (plaidPublicToken != '' && plaidPublicToken != null) {
+    if (_paymentMethodId != '' && _paymentMethodId != null) {
       return Text(
         'Connected',
         style: TextStyle(
           color: Colors.green,
         ),
       );
-    } else if (plaidPublicToken == null) {
+    } else if (_paymentMethodId == null) {
       return Text(
-        'Link Your Credit Card Account',
+        'Link Your Credit Card',
         style: TextStyle(
           fontWeight: FontWeight.bold,
         ),
@@ -231,7 +235,7 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
           ));
         },
         child: Text(
-          "I thought I just linked my credit card?",
+          "Why am I linking a payment method?",
           style: TextStyle(
             decoration: TextDecoration.underline,
             fontSize: 15,
@@ -244,8 +248,8 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
   Widget _submitCont() {
     return ChangeSubmitRow(
       loading: loading,
-      onClick: _addAccount,
-      text: "Submit",
+      onClick: _linkAccount,
+      text: "Next Step",
       animation: _animationC,
     );
   }
@@ -261,7 +265,7 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
         child: Container(
           alignment: Alignment.center,
           child: Text(
-            "I will connect my round-up method later",
+            "I will connect my payment method later",
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 19,
@@ -279,11 +283,11 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
       appBar: AppBar(
         backgroundColor: MediaQuery.of(context).platformBrightness == Brightness.light ? Colors.grey[50] : Colors.grey[850],
         title: Text(
-            "Step Two",
-            style: TextStyle(
-              fontSize: 25,
-            ),
+          "Step One",
+          style: TextStyle(
+            fontSize: 25,
           ),
+        ),
         centerTitle: true,
         elevation: 0,
       ),
@@ -321,23 +325,70 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
     super.dispose();
   }
 
-  Future<void> _getToken() async {
+  void _openCredit() async {
+    var paymentResponse = await _stripePayment.addPaymentMethod();
+    setState(() {
+      if (paymentResponse.status ==
+          PaymentResponseStatus.succeeded) {
+        _paymentMethodId = paymentResponse.paymentMethodId;
+        _checkAndApply();
+      } else {
+        _plaidErr = "Invalid card";
+      }
+    });
+    print("payment id is: $_paymentMethodId");
+  }
+
+  void _checkAndApply() async {
     SharedPreferences prefs=await SharedPreferences.getInstance();
     token=prefs.getString('token');
     var content = '{"user_token":"$token"}';
-    var response = await http.post("${cfg.getString("host")}/users/createlinktoken", body: content);
+    var response = await http.post("${cfg.getString("host")}/users/genephemeraltoken", body: content);
     var decodedRes = jsonDecode(response.body);
-    setState(() {
-      plaidGenToken = decodedRes["linkToken"];
-    });
+    var intentResponse = await _stripePayment.setupPaymentIntent(
+        decodedRes["token"], _paymentMethodId);
+
+    if (intentResponse.status == PaymentResponseStatus.succeeded) {
+      print(_paymentMethodId);
+    } else if (intentResponse.status == PaymentResponseStatus.failed) {
+      setState(() {
+        _plaidErr ="Issue verifying your card. Please try a different card.";
+        _paymentMethodId = '';
+      });
+    } else {
+      _plaidErr ="Issue verifying your card at this time. Either try a different card, or try again later.";
+    }
   }
 
-  void _linkCard() async {
-    if(plaidPublicToken == '' || plaidPublicToken == null){
+  void _linkAccount() async {
+    if(_paymentMethodId == '' || _paymentMethodId == null){
       setState(() {
-        _plaidErr = 'Click here to link your credit card account';
+        _plaidErr = 'Click here to link your card';
       });
       return;
+    }
+
+    setState(() {
+      loading = true;
+    });
+
+    SharedPreferences prefs=await SharedPreferences.getInstance();
+    token=prefs.getString('token');
+    var content = '{"user_token":"$token"}';
+    var response = await http.post("${cfg.getString("host")}/users/checkcuslinkedcard", body: content);
+    if (response.body == "success") {
+      setState(() {
+        loading = false;
+      });
+
+      prefs.setString('linkBank', null);
+      Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>LinkBank()));
+    } else {
+      print(response.body);
+      setState(() {
+        loading = false;
+        _plaidErr = 'There was an error linking your credit card at this time. Either try a different account, or try to re-link this card in a few hours';
+      });
     }
   }
 
@@ -345,118 +396,5 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
     SharedPreferences prefs=await SharedPreferences.getInstance();
     prefs.setString('linkBank', null);
     Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>HomePage()));
-  }
-
-  Future<void> _setPlaid() async{
-    print("dopes");
-    await _getToken();
-    print(plaidGenToken);
-
-    setState(() {
-      LinkConfiguration linkTokenConfiguration = LinkConfiguration(
-        linkToken: plaidGenToken,
-      );
-
-      _plaidLinkToken = PlaidLink(
-        configuration: linkTokenConfiguration,
-        onSuccess: _onSuccessCallback,
-        onEvent: _onEventCallback,
-        onExit: _onExitCallback,
-      );
-
-    });
-  }
-
-  void _onSuccessCallback(publicToken, metadata) {
-    setState(() {
-      _plaidErr = '';
-    });
-    print("onSuccess: $publicToken, metadata: ${metadata.description()}");
-
-    var account;
-    var accounts=metadata.accounts;
-
-    print(accounts);
-
-    for(int i=0; i<accounts.length; i++){
-      if(accounts[i].subtype=="credit card"){
-        account=accounts[i];
-        print(account);
-      }
-    }
-
-    if(account == null) {
-      setState(() {
-        _plaidErr = "You must link a Credit Card Account, and not just a Checking Account";
-      });
-    }
-
-    bankName = metadata.institutionName;
-    mask = int.parse(account.mask);
-    accountId = account.id;
-
-    setState(() {
-      plaidPublicToken = publicToken;
-    });
-
-    print(bankName);
-
-  }
-
-  void _onEventCallback(event, metadata) {
-    print("onEvent: $event, metadata: ${metadata.description()}");
-  }
-
-  void _onExitCallback(error, metadata) {
-    print("onExit: $error, metadata: ${metadata.description()}");
-  }
-
-  bool _checkValidPlaid(){
-    if(plaidPublicToken==null|| plaidPublicToken==''){
-      setState(() {
-        _plaidErr="Click here to link your credit card account";
-      });
-      return false;
-    }
-    return true;
-  }
-
-  _addAccount() async {
-    if (!_checkValidPlaid()) {
-      print(_plaidErr);
-      return;
-    }
-
-    setState(() {
-      loading=!loading;
-    });
-
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    token = prefs.getString('token');
-    print(token);
-    print(bankName);
-    var content = '{"user_token":"$token", "plaid_public_token":"$plaidPublicToken", "plaid_account_id":"$accountId", "mask":$mask, "bank_name":"$bankName"}';
-    var response = await http.post("${cfg.getString("host")}/users/addcard", body: content);
-
-    print(response.body);
-    setState(() {
-      loading = !loading;
-    });
-    if (response.body.contains('no rows in')){
-      setState(() {
-        _plaidErr = "This account is already linked";
-        plaidPublicToken = "";
-      });
-      return;
-    } else if (response.body == "success") {
-      Navigator.pushAndRemoveUntil(
-          context, PageRouteBuilder(pageBuilder: (_, __, ___) => HomePage()), (
-          route) => false);
-    } else {
-      setState(() {
-        _plaidErr = "There was an error linking your bank account at this time. Either try a different account, or try to re-link this account in a few hours";
-        plaidPublicToken = "";
-      });
-    }
   }
 }

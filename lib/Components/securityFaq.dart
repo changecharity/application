@@ -97,23 +97,34 @@ class _SecurityFAQState extends State<SecurityFAQ> with SingleTickerProviderStat
             child: ListView(
               children: [
                 _questionContainer(
-                  "Why do I need to link my bank account?",
-                  "Change Charity uses ACH transfers to ensure your charity gets the most out of your donations. "
-                  "Linking your bank account enables us to round up your credit transactions, while a credit card does not provide us with that ability.",
+                    "How do I know my credit card info will be secured?",
+                    "Change Charity works with Stripe to securely handle your credit card and payments. We ensure that none of your sensitive information is stored."
                 ),
                 _questionContainer(
-                  "How can I be sure no one can see my credentials?",
-                  "Change Charity uses a financial technology service called Plaid, to ensure you have the highest level of protection. "
+                    "How do I know my bank info will be secured?",
+                    "Change Charity works with Plaid to securely link your bank account. We will never charge your bank account, and it is only used for reading your new transaction amounts."
+                    " Plaid is used by companies such as Venmo and Robinhood, and it uses industry standard security methods."
+
+                ),
+                _questionContainer(
+                  "Why do I need to link my credit card and Credit Card Account?",
+                  "Change Charity requires you to link a payment method, along with a round-up method. Your payment method is write-only, and strictly used for creating charges."
+                      " Your round-up method(s) enables us to monitor and securely round up your transactions. Your round-up method is read-only, and cannot be used to make charges."
+                      " All charges are made to your credit card for extra security and assurance.",
+                ),
+                _questionContainer(
+                  "Can't I just link my credit card without the need for my Credit Card Account?",
+                  "For security, Change Charity only creates charges to your credit card. Your credit card does not provide any round-up ability, and "
+                      "therefore we require a Credit Card Account. "
                   "We store none of your sensitive information, and can guarantee complete security.",
                 ),
                 _questionContainer(
-                  "Can I link my credit account after I link my checking account?",
-                  "After you link your checking account, you have the ability to link multiple credit accounts. "
-                  "All your transactions are read-only, and none of your transaction hisotry is shared with your charity.",
+                  "Can I link multiple Credit Card Accounts and have them all be round-ups?",
+                  "After you link your payment method, you can add as many Credit Card Accounts as you like."
                 ),
                 _questionContainer(
                   "Are my donation tax deductible?",
-                  "Every donation you make to a charity through Change Charity, is fully tax deductible. At the end of every month, we will email you a receipt of all your months donations.",
+                  "Every donation you make to a charity through Change Charity is fully tax deductible. At the end of every month, we will email you a receipt of all your months donations.",
                 ),
               ],
             ),

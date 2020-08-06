@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:change/Pages/linkBank.dart';
+import 'package:change/Pages/linkCredit.dart';
 import 'package:change_charity_components/change_charity_components.dart';
 import 'package:flutter/services.dart';
 
@@ -17,6 +19,7 @@ import 'Search.dart';
 import 'profile.dart';
 import 'login.dart';
 import '../Models/userBankModel.dart';
+import '../Components/bankAccountsDialog.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -295,13 +298,19 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   Widget _transactionsList(){
     if(transactions==''|| transactions==null){
-     return Container(
-       width: MediaQuery.of(context).size.width,
-       height: MediaQuery.of(context).size.height * .42,
-       alignment: Alignment.center,
-       child:Text( context.watch<UserBankModel>().getBankName != "" &&  context.watch<UserBankModel>().getBankName != null ? 'You have no transactions at this time. Check back in a few days' : "You must link your bank account to begin donating.",
+     return GestureDetector(
+       onTap: () {
+         _transactionsContTextClick();
+       },
+       child: Container(
+         width: MediaQuery.of(context).size.width,
+         height: MediaQuery.of(context).size.height * .42,
+         alignment: Alignment.center,
+         child:Text(
+           _transactionsContText(),
            textAlign: TextAlign.center,
-       )
+         )
+       ),
      );
     }
     return ListView.separated(
@@ -576,6 +585,41 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     _getOrgInfo();
     _getProfDetails();
   }
+
+  String _transactionsContText() {
+    if (context
+        .watch<UserBankModel>()
+        .getBankName == "" || context
+        .watch<UserBankModel>()
+        .getBankName == null) {
+      return "You must link a payment method to begin donating.";
+    } else if (context
+        .watch<UserBankModel>()
+        .getCards.length == 0) {
+      return "You must link a round-up method in the accounts overview page";
+    } else {
+      return 'You have no transactions at this time. Check back in a few days';
+    }
+  }
+
+  void _transactionsContTextClick() {
+    if (context
+        .read<UserBankModel>()
+        .getBankName == "" || context
+        .read<UserBankModel>()
+        .getBankName == null) {
+      Future<void>.delayed(Duration(milliseconds: 100), () {
+        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => LinkCredit()));
+      });
+    } else if (context
+        .read<UserBankModel>()
+        .getCards.length == 0) {
+      Future<void>.delayed(Duration(milliseconds: 100), () {
+        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => LinkBank()));
+      });
+    }
+  }
+
   void _showDialog() {
     // flutter defined function
     showDialog(
@@ -642,4 +686,3 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 }
-

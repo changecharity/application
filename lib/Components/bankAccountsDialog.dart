@@ -1,10 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:change_charity_components/change_charity_components.dart';
 import '../Models/userBankModel.dart';
-import 'passwordDialog.dart';
 import 'changeAccountDialog.dart';
+import '../Pages/linkBank.dart';
 
 class BankAccountsDialog extends StatefulWidget {
   _BankAccountDialogState createState() => _BankAccountDialogState();
@@ -102,42 +104,43 @@ class _BankAccountDialogState extends State<BankAccountsDialog> with SingleTicke
             ),
           ),
           first ? Wrap(
+            alignment: WrapAlignment.center,
             children: [
               Padding(
                 padding: EdgeInsets.only(top: 10, left: 30, bottom: 20),
                 child: GestureDetector(
                   onTap: (){
-                    showDialog(context: context,
-                        builder: (context) =>
-                            PasswordDialog("change"),
-                        barrierDismissible: true);
+                    Navigator.pushAndRemoveUntil(
+                        context, PageRouteBuilder(pageBuilder: (_, __, ___) => LinkBank()), (
+                        route) => false);
                     },
                   child: Text(
-                    'Change Account',
+                    'Change Card',
                     style: TextStyle(
                       decoration: TextDecoration.underline
                     ),
                   ),
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.only(top: 10, left: 30, bottom: 20),
-                child: GestureDetector(
-                  onTap: (){
-                    showDialog(context: context,
-                        builder: (context) =>
-                            PasswordDialog("unlink"),
-                        barrierDismissible: true);
-                  },
-                  child: Text(
-                    'Delete Account',
-                    style: TextStyle(
-                      decoration: TextDecoration.underline,
-                      color: Colors.red,
-                    ),
-                  ),
-                ),
-              ),
+//              todo: add delete method
+//              Padding(
+//                padding: EdgeInsets.only(top: 10, left: 30, bottom: 20),
+//                child: GestureDetector(
+//                  onTap: (){
+//                    showDialog(context: context,
+//                        builder: (context) =>
+//                            PasswordDialog("unlink"),
+//                        barrierDismissible: true);
+//                  },
+//                  child: Text(
+//                    'Delete Card',
+//                    style: TextStyle(
+//                      decoration: TextDecoration.underline,
+//                      color: Colors.red,
+//                    ),
+//                  ),
+//                ),
+//              ),
             ],
           ) : Container(),
         ],
@@ -154,11 +157,11 @@ class _BankAccountDialogState extends State<BankAccountsDialog> with SingleTicke
             if (idx < userBank.getCards.length + 1) {
               print(userBank.getCards);
               return _bankCard(
-                idx == 0 ? Icons.business : Icons.credit_card,
-                idx == 0 ? 'Checking' : 'Credit Card',
+                idx == 0 ? Icons.credit_card : Icons.business,
+                idx == 0 ? 'Payment Method' : 'Round-Up Method',
                 idx == 0 ? userBank.getMask : userBank.getCards[idx-1]["mask"],
                 idx == 0 ? userBank.getBankName : userBank.getCards[idx-1]["bankName"],
-                idx == 0 ? true : false,
+                idx == 0 ? false : false,
               );
             }
             return Container(
@@ -166,7 +169,7 @@ class _BankAccountDialogState extends State<BankAccountsDialog> with SingleTicke
               margin: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.20, vertical: 30),
               child: MaterialButton(
                 onPressed: (){
-                  showDialog(context:context, builder:(context)=>ChangeAccDialog(password: "", action: "new",), barrierDismissible: true);
+                  Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => LinkBank()));
                 },
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -179,7 +182,7 @@ class _BankAccountDialogState extends State<BankAccountsDialog> with SingleTicke
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(Icons.add),
-                    Text('Add Credit Card'),
+                    Text('Add Round-up Method'),
                   ],
                 ),
               ),
