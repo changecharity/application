@@ -158,7 +158,7 @@ class _BankAccountDialogState extends State<BankAccountsDialog> with SingleTicke
               print(userBank.getCards);
               return _bankCard(
                 idx == 0 ? Icons.credit_card : Icons.business,
-                idx == 0 ? 'Payment Method' : 'Round-Up Method',
+                idx == 0 ? 'Payment Method' : 'Round-Up Account',
                 idx == 0 ? userBank.getMask : userBank.getCards[idx-1]["mask"],
                 idx == 0 ? userBank.getBankName : userBank.getCards[idx-1]["bankName"],
                 idx == 0 ? false : false,
@@ -182,7 +182,7 @@ class _BankAccountDialogState extends State<BankAccountsDialog> with SingleTicke
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(Icons.add),
-                    Text('Add Round-up Method'),
+                    Text('Add Round-up Account'),
                   ],
                 ),
               ),

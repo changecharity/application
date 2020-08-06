@@ -93,7 +93,7 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
     return Container(
       margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.03, left: 20, right: 20),
       child: Text(
-        'Connect Your Round-Up Method',
+        'Connect Your Round-Up Account',
         textAlign: TextAlign.center,
         style: TextStyle(
           fontSize: 30,
@@ -245,7 +245,7 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
     return ChangeSubmitRow(
       loading: loading,
       onClick: _addAccount,
-      text: "Submit",
+      text: "Finish",
       animation: _animationC,
     );
   }
@@ -261,7 +261,7 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
         child: Container(
           alignment: Alignment.center,
           child: Text(
-            "I will connect my round-up method later",
+            "I will connect my round-up account later",
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 19,

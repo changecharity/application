@@ -108,8 +108,8 @@ class _SecurityFAQState extends State<SecurityFAQ> with SingleTickerProviderStat
                 ),
                 _questionContainer(
                   "Why do I need to link my credit card and Credit Card Account?",
-                  "Change Charity requires you to link a payment method, along with a round-up method. Your payment method is write-only, and strictly used for creating charges."
-                      " Your round-up method(s) enables us to monitor and securely round up your transactions. Your round-up method is read-only, and cannot be used to make charges."
+                  "Change Charity requires you to link a payment method, along with a round-up account. Your payment method is write-only, and strictly used for creating charges."
+                      " Your round-up account(s) enables us to monitor and securely round up your transactions. Your round-up account is read-only, and cannot be used to make charges."
                       " All charges are made to your credit card for extra security and assurance.",
                 ),
                 _questionContainer(
