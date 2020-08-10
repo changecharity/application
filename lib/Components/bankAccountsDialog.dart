@@ -1,11 +1,11 @@
-import 'dart:io';
+//import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:change_charity_components/change_charity_components.dart';
 import '../Models/userBankModel.dart';
-import 'changeAccountDialog.dart';
+//import 'changeAccountDialog.dart';
 import '../Pages/linkBank.dart';
 
 class BankAccountsDialog extends StatefulWidget {

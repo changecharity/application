@@ -35,6 +35,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
 
   AnimationController _controller;
   AnimationController _sliderController;
+  AnimationController _roundUpsControll;
   Animation<Offset> _topDown;
   Animation<Offset> _bottomUp;
   Animation<Offset>_rightToLeft;
@@ -53,6 +54,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
   var password;
 
   bool _switchVal = false;
+  bool _roundUps = true;
   int _monthLimit;
   Money _monthLimitMoney;
   int _initialSliderVal = 6000;
@@ -72,6 +74,8 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
         vsync: this, duration: Duration(milliseconds: 2000));
     _sliderController =
         AnimationController(vsync: this, duration: Duration(seconds: 1));
+    _roundUpsControll =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
 
     _topDown = Tween<Offset>(
       begin: Offset(-1.0, -2.0),
@@ -317,10 +321,14 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                                       textAlign: TextAlign.center,
                                       style: TextStyle(fontSize: 16,
                                           fontWeight: FontWeight.bold))),
+                                  Center(child: Text('Pause Round Ups',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(fontSize: 16,
+                                          fontWeight: FontWeight.bold))),
                                 ]
                             )
                         ),
-                        _widgetIndex != 3 ? IconButton(
+                        _widgetIndex != 4 ? IconButton(
                             icon: Icon(Icons.arrow_forward_ios),
                             iconSize: 16,
                             splashColor: MediaQuery
@@ -347,7 +355,8 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                         _currentOrgContent(),
                         _bankContent(),
                         _sliderContent(),
-                        _monthlyLimitContent()
+                        _monthlyLimitContent(),
+                        _pauseRoundUps(),
                       ],
                     ),
                   ]
@@ -770,9 +779,64 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
     );
   }
 
+  Widget _pauseRoundUps() {
+    return Container(
+      alignment: Alignment.topCenter,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          _pauseRoundUpsIcon(),
+        ],
+      ),
+    );
+  }
+
+  Widget _pauseRoundUpsIcon() {
+    return Container(
+      width: 100,
+//      height: 130,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Padding(padding: EdgeInsets.only(top: 30),),
+          Transform.scale(
+            scale: 2,
+            child: IconButton(
+              onPressed: () {
+                if(_roundUps) {
+                  _roundUpsControll.forward();
+                } else {
+                  _roundUpsControll.reverse();
+                }
+                setState(() {
+                  _roundUps = !_roundUps;
+                });
+                _setRoundUpStatus();
+              },
+              icon: AnimatedIcon(
+                icon: AnimatedIcons.pause_play,
+                size: 30,
+                progress: _roundUpsControll,
+              ),
+            ),
+          ),
+          Padding(padding: EdgeInsets.only(top: 50),),
+          Text(
+            _roundUps ? "Running" : "Paused",
+            style: TextStyle(
+              color: _roundUps ? Theme.of(context).textTheme.caption.color : Colors.red,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   void dispose() {
     _controller.dispose();
+    _sliderController.dispose();
+    _roundUpsControll.dispose();
     super.dispose();
   }
 
@@ -791,7 +855,6 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                         .of(context)
                         .size
                         .height,
-//                margin:EdgeInsets.only(bottom:MediaQuery.of(context).size.height*.10),
                     child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
@@ -840,6 +903,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
       threshold = threshDecode;
       mask = decodedMask; //== null ? "0000" : decodedMask;
       bankName = decodedResponse["bankName"];
+      _roundUps = decodedResponse["roundUpStatus"] == null ? false : true;
       profileLetter = decodedPL != null ? decodedPL[0] : "A";
       _sliderController.value =
           (threshDecode * 2 - 100) / 100 + (threshDecode == 50 ? 0.01 : 0);
@@ -857,6 +921,10 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
     print("cards are $cards");
     //notify provider of mask and bankName
     context.read<UserBankModel>().notify(mask, bankName, profileLetter, cards);
+    if(!_roundUps) {
+      print("no rounds");
+      _roundUpsControll.forward();
+    }
   }
 
   //if the user provider is not filled, we have to make an api call here to get info
@@ -908,6 +976,12 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
     print(_monthLimit);
   }
 
+  _setRoundUpStatus() async {
+    var content = '{"user_token":"$token", "status":$_roundUps}';
+    await http.post(
+        "${cfg.getString("host")}/users/updateroundupstatus", body: content);
+    print(_roundUps);
+  }
 
   void _logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:change_charity_components/change_charity_components.dart';
 import 'package:plaid_flutter/plaid_flutter.dart';
@@ -120,7 +121,7 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
     return GestureDetector(
       onTap: () {
         if(plaidPublicToken == null || plaidPublicToken == ''){
-          if(plaidGenToken != null) {
+          if(plaidGenToken != null && plaidGenToken != "") {
             _plaidLinkToken.open();
           } else {
             setState(() {
@@ -318,27 +319,28 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
   @override
   void dispose() {
     _controller.dispose();
+    controllerC.dispose();
     super.dispose();
   }
 
   Future<void> _getToken() async {
+    var device;
+    if(Platform.isAndroid) {
+      device = "android";
+    } else {
+      device = "ios";
+    }
+
+    print(device);
+
     SharedPreferences prefs=await SharedPreferences.getInstance();
     token=prefs.getString('token');
-    var content = '{"user_token":"$token"}';
+    var content = '{"user_token":"$token", "device":"$device"}';
     var response = await http.post("${cfg.getString("host")}/users/createlinktoken", body: content);
     var decodedRes = jsonDecode(response.body);
     setState(() {
       plaidGenToken = decodedRes["linkToken"];
     });
-  }
-
-  void _linkCard() async {
-    if(plaidPublicToken == '' || plaidPublicToken == null){
-      setState(() {
-        _plaidErr = 'Click here to link your credit card account';
-      });
-      return;
-    }
   }
 
   void _chooseLater() async{
@@ -348,9 +350,8 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
   }
 
   Future<void> _setPlaid() async{
-    print("dopes");
     await _getToken();
-    print(plaidGenToken);
+    print("plaid gen token is $plaidGenToken");
 
     setState(() {
       LinkConfiguration linkTokenConfiguration = LinkConfiguration(
@@ -363,7 +364,6 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
         onEvent: _onEventCallback,
         onExit: _onExitCallback,
       );
-
     });
   }
 

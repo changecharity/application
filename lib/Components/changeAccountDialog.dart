@@ -346,33 +346,33 @@ class _ChangeAccDialogState extends State<ChangeAccDialog>with SingleTickerProvi
     }
   }
 
-  _onSuccess (publicToken, metadata) {
-    var account;
-    var accounts=metadata["accounts"];
-    String type = widget.action == "update" ? "checking" : "credit card";
-
-    for(int i=0; i<accounts.length; i++){
-      if(accounts[i]["subtype"]==type){
-        account=accounts[i];
-        print(account);
-      }
-    }
-    if(account == null) {
-      setState(() {
-        _plaidErr = "You must link a ${widget.action == 'update' ? 'Checking' : 'Credit Card'} Account";
-      });
-      return;
-    }
-
-    print(metadata.toString());
-
-    setState(() {
-      plaidToken = publicToken;
-    });
-    accountId=(account["id"]);
-    mask = int.parse(account["mask"]);
-    bankName = metadata["institution_name"];
-
-    print("data is $accountId, $mask, $bankName");
-  }
+//  _onSuccess (publicToken, metadata) {
+//    var account;
+//    var accounts=metadata["accounts"];
+//    String type = widget.action == "update" ? "checking" : "credit card";
+//
+//    for(int i=0; i<accounts.length; i++){
+//      if(accounts[i]["subtype"]==type){
+//        account=accounts[i];
+//        print(account);
+//      }
+//    }
+//    if(account == null) {
+//      setState(() {
+//        _plaidErr = "You must link a ${widget.action == 'update' ? 'Checking' : 'Credit Card'} Account";
+//      });
+//      return;
+//    }
+//
+//    print(metadata.toString());
+//
+//    setState(() {
+//      plaidToken = publicToken;
+//    });
+//    accountId=(account["id"]);
+//    mask = int.parse(account["mask"]);
+//    bankName = metadata["institution_name"];
+//
+//    print("data is $accountId, $mask, $bankName");
+//  }
 }

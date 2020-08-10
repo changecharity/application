@@ -19,7 +19,6 @@ import 'Search.dart';
 import 'profile.dart';
 import 'login.dart';
 import '../Models/userBankModel.dart';
-import '../Components/bankAccountsDialog.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -226,6 +225,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         child: Icon(
                           Icons.search,
                           size: 60,
+                          color: Colors.white,
                         ),
                       ),
                     ),
