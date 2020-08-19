@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:change/Models/userProfileModel.dart';
 import 'package:change/Pages/linkBank.dart';
 import 'package:change/Pages/linkCredit.dart';
 import 'package:change_charity_components/change_charity_components.dart';
@@ -16,7 +17,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:global_configuration/global_configuration.dart';
 
 import 'Search.dart';
-import 'profile.dart';
+import 'newPofile.dart';
 import 'login.dart';
 import '../Models/userBankModel.dart';
 
@@ -124,13 +125,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 _controller.animateBack(0, duration: Duration(milliseconds: 800));
                 await _paintController.animateBack(0,duration: Duration(milliseconds: 1000));
                 Future<void>.delayed(Duration(milliseconds: 100), (){
-                  Navigator.pushReplacement(context, PageRouteBuilder(pageBuilder: (_, __, ___) => Profile()));
+                  Navigator.pushReplacement(context, PageRouteBuilder(pageBuilder: (_, __, ___) => NewProfile()));
                 });
               },
-              child: Consumer<UserBankModel>(
-                builder: (context, userBank, child){
+              child: Consumer<UserProfileModel>(
+                builder: (context, userPF, child){
                   return Text(
-                    userBank.getPfLetter.toUpperCase(),
+                    userPF.getUserPfLetter,
                     style:TextStyle(fontSize: 24, color:Colors.white, fontWeight: FontWeight.bold),
                   );
                 },
@@ -157,7 +158,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 _controller.animateBack(0, duration: Duration(milliseconds: 800));
                 await _paintController.animateBack(0,duration: Duration(milliseconds: 800));
                 Future<void>.delayed(Duration(milliseconds: 30), (){
-                  Navigator.pushReplacement(context, PageRouteBuilder(pageBuilder: (_, __, ___) => Profile()));
+                  Navigator.pushReplacement(context, PageRouteBuilder(pageBuilder: (_, __, ___) => NewProfile()));
                 });
               },
               child: Transform.scale(
@@ -407,7 +408,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final bool isLight =  MediaQuery.of(context).platformBrightness == Brightness.light;
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      systemNavigationBarColor: isLight ? Colors.grey[50] : Colors.grey[900],
+      systemNavigationBarColor: isLight ? Colors.grey[100] : Colors.grey[900],
       systemNavigationBarIconBrightness: isLight ? Brightness.dark : Brightness.light,
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: isLight ? Brightness.dark : Brightness.light,
@@ -571,12 +572,16 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     var decodedMask = decodedRes["mask"].toString();
     var decodedPL = decodedRes["legalName"];
     var mask = decodedMask == null ? "0000" : decodedMask;
+    var threshDecode = decodedRes["threshold"];
     var bankName=decodedRes["bankName"];
     var profileLetter = decodedPL != null ? decodedPL[0] : "A";
     List cards = decodedRes["cards"];
+    var monthlyLimit = decodedRes["monthlyLimit"];
+    var roundUps = decodedRes["roundUpStatus"] == null ? false : true;
     //notify provider of mask and bankName
 
-    context.read<UserBankModel>().notify(mask, bankName, profileLetter, cards);
+    context.read<UserBankModel>().notify(mask, bankName, cards);
+    context.read<UserProfileModel>().notify(profileLetter, decodedPL, threshDecode, monthlyLimit, roundUps);
   }
 
   _getAllInfo() async{

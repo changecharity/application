@@ -1,3 +1,4 @@
+import 'package:change/Models/userProfileModel.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'app.dart';
@@ -10,6 +11,7 @@ void main(){
       providers: [
         ChangeNotifierProvider(create: (context) => UserOrgModel()),
         ChangeNotifierProvider(create: (context) => UserBankModel()),
+        ChangeNotifierProvider(create: (context) => UserProfileModel()),
       ],
       child:Change()
     ),

@@ -197,7 +197,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
             child: Text(
               "Don't have an account?",
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 16,
               ),
             ),
           ),
@@ -211,8 +211,9 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
               child: Text(
                 'Sign Up',
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: 22,
                   fontWeight: FontWeight.bold,
+                  color: Colors.lightBlue[400],
                 ),
               ),
             ),

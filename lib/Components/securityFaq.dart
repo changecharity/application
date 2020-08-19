@@ -84,7 +84,7 @@ class _SecurityFAQState extends State<SecurityFAQ> with SingleTickerProviderStat
         backgroundColor: MediaQuery.of(context).platformBrightness == Brightness.light ? Colors.grey[50] : Colors.grey[850],
         elevation: 0,
         centerTitle: true,
-        title: Text("Security Overview"),
+        title: Text("FAQ"),
         iconTheme: IconThemeData(
           color: MediaQuery.of(context).platformBrightness == Brightness.light ? Colors.black : Colors.white,
         ),

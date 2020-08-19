@@ -166,17 +166,16 @@ class _BankAccountDialogState extends State<BankAccountsDialog> with SingleTicke
             }
             return Container(
               alignment: Alignment.center,
-              margin: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.20, vertical: 30),
+              margin: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.17, vertical: 30),
               child: MaterialButton(
+                padding: EdgeInsets.symmetric(vertical: 10),
+                elevation: 10,
+                color: MediaQuery.of(context).platformBrightness == Brightness.light ? Colors.white : Colors.grey[900],
                 onPressed: (){
                   Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => LinkBank()));
                 },
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(5)),
-                  side: BorderSide(
-                    style: BorderStyle.solid,
-                    color: MediaQuery.of(context).platformBrightness == Brightness.light ? Colors.black : Colors.white,
-                  )
+                  borderRadius: BorderRadius.all(Radius.circular(7)),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -216,5 +215,11 @@ class _BankAccountDialogState extends State<BankAccountsDialog> with SingleTicke
           ),
         ),
     );
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 }
