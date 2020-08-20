@@ -603,7 +603,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         .getCards.length == 0) {
       return "You must link a round-up method in the accounts overview page";
     } else {
-      return 'You have no transactions at this time. Check back in a few days';
+      return 'Everything is connected properly, and Change Charity will email you a receipt at the end of the month. It might take up to 48 hours for your transactions to begin processing.';
     }
   }
 
