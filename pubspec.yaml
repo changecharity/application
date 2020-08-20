@@ -37,8 +37,8 @@ dependencies:
   flutter_swiper: ^1.1.6
   sleek_circular_slider : ^1.1.0
   package_info: ^0.4.0+16
-  change_charity_components:
-    path: ../change_charity_components
+  change_charity_components: 0.0.8
+#    path: ../change_charity_components
 
 dev_dependencies:
   flutter_test:
