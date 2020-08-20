@@ -123,7 +123,7 @@ class _SecurityFAQState extends State<SecurityFAQ> with SingleTickerProviderStat
                   "After you link your payment method, you can add as many Credit Card Accounts as you like."
                 ),
                 _questionContainer(
-                  "Are my donation tax deductible?",
+                  "Are my donations tax deductible?",
                   "Every donation you make to a charity through Change Charity is fully tax deductible. At the end of every month, we will email you a receipt of all your months donations.",
                 ),
               ],
