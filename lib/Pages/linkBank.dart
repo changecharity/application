@@ -146,7 +146,7 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
     return Container(
       margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.04, bottom: 15),
       child: Text(
-        'Connect your Payment Method',
+        'Connect Your Credit Card Account',
         textAlign: TextAlign.center,
         style: TextStyle(
           fontSize: 21,
@@ -169,7 +169,7 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
                 fontSize: 14.5,
                 color: Theme.of(context).textTheme.caption.color,
               ),
-              text: 'To enable Change Charity to process your round-ups, link a Credit Card Account. This information is secured and protected by ',
+              text: 'To enable Change Charity to compute your round-ups, link a Credit Card Account. This information is secured and protected by ',
             ),
             WidgetSpan(
               child: Padding(
@@ -263,7 +263,7 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
         child: Container(
           alignment: Alignment.center,
           child: Text(
-            "I will connect my round-up account later",
+            "I will connect my Credit Card Account later",
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 15,
