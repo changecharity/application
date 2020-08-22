@@ -17,7 +17,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:global_configuration/global_configuration.dart';
 
 import 'Search.dart';
-import 'newPofile.dart';
+import 'profile.dart';
 import 'login.dart';
 import '../Models/userBankModel.dart';
 
@@ -125,7 +125,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 _controller.animateBack(0, duration: Duration(milliseconds: 800));
                 await _paintController.animateBack(0,duration: Duration(milliseconds: 1000));
                 Future<void>.delayed(Duration(milliseconds: 100), (){
-                  Navigator.pushReplacement(context, PageRouteBuilder(pageBuilder: (_, __, ___) => NewProfile()));
+                  Navigator.pushReplacement(context, PageRouteBuilder(pageBuilder: (_, __, ___) => ProfilePage()));
                 });
               },
               child: Consumer<UserProfileModel>(
@@ -158,7 +158,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 _controller.animateBack(0, duration: Duration(milliseconds: 800));
                 await _paintController.animateBack(0,duration: Duration(milliseconds: 800));
                 Future<void>.delayed(Duration(milliseconds: 30), (){
-                  Navigator.pushReplacement(context, PageRouteBuilder(pageBuilder: (_, __, ___) => NewProfile()));
+                  Navigator.pushReplacement(context, PageRouteBuilder(pageBuilder: (_, __, ___) => ProfilePage()));
                 });
               },
               child: Transform.scale(
@@ -603,7 +603,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         .getCards.length == 0) {
       return "You must link a round-up method in the accounts overview page";
     } else {
-      return 'Everything is connected properly, and Change Charity will email you a receipt at the end of the month. It might take up to 48 hours for your transactions to begin processing.';
+      return 'Everything is connected properly, and Change Charity will email you a receipt at the end of the month. It may take up to 48 hours for your transactions to begin processing.';
     }
   }
 

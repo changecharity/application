@@ -95,108 +95,109 @@ class _LinkCreditState extends State<LinkCredit> with TickerProviderStateMixin{
 
   }
 
-  Widget _linkBankText() {
+  Widget _securedBy() {
     return Container(
-      margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.03, left: 20, right: 20),
+      margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.05),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.lock_outline),
+          Text(
+            " Secured by "
+          ) ,
+          Padding(
+            padding: EdgeInsets.only(top: 3),
+            child: Image.asset(
+              "images/stripe-logo.png",
+              alignment: Alignment.bottomCenter,
+              height: 17,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _icon() {
+    return GestureDetector(
+      onTap: () => _openCredit(),
+      child: Container(
+        margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.05),
+        child: Container(
+          width: 115,
+          height: 115,
+          decoration: BoxDecoration(
+            color: Theme.of(context).brightness == Brightness.light ? Colors.grey[100] : Colors.grey[900],
+            boxShadow:  [BoxShadow(
+                color: MediaQuery
+                    .of(context)
+                    .platformBrightness == Brightness.light ? Colors
+                    .grey[300] : Colors.grey[700],
+                offset: Offset.fromDirection(1),
+                blurRadius: 15),
+            ],
+            shape: BoxShape.circle,
+          ),
+          child: Icon(
+            Icons.credit_card,
+            size: 50,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _linkYourText() {
+    return Container(
+      margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.04, bottom: 15),
       child: Text(
-        'Connect Your Payment Method',
+        'Link your Payment Method',
         textAlign: TextAlign.center,
         style: TextStyle(
-          fontSize: 30,
+          fontSize: 21,
+          fontWeight: FontWeight.bold,
         ),
       ),
     );
   }
 
-  Widget _reasonText() {
+  Widget _explainText() {
     return Container(
-      margin: EdgeInsets.fromLTRB(30, MediaQuery.of(context).size.height*0.04,30,0),
-      child: Text(
-        'Link your credit card so you can be charged for your donations.',
+      margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.001, left: MediaQuery.of(context).size.width* 0.1, right: MediaQuery.of(context).size.width* 0.1),
+      child: RichText(
         textAlign: TextAlign.justify,
-        style: TextStyle(
-          fontSize: 20,
-          wordSpacing: 2,
-        ),
-      ),
-    );
-  }
-
-  Widget _plaidButton() {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          FocusScope.of(context).unfocus();
-          _plaidErr='';
-        });
-        if (_paymentMethodId == null || _paymentMethodId == '') {
-          _openCredit();
-          Future.delayed(const Duration(milliseconds: 500), () {
-            setState(() {
-              _paymentMethodId = '';
-            });
-          });
-        }
-      },
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        height: 60,
-        margin: EdgeInsets.only(right: 20, left: 20, top: MediaQuery.of(context).size.height * 0.07),
-        decoration: BoxDecoration(
-          color:  MediaQuery.of(context).platformBrightness == Brightness.light ? Colors.white : Colors.black,
-          borderRadius: BorderRadius.all(Radius.circular(30)),
-          boxShadow: [
-            BoxShadow(
-              color: MediaQuery.of(context).platformBrightness == Brightness.light ?  Colors.grey[350] : Colors.grey[600],
-              blurRadius: 20.0,
-              offset: Offset.fromDirection(0.9),
+        text: TextSpan(
+          children: [
+            TextSpan(
+              style: TextStyle(
+                height: 1.5,
+                fontSize: 15,
+                color: Theme.of(context).textTheme.caption.color,
+              ),
+              text:'To donate your round-ups, link a credit card to your Change Charity Account. This information is secured and protected by ',
+            ),
+            WidgetSpan(
+              child: Padding(
+                padding: EdgeInsets.only(bottom: 0),
+                child: Image.asset(
+                  "images/stripe-logo.png",
+                  alignment: Alignment.bottomCenter,
+                  height: 16,
+                ),
+              ),
+            ),
+            TextSpan(
+              style: TextStyle(
+                height: 1.5,
+                fontSize: 15,
+                color: Theme.of(context).textTheme.caption.color,
+              ),
+              text:'.',
             ),
           ],
         ),
-        child: Row(
-          children: <Widget>[
-            _linkIcon(),
-            _plaidStatus(),
-          ],
-        ),
       ),
     );
-  }
-
-  Widget _linkIcon() {
-    return Container(
-      margin: EdgeInsets.only(left: 25, right: 15),
-      child: Icon(
-        Icons.link,
-        size: 20,
-      ),
-    );
-  }
-
-  //Changes on account connection or disconnect
-  Widget _plaidStatus() {
-    if (_paymentMethodId != '' && _paymentMethodId != null) {
-      return Text(
-        'Connected',
-        style: TextStyle(
-          color: Colors.green,
-        ),
-      );
-    } else if (_paymentMethodId == null) {
-      return Text(
-        'Link Your Credit Card',
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-        ),
-      );
-    } else {
-      return Text(
-        'Not Connected',
-        style: TextStyle(
-          color: Colors.red,
-        ),
-      );
-    }
   }
 
   Widget _errCont() {
@@ -223,7 +224,7 @@ class _LinkCreditState extends State<LinkCredit> with TickerProviderStateMixin{
 
   Widget _whySecure() {
     return Container(
-      margin: EdgeInsets.only(left: 45, top: 10),
+      margin: EdgeInsets.only(left: MediaQuery.of(context).size.width *0.1, top: 40),
       alignment: Alignment.centerLeft,
       child: GestureDetector(
         onTap: () {
@@ -235,7 +236,7 @@ class _LinkCreditState extends State<LinkCredit> with TickerProviderStateMixin{
           ));
         },
         child: Text(
-          "Why am I linking a payment method?",
+          "Security FAQ",
           style: TextStyle(
             decoration: TextDecoration.underline,
             fontSize: 15,
@@ -249,14 +250,14 @@ class _LinkCreditState extends State<LinkCredit> with TickerProviderStateMixin{
     return ChangeSubmitRow(
       loading: loading,
       onClick: _linkAccount,
-      text: "Next Step",
+      text: _paymentMethodId == "" || _paymentMethodId == null ? "Link" : "Loading",
       animation: _animationC,
     );
   }
 
   Widget _skipText() {
     return Container(
-      margin: EdgeInsets.only(top: 0, bottom: MediaQuery.of(context).size.height < 650 ? 40: 40, left: 30, right: 30),
+      margin: EdgeInsets.only(top: 0, bottom: MediaQuery.of(context).size.height < 650 ? 20: 30, left: 30, right: 30),
       alignment: Alignment.bottomCenter,
       child: GestureDetector(
         onTap: () {
@@ -268,7 +269,7 @@ class _LinkCreditState extends State<LinkCredit> with TickerProviderStateMixin{
             "I will connect my payment method later",
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 19,
+              fontSize: 15,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -292,28 +293,31 @@ class _LinkCreditState extends State<LinkCredit> with TickerProviderStateMixin{
         elevation: 0,
       ),
       backgroundColor: MediaQuery.of(context).platformBrightness == Brightness.light ? Colors.grey[50] : Colors.grey[850],
-      body: SafeArea(
-        child:SlideTransition(
+      body: Material(
+        child: SafeArea(
+          child:SlideTransition(
             position:_rightToLeft,
             child:Container(
               height:MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
-              child:Column(
+              child: Column(
                   mainAxisAlignment:MainAxisAlignment.start,
                   children: <Widget>[
-//                    SlideTransition(position:_topDown, child:_secureText()),
-                    SlideTransition(position:_topDown, child: _linkBankText()),
-                    _reasonText(),
-                    _plaidButton(),
-                    _errCont(),
+                    SlideTransition(position:_topDown, child: _securedBy()),
+                    Expanded(child: Container(),),
+                    _icon(),
+                    _linkYourText(),
+                    _explainText(),
                     _whySecure(),
                     Expanded(child: Container(),),
                     SlideTransition(position:_bottomUp, child: _submitCont()),
+                    _errCont(),
                     Expanded(child: Container(),),
                     SlideTransition(position:_bottomUp, child: _skipText()),
                   ]
               ),
-            )
+            ),
+          ),
         ),
       ),
     );
@@ -325,12 +329,26 @@ class _LinkCreditState extends State<LinkCredit> with TickerProviderStateMixin{
     super.dispose();
   }
 
-  void _openCredit() async {
+  Future _openCredit() async {
+    FocusScope.of(context).unfocus();
+    setState(() {
+      _plaidErr='';
+    });
+    if (_paymentMethodId == null || _paymentMethodId == '') {
+      Future.delayed(const Duration(milliseconds: 500), () {
+        setState(() {
+          _paymentMethodId = '';
+        });
+      });
+    }
+
     var paymentResponse = await _stripePayment.addPaymentMethod();
+
     setState(() {
       if (paymentResponse.status ==
           PaymentResponseStatus.succeeded) {
         _paymentMethodId = paymentResponse.paymentMethodId;
+        loading = true;
         _checkAndApply();
       } else {
         _plaidErr = "Invalid card";
@@ -354,23 +372,24 @@ class _LinkCreditState extends State<LinkCredit> with TickerProviderStateMixin{
       setState(() {
         _plaidErr ="Issue verifying your card. Please try a different card.";
         _paymentMethodId = '';
+        loading = false;
       });
     } else {
       _plaidErr ="Issue verifying your card at this time. Either try a different card, or try again later.";
+      loading = false;
     }
   }
 
-  void _linkAccount() async {
+  Future _linkAccount() async {
+    await _openCredit();
+
     if(_paymentMethodId == '' || _paymentMethodId == null){
       setState(() {
         _plaidErr = 'Click here to link your card';
+        loading = false;
       });
       return;
     }
-
-    setState(() {
-      loading = true;
-    });
 
     SharedPreferences prefs=await SharedPreferences.getInstance();
     token=prefs.getString('token');

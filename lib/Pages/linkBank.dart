@@ -90,110 +90,109 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
     });
   }
 
-  Widget _linkBankText() {
+  Widget _securedBy() {
     return Container(
-      margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.03, left: 20, right: 20),
+      margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.05),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.lock_outline),
+          Text(
+              " Secured by "
+          ) ,
+          Padding(
+            padding: EdgeInsets.only(top: 3),
+            child: Image.asset(
+              Theme.of(context).brightness == Brightness.light ? "images/plaid-logo.png" : "images/plaid-logo-white.png",
+              alignment: Alignment.bottomCenter,
+              height: 20,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _icon() {
+    return GestureDetector(
+      onTap: () => _openPlaid(),
+      child: Container(
+        margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.05),
+        child: Container(
+          width: 115,
+          height: 115,
+          decoration: BoxDecoration(
+            color: Theme.of(context).brightness == Brightness.light ? Colors.grey[100] : Colors.grey[900],
+            boxShadow:  [BoxShadow(
+                color: MediaQuery
+                    .of(context)
+                    .platformBrightness == Brightness.light ? Colors
+                    .grey[300] : Colors.grey[700],
+                offset: Offset.fromDirection(1),
+                blurRadius: 15),
+            ],
+            shape: BoxShape.circle,
+          ),
+          child: Icon(
+            Icons.account_balance,
+            size: 50,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _linkYourText() {
+    return Container(
+      margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.04, bottom: 15),
       child: Text(
-        'Connect Your Round-Up Account',
+        'Connect your Payment Method',
         textAlign: TextAlign.center,
         style: TextStyle(
-          fontSize: 30,
+          fontSize: 21,
+          fontWeight: FontWeight.bold,
         ),
       ),
     );
   }
 
-  Widget _reasonText() {
+  Widget _explainText() {
     return Container(
-      margin: EdgeInsets.fromLTRB(30, MediaQuery.of(context).size.height*0.04,30,0),
-      child: Text(
-        'Link your credit card account so you can have your monthly transactions be rounded up.',
-        textAlign: TextAlign.left,
-        style: TextStyle(
-          fontSize: 20,
-          wordSpacing: 2,
-        ),
-      ),
-    );
-  }
-
-  Widget _plaidButton() {
-    return GestureDetector(
-      onTap: () {
-        if(plaidPublicToken == null || plaidPublicToken == ''){
-          if(plaidGenToken != null && plaidGenToken != "") {
-            _plaidLinkToken.open();
-          } else {
-            setState(() {
-              _plaidErr ='Please wait a few seconds and try again.';
-            });
-          }
-          Future.delayed(const Duration(milliseconds: 500), () {
-            setState(() {
-              plaidPublicToken = '';
-            });
-          });
-        }
-      },
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        height: 60,
-        margin: EdgeInsets.only(right: 20, left: 20, top: MediaQuery.of(context).size.height * 0.07),
-        decoration: BoxDecoration(
-          color:  MediaQuery.of(context).platformBrightness == Brightness.light ? Colors.white : Colors.black,
-          borderRadius: BorderRadius.all(Radius.circular(30)),
-          boxShadow: [
-            BoxShadow(
-              color: MediaQuery.of(context).platformBrightness == Brightness.light ?  Colors.grey[350] : Colors.grey[600],
-              blurRadius: 20.0,
-              offset: Offset.fromDirection(0.9),
+      margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.001, left: MediaQuery.of(context).size.width* 0.1, right: MediaQuery.of(context).size.width* 0.1),
+      child: RichText(
+        textAlign: TextAlign.justify,
+        text: TextSpan(
+          children: [
+            TextSpan(
+              style: TextStyle(
+                height: 1.5,
+                fontSize: 14.5,
+                color: Theme.of(context).textTheme.caption.color,
+              ),
+              text: 'To enable Change Charity to process your round-ups, link a Credit Card Account. This information is secured and protected by ',
+            ),
+            WidgetSpan(
+              child: Padding(
+                padding: EdgeInsets.only(bottom: 0),
+                child: Image.asset(
+                  Theme.of(context).brightness == Brightness.light ? "images/plaid-logo.png" : "images/plaid-logo-white.png",
+                  alignment: Alignment.bottomCenter,
+                  height: 16,
+                ),
+              ),
+            ),
+            TextSpan(
+              style: TextStyle(
+                height: 1.5,
+                fontSize: 15,
+                color: Theme.of(context).textTheme.caption.color,
+              ),
+              text:'.',
             ),
           ],
         ),
-        child: Row(
-          children: <Widget>[
-            _linkIcon(),
-            _plaidStatus(),
-          ],
-        ),
       ),
     );
-  }
-
-  Widget _linkIcon() {
-    return Container(
-      margin: EdgeInsets.only(left: 25, right: 15),
-      child: Icon(
-        Icons.link,
-        size: 20,
-      ),
-    );
-  }
-
-  //Changes on account connection or disconnect
-  Widget _plaidStatus() {
-    if (plaidPublicToken != '' && plaidPublicToken != null) {
-      return Text(
-        'Connected',
-        style: TextStyle(
-          color: Colors.green,
-        ),
-      );
-    } else if (plaidPublicToken == null) {
-      return Text(
-        'Link Your Credit Card Account',
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-        ),
-      );
-    } else {
-      return Text(
-        'Not Connected',
-        style: TextStyle(
-          color: Colors.red,
-        ),
-      );
-    }
   }
 
   Widget _errCont() {
@@ -220,7 +219,7 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
 
   Widget _whySecure() {
     return Container(
-      margin: EdgeInsets.only(left: 45, top: 10),
+      margin: EdgeInsets.only(left: MediaQuery.of(context).size.width *0.1, top: 40),
       alignment: Alignment.centerLeft,
       child: GestureDetector(
         onTap: () {
@@ -242,18 +241,20 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
     );
   }
 
+
   Widget _submitCont() {
     return ChangeSubmitRow(
       loading: loading,
-      onClick: _addAccount,
-      text: "Finish",
+      onClick: _openPlaid,
+      text: plaidPublicToken == "" || plaidPublicToken == null ? "Connect" : "Loading",
       animation: _animationC,
     );
   }
 
+
   Widget _skipText() {
     return Container(
-      margin: EdgeInsets.only(top: 0, bottom: MediaQuery.of(context).size.height < 650 ? 40: 40, left: 30, right: 30),
+      margin: EdgeInsets.only(top: 0, bottom: MediaQuery.of(context).size.height < 650 ? 20: 30, left: 30, right: 30),
       alignment: Alignment.bottomCenter,
       child: GestureDetector(
         onTap: () {
@@ -265,7 +266,7 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
             "I will connect my round-up account later",
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 19,
+              fontSize: 15,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -273,7 +274,6 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
       ),
     );
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -298,14 +298,15 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
               child:Column(
                   mainAxisAlignment:MainAxisAlignment.start,
                   children: <Widget>[
-//                    SlideTransition(position:_topDown, child:_secureText()),
-                    SlideTransition(position:_topDown, child: _linkBankText()),
-                    _reasonText(),
-                    _plaidButton(),
-                    _errCont(),
+                    SlideTransition(position:_topDown, child: _securedBy()),
+                    Expanded(child: Container(),),
+                    _icon(),
+                    _linkYourText(),
+                    _explainText(),
                     _whySecure(),
                     Expanded(child: Container(),),
                     SlideTransition(position:_bottomUp, child: _submitCont()),
+                    _errCont(),
                     Expanded(child: Container(),),
                     SlideTransition(position:_bottomUp, child: _skipText()),
                   ]
@@ -321,6 +322,23 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
     _controller.dispose();
     controllerC.dispose();
     super.dispose();
+  }
+
+  Future<void> _openPlaid() async {
+    if(plaidPublicToken == null || plaidPublicToken == ''){
+      if(plaidGenToken != null && plaidGenToken != "") {
+        _plaidLinkToken.open();
+      } else {
+        setState(() {
+          _plaidErr ='Please wait a few seconds and try again.';
+        });
+      }
+      Future.delayed(const Duration(milliseconds: 500), () {
+        setState(() {
+          plaidPublicToken = '';
+        });
+      });
+    }
   }
 
   Future<void> _getToken() async {
@@ -397,10 +415,12 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
 
     setState(() {
       plaidPublicToken = publicToken;
+      loading = true;
     });
 
     print(bankName);
 
+    _addAccount();
   }
 
   void _onEventCallback(event, metadata) {
@@ -414,7 +434,7 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
   bool _checkValidPlaid(){
     if(plaidPublicToken==null|| plaidPublicToken==''){
       setState(() {
-        _plaidErr="Click here to link your credit card account";
+        _plaidErr="Click here to connect your credit card account";
       });
       return false;
     }
@@ -427,10 +447,6 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
       return;
     }
 
-    setState(() {
-      loading=!loading;
-    });
-
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token');
     print(token);
@@ -440,7 +456,7 @@ class _LinkBankState extends State<LinkBank> with TickerProviderStateMixin{
 
     print(response.body);
     setState(() {
-      loading = !loading;
+      loading = false;
     });
     if (response.body.contains('no rows in')){
       setState(() {

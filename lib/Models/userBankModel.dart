@@ -11,7 +11,7 @@ class UserBankModel extends ChangeNotifier{
   List get getCards=> _cards;
 
   void notify(String mask, String name, List cards){
-    _mask=mask;
+    _mask=convertMask(mask);
     _bankName=name == null ? null : titleCase(name);
     _cards= cards == null ? [] : cards;
     notifyListeners();
@@ -21,12 +21,17 @@ class UserBankModel extends ChangeNotifier{
 /// My way of capitalizing each word in a string.
 String titleCase(String text) {
   if (text == null) throw ArgumentError("string: $text");
-
   if (text.isEmpty) return text;
-
-  /// If you are careful you could use only this part of the code as shown in the second option.
   return text
       .split(' ')
       .map((word) => word[0].toUpperCase() + word.substring(1))
       .join(' ');
+}
+
+String convertMask(String mask) {
+  if (mask == null) throw ArgumentError("mask: $mask");
+  for( var i = 0 ; i < 4 - mask.length; i++) {
+    mask = "0" + mask;
+  }
+  return mask;
 }

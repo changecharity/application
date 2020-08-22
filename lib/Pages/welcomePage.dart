@@ -21,6 +21,7 @@ class _WelcomePageState extends State<WelcomePage> with TickerProviderStateMixin
   SwiperController _swiperCont = SwiperController();
 
   bool loading = false;
+  bool _last = false;
 
   void initState() {
     super.initState();
@@ -60,7 +61,23 @@ class _WelcomePageState extends State<WelcomePage> with TickerProviderStateMixin
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Container(
-          margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.04),
+          width: 180,
+          height: 180,
+          margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.05),
+          child: Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+            ),
+            child: ClipOval(
+              child: Image.asset(
+                image,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+        ),
+        Expanded(child: Container(),),
+        Container(
           child: Text(
             text,
             textAlign: TextAlign.center,
@@ -70,13 +87,7 @@ class _WelcomePageState extends State<WelcomePage> with TickerProviderStateMixin
             ),
           ),
         ),
-        Spacer(
-          flex: 5,
-        ),
-        Container(
-          margin: EdgeInsets.only(bottom: MediaQuery.of(context).size.height*0.06),
-          child: Image.asset(image),
-        ),
+        Expanded(child: Container(),),
       ],
     );
   }
@@ -121,7 +132,7 @@ class _WelcomePageState extends State<WelcomePage> with TickerProviderStateMixin
                           return _mainContent("All your sensitive data is secure and encrypted, with state of the art security.","images/clip-internet-security.png");
                           break;
                         case 2:
-                          return _mainContent("All donations are fully tax-deductible. Simply sign up, link your bank, and we'll handle the rest.","images/clip-waiting.png");
+                          return _mainContent("All donations are fully tax-deductible. Simply sign up, and we'll handle the rest.","images/clip-waiting.png");
                           break;
                         default:
                           return _mainContent("none", "images/clip-online-shopping.png");
@@ -137,13 +148,14 @@ class _WelcomePageState extends State<WelcomePage> with TickerProviderStateMixin
             SlideTransition(
               position: _buttonAnim,
               child: Padding(
-                padding: EdgeInsets.only(bottom: 20),
+                padding: EdgeInsets.only(bottom: 20, right: 20),
                 child: ChangeSubmitRow(
-                  scale: _swiperCont.index == 3 ? 0 : 1,
+                  scale: 1.1,
                   buttonColors: [Colors.blue[900], Colors.blue[900]],
                   loading: loading,
                   onClick: _next,
                   animation: _loadingCon,
+                  text: _last ? "Get Started" : "Next",
                 ),
               ),
             ),
@@ -163,7 +175,13 @@ class _WelcomePageState extends State<WelcomePage> with TickerProviderStateMixin
 
   void _next () async {
     var idx = _swiperCont.index;
+    print(idx);
     _swiperCont.move(idx == null || idx == 0 ? 1 : 2 );
+    if(idx == 1) {
+      setState(() {
+        _last = true;
+      });
+    }
     if(idx != 2) {
       return;
     }

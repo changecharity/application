@@ -163,7 +163,7 @@ class _MonthlyLimitState extends State<MonthlyLimit> with TickerProviderStateMix
                   if (!s) {
                     _monthLimit = 0;
                   } else {
-                    _monthLimit = 3000;
+                    _monthLimit = 6000;
                   }
                 });
                 _setMonthlyLimit();

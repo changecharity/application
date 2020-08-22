@@ -1,7 +1,7 @@
 import'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'unlinkAccountDialog.dart';
+import '../Components/unlinkAccountDialog.dart';
 import 'changeAccountDialog.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:change_charity_components/change_charity_components.dart';
