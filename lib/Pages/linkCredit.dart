@@ -56,7 +56,6 @@ class _LinkCreditState extends State<LinkCredit> with TickerProviderStateMixin{
     controllerC = AnimationController(
         vsync: this, duration: Duration(seconds: 1));
 
-
     _topDown = Tween<Offset>(
       begin: Offset(-1.0, -2.0),
       end:Offset(0.0,0.0),
@@ -329,18 +328,11 @@ class _LinkCreditState extends State<LinkCredit> with TickerProviderStateMixin{
     super.dispose();
   }
 
-  Future _openCredit() async {
+  Future<bool> _openCredit() async {
     FocusScope.of(context).unfocus();
     setState(() {
       _plaidErr='';
     });
-    if (_paymentMethodId == null || _paymentMethodId == '') {
-      Future.delayed(const Duration(milliseconds: 500), () {
-        setState(() {
-          _paymentMethodId = '';
-        });
-      });
-    }
 
     var paymentResponse = await _stripePayment.addPaymentMethod();
 
@@ -349,34 +341,43 @@ class _LinkCreditState extends State<LinkCredit> with TickerProviderStateMixin{
           PaymentResponseStatus.succeeded) {
         _paymentMethodId = paymentResponse.paymentMethodId;
         loading = true;
-        _checkAndApply();
       } else {
         _plaidErr = "Invalid card";
       }
     });
+
+    if(paymentResponse.status == PaymentResponseStatus.succeeded) {
+      print("paymentId is $_paymentMethodId");
+      await  _checkAndApply();
+    }
+
     print("payment id is: $_paymentMethodId");
   }
 
-  void _checkAndApply() async {
+  Future<bool> _checkAndApply() async {
     SharedPreferences prefs=await SharedPreferences.getInstance();
     token=prefs.getString('token');
     var content = '{"user_token":"$token"}';
     var response = await http.post("${cfg.getString("host")}/users/genephemeraltoken", body: content);
     var decodedRes = jsonDecode(response.body);
-    var intentResponse = await _stripePayment.setupPaymentIntent(
-        decodedRes["token"], _paymentMethodId);
+    var intentResponse = await _stripePayment.setupPaymentIntent(decodedRes["token"], _paymentMethodId);
+
+    print("status is: ${intentResponse.status}");
 
     if (intentResponse.status == PaymentResponseStatus.succeeded) {
       print(_paymentMethodId);
+      return true;
     } else if (intentResponse.status == PaymentResponseStatus.failed) {
       setState(() {
         _plaidErr ="Issue verifying your card. Please try a different card.";
         _paymentMethodId = '';
         loading = false;
       });
+      return false;
     } else {
       _plaidErr ="Issue verifying your card at this time. Either try a different card, or try again later.";
       loading = false;
+      return false;
     }
   }
 
@@ -385,7 +386,6 @@ class _LinkCreditState extends State<LinkCredit> with TickerProviderStateMixin{
 
     if(_paymentMethodId == '' || _paymentMethodId == null){
       setState(() {
-        _plaidErr = 'Click here to link your card';
         loading = false;
       });
       return;
