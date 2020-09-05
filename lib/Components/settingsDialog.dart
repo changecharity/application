@@ -11,7 +11,8 @@ class SettingsDialog extends StatefulWidget {
   _SettingsDialogState createState() => _SettingsDialogState();
 }
 
-class _SettingsDialogState extends State<SettingsDialog> with SingleTickerProviderStateMixin{
+class _SettingsDialogState extends State<SettingsDialog>
+    with SingleTickerProviderStateMixin {
   AnimationController controller;
   Animation<Offset> _paintAnm;
   Animation<Offset> _cardsAnm;
@@ -19,24 +20,19 @@ class _SettingsDialogState extends State<SettingsDialog> with SingleTickerProvid
   void initState() {
     super.initState();
 
-    controller = AnimationController(vsync: this, duration: Duration(seconds:  1));
+    controller =
+        AnimationController(vsync: this, duration: Duration(seconds: 1));
     _paintAnm = Tween<Offset>(
       begin: Offset(1.0, 0.0),
       end: Offset(0.0, 0.0),
     ).animate(CurvedAnimation(
-        parent: controller,
-        curve: Curves.fastLinearToSlowEaseIn
-    )
-    );
+        parent: controller, curve: Curves.fastLinearToSlowEaseIn));
 
     _cardsAnm = Tween<Offset>(
       begin: Offset(2.0, 0.0),
       end: Offset(0.0, 0.0),
     ).animate(CurvedAnimation(
-        parent: controller,
-        curve: Curves.fastLinearToSlowEaseIn
-    )
-    );
+        parent: controller, curve: Curves.fastLinearToSlowEaseIn));
 
     Future<void>.delayed(Duration(milliseconds: 500), () {
       controller.forward();
@@ -48,13 +44,12 @@ class _SettingsDialogState extends State<SettingsDialog> with SingleTickerProvid
       contentPadding: EdgeInsets.symmetric(horizontal: 30, vertical: 3),
       leading: Icon(Icons.help_outline),
       title: Text('FAQ'),
-      onTap: (){
+      onTap: () {
         Navigator.of(context).push(new MaterialPageRoute<Null>(
             builder: (BuildContext context) {
               return SecurityFAQ();
             },
-            fullscreenDialog: true
-        ));
+            fullscreenDialog: true));
       },
     );
   }
@@ -65,7 +60,7 @@ class _SettingsDialogState extends State<SettingsDialog> with SingleTickerProvid
       leading: Icon(Icons.people),
       title: Text('Contact Us'),
       subtitle: Text('Questions? Feedback? Need Help?'),
-      onTap: (){
+      onTap: () {
         launch('mailto:support@changecharity.io?subject=AppSupport');
       },
     );
@@ -76,10 +71,10 @@ class _SettingsDialogState extends State<SettingsDialog> with SingleTickerProvid
       contentPadding: EdgeInsets.symmetric(horizontal: 30, vertical: 3),
       leading: Icon(Icons.info_outline),
       title: Text('App Info'),
-      onTap: (){
-        showDialog(context: context,
-            builder: (context) =>
-                AboutChange(),
+      onTap: () {
+        showDialog(
+            context: context,
+            builder: (context) => AboutChange(),
             barrierDismissible: true);
       },
     );
@@ -105,14 +100,22 @@ class _SettingsDialogState extends State<SettingsDialog> with SingleTickerProvid
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: MediaQuery.of(context).platformBrightness == Brightness.light ? Colors.grey[50] : Colors.grey[850],
+      backgroundColor:
+          MediaQuery.of(context).platformBrightness == Brightness.light
+              ? Colors.grey[50]
+              : Colors.grey[850],
       appBar: AppBar(
-        backgroundColor: MediaQuery.of(context).platformBrightness == Brightness.light ? Colors.grey[50] : Colors.grey[850],
+        backgroundColor:
+            MediaQuery.of(context).platformBrightness == Brightness.light
+                ? Colors.grey[50]
+                : Colors.grey[850],
         elevation: 0,
         centerTitle: true,
         title: Text("Settings"),
         iconTheme: IconThemeData(
-          color: MediaQuery.of(context).platformBrightness == Brightness.light ? Colors.black : Colors.white,
+          color: MediaQuery.of(context).platformBrightness == Brightness.light
+              ? Colors.black
+              : Colors.white,
         ),
       ),
       body: SafeArea(
@@ -144,7 +147,8 @@ class _SettingsDialogState extends State<SettingsDialog> with SingleTickerProvid
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('token', null);
     Navigator.pushAndRemoveUntil(
-        context, PageRouteBuilder(pageBuilder: (_, __, ___) => Login()), (
-        route) => false);
+        context,
+        PageRouteBuilder(pageBuilder: (_, __, ___) => Login()),
+        (route) => false);
   }
 }

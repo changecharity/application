@@ -7,12 +7,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../splash.dart';
 
-class WelcomePage extends StatefulWidget{
+class WelcomePage extends StatefulWidget {
   @override
   _WelcomePageState createState() => _WelcomePageState();
 }
 
-class _WelcomePageState extends State<WelcomePage> with TickerProviderStateMixin{
+class _WelcomePageState extends State<WelcomePage>
+    with TickerProviderStateMixin {
   Animation<Offset> _imageAnim;
   Animation<Offset> _buttonAnim;
   AnimationController _fadeAnimContr;
@@ -26,32 +27,34 @@ class _WelcomePageState extends State<WelcomePage> with TickerProviderStateMixin
   void initState() {
     super.initState();
 
-    _fadeAnimContr = AnimationController(vsync: this, duration: Duration(milliseconds: 1500));
-    _imagesAnimContr = AnimationController(vsync: this, duration: Duration(milliseconds: 2000));
+    _fadeAnimContr = AnimationController(
+        vsync: this, duration: Duration(milliseconds: 1500));
+    _imagesAnimContr = AnimationController(
+        vsync: this, duration: Duration(milliseconds: 2000));
     _loadingCon = _fadeAnimContr.drive(
         ColorTween(begin: Colors.lightBlue[200], end: Colors.lightBlue[600]));
 
     _imageAnim = Tween<Offset>(
-      begin:Offset(1.5, 0.0),
-      end:Offset(0.0, 0.0),
+      begin: Offset(1.5, 0.0),
+      end: Offset(0.0, 0.0),
     ).animate(CurvedAnimation(
       parent: _imagesAnimContr,
       curve: Curves.fastLinearToSlowEaseIn,
     ));
 
     _buttonAnim = Tween<Offset>(
-      begin:Offset(0.0, 1.0),
-      end:Offset(0.0, 0.0),
+      begin: Offset(0.0, 1.0),
+      end: Offset(0.0, 0.0),
     ).animate(CurvedAnimation(
       parent: _imagesAnimContr,
       curve: Curves.fastLinearToSlowEaseIn,
     ));
 
-    Future<void>.delayed(Duration(milliseconds: 200),(){
+    Future<void>.delayed(Duration(milliseconds: 200), () {
       _fadeAnimContr.forward();
     });
 
-    Future<void>.delayed(Duration(milliseconds: 800),(){
+    Future<void>.delayed(Duration(milliseconds: 800), () {
       _imagesAnimContr.forward();
     });
   }
@@ -63,7 +66,8 @@ class _WelcomePageState extends State<WelcomePage> with TickerProviderStateMixin
         Container(
           width: 180,
           height: 180,
-          margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.05),
+          margin:
+              EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.05),
           child: Container(
             decoration: BoxDecoration(
               shape: BoxShape.circle,
@@ -76,7 +80,9 @@ class _WelcomePageState extends State<WelcomePage> with TickerProviderStateMixin
             ),
           ),
         ),
-        Expanded(child: Container(),),
+        Expanded(
+          child: Container(),
+        ),
         Container(
           child: Text(
             text,
@@ -87,7 +93,9 @@ class _WelcomePageState extends State<WelcomePage> with TickerProviderStateMixin
             ),
           ),
         ),
-        Expanded(child: Container(),),
+        Expanded(
+          child: Container(),
+        ),
       ],
     );
   }
@@ -111,31 +119,35 @@ class _WelcomePageState extends State<WelcomePage> with TickerProviderStateMixin
               opacity: _fadeAnimContr,
               child: Text(
                 'Welcome',
-                style: TextStyle(
-                  fontSize: 50,
-                  color: Colors.white
-                ),
+                style: TextStyle(fontSize: 50, color: Colors.white),
               ),
             ),
             Expanded(
               child: Container(
-                width: MediaQuery.of(context).size.width*0.8,
+                width: MediaQuery.of(context).size.width * 0.8,
                 child: SlideTransition(
                   position: _imageAnim,
                   child: Swiper(
-                    itemBuilder: (BuildContext context,int index){
-                      switch(index){
+                    itemBuilder: (BuildContext context, int index) {
+                      switch (index) {
                         case 0:
-                          return _mainContent("Spend \$4.76 on your espresso, and we round up your purchase to \$5.00. The extra \$0.24 goes to your charity of choice.", "images/clip-online-shopping.png");
+                          return _mainContent(
+                              "Spend \$4.76 on your espresso, and we round up your purchase to \$5.00. The extra \$0.24 goes to your charity of choice.",
+                              "images/clip-online-shopping.png");
                           break;
                         case 1:
-                          return _mainContent("All your sensitive data is secure and encrypted, with state of the art security.","images/clip-internet-security.png");
+                          return _mainContent(
+                              "All your sensitive data is secure and encrypted, with state of the art security.",
+                              "images/clip-internet-security.png");
                           break;
                         case 2:
-                          return _mainContent("All donations are fully tax-deductible. Simply sign up, and we'll handle the rest.","images/clip-waiting.png");
+                          return _mainContent(
+                              "All donations are fully tax-deductible. Simply sign up, and we'll handle the rest.",
+                              "images/clip-waiting.png");
                           break;
                         default:
-                          return _mainContent("none", "images/clip-online-shopping.png");
+                          return _mainContent(
+                              "none", "images/clip-online-shopping.png");
                       }
                     },
                     controller: _swiperCont,
@@ -173,24 +185,25 @@ class _WelcomePageState extends State<WelcomePage> with TickerProviderStateMixin
     super.dispose();
   }
 
-  void _next () async {
+  void _next() async {
     var idx = _swiperCont.index;
     print(idx);
-    _swiperCont.move(idx == null || idx == 0 ? 1 : 2 );
-    if(idx == 1) {
+    _swiperCont.move(idx == null || idx == 0 ? 1 : 2);
+    if (idx == 1) {
       setState(() {
         _last = true;
       });
     }
-    if(idx != 2) {
+    if (idx != 2) {
       return;
     }
     _imagesAnimContr.animateBack(0, duration: Duration(milliseconds: 800));
     await _fadeAnimContr.animateBack(0, duration: Duration(milliseconds: 800));
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool("newUser", false);
-    Future<void>.delayed(Duration(milliseconds: 100), (){
-      Navigator.pushReplacement(context, PageRouteBuilder(pageBuilder: (_, __, ___) => Splash()));
+    Future<void>.delayed(Duration(milliseconds: 100), () {
+      Navigator.pushReplacement(
+          context, PageRouteBuilder(pageBuilder: (_, __, ___) => Splash()));
     });
   }
 }

@@ -1,13 +1,14 @@
-import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'Pages/login.dart';
-import 'Pages/homePage.dart';
-import 'Pages/emailAuth.dart';
-import 'Pages/linkCredit.dart';
-import 'Pages/welcomePage.dart';
-import 'package:flutter/services.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:global_configuration/global_configuration.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'Pages/emailAuth.dart';
+import 'Pages/homePage.dart';
+import 'Pages/linkCredit.dart';
+import 'Pages/login.dart';
+import 'Pages/welcomePage.dart';
 
 class Splash extends StatefulWidget {
   @override
@@ -30,10 +31,12 @@ class _SplashState extends State<Splash> {
 
   @override
   Widget build(BuildContext context) {
-    final bool isLight =  MediaQuery.of(context).platformBrightness == Brightness.light;
+    final bool isLight =
+        MediaQuery.of(context).platformBrightness == Brightness.light;
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       systemNavigationBarColor: isLight ? Colors.grey[50] : Colors.grey[850],
-      systemNavigationBarIconBrightness: isLight ? Brightness.dark : Brightness.light,
+      systemNavigationBarIconBrightness:
+          isLight ? Brightness.dark : Brightness.light,
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: isLight ? Brightness.dark : Brightness.light,
       statusBarBrightness: isLight ? Brightness.dark : Brightness.light,
@@ -43,7 +46,7 @@ class _SplashState extends State<Splash> {
       child: AnimatedContainer(
         margin: EdgeInsets.symmetric(vertical: _height, horizontal: _width),
         child: Image.asset(
-            "images/logo-circle.png",
+          "images/logo-circle.png",
         ),
         duration: Duration(milliseconds: 1500),
         curve: Curves.fastOutSlowIn,
@@ -51,35 +54,31 @@ class _SplashState extends State<Splash> {
     );
   }
 
-   _pushRoute() {
-     switch(_initScreen){
-
-      case "homepage":{
+  _pushRoute() {
+    switch (_initScreen) {
+      case "homepage":
         return HomePage();
-      }
-      break;
+        break;
 
-      case "authpage":{
+      case "authpage":
         return EmailAuth(email, "signup");
-      }
-      break;
+        break;
 
-     case "login":{
+      case "login":
         return Login();
-      }
-      break;
+        break;
 
-      case "forgotpage":{
+      case "forgotpage":
         return EmailAuth(email, "forgotpass");
-      }
+        break;
 
-      case "linkcredit":{
+      case "linkcredit":
         return LinkCredit();
-      }
+        break;
 
-       case "welcome":{
-         return WelcomePage();
-       }
+      case "welcome":
+        return WelcomePage();
+        break;
     }
   }
 
@@ -95,24 +94,24 @@ class _SplashState extends State<Splash> {
     //if token=null, login
     //if token!=null and email!=null, email logic
     //homepage
-    if(email == null) {
+    if (email == null) {
       email = prefs.getString("forgotPassEmail");
       auth = false;
     }
-    if(token == null && newUser != null){
-      _initScreen="login";
-    }else if(token!=null &&email!=null){
+    if (token == null && newUser != null) {
+      _initScreen = "login";
+    } else if (token != null && email != null) {
       if (auth) {
         _initScreen = "authpage";
       } else {
         _initScreen = "forgotpage";
       }
-    } else if (token!=null &&_linkBank!=null){
-      _initScreen="linkcredit";
-    } else if(newUser == null){
-      _initScreen="welcome";
+    } else if (token != null && _linkBank != null) {
+      _initScreen = "linkcredit";
+    } else if (newUser == null) {
+      _initScreen = "welcome";
     } else {
-      _initScreen="homepage";
+      _initScreen = "homepage";
     }
 
     Future<void>.delayed(Duration(milliseconds: 600), () {
@@ -120,7 +119,8 @@ class _SplashState extends State<Splash> {
         _width = 260;
       });
       Future<void>.delayed(Duration(milliseconds: 600), () {
-          Navigator.pushReplacement(context, PageRouteBuilder(pageBuilder: (_, __, ___) => _pushRoute()));
+        Navigator.pushReplacement(context,
+            PageRouteBuilder(pageBuilder: (_, __, ___) => _pushRoute()));
       });
     });
   }
@@ -128,7 +128,8 @@ class _SplashState extends State<Splash> {
 //  responsible for checking dynamic link. Sets the shared prefs "selOrg" to the id of the chosen org, which is later consumed
 //  by the homepage.
   void initDynamicLinks() async {
-    final PendingDynamicLinkData data = await FirebaseDynamicLinks.instance.getInitialLink();
+    final PendingDynamicLinkData data =
+        await FirebaseDynamicLinks.instance.getInitialLink();
     final Uri deepLink = data?.link;
     int selOrg;
     if (deepLink != null) {
@@ -139,23 +140,21 @@ class _SplashState extends State<Splash> {
 
     FirebaseDynamicLinks.instance.onLink(
         onSuccess: (PendingDynamicLinkData dynamicLink) async {
-          final Uri deepLink = dynamicLink?.link;
+      final Uri deepLink = dynamicLink?.link;
 
-          if (deepLink != null) {
-            print("second");
-            selOrg = int.parse(deepLink.queryParameters["org"]);
-            _saveSelectedOrg(selOrg);
-          }
-        },
-        onError: (OnLinkErrorException e) async {
-          print('onLinkError');
-          print(e.message);
-        }
-    );
-
+      if (deepLink != null) {
+        print("second");
+        selOrg = int.parse(deepLink.queryParameters["org"]);
+        _saveSelectedOrg(selOrg);
+      }
+    }, onError: (OnLinkErrorException e) async {
+      print('onLinkError');
+      print(e.message);
+    });
   }
-  void _saveSelectedOrg(int org) async{
-    SharedPreferences prefs=await SharedPreferences.getInstance();
+
+  void _saveSelectedOrg(int org) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setInt('selOrg', org);
   }
 }

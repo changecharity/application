@@ -10,12 +10,14 @@ import 'package:money2/money2.dart';
 
 class MonthlyLimit extends StatefulWidget {
   MonthlyLimit(this.initialVal);
+
   final int initialVal;
 
   _MonthlyLimitState createState() => _MonthlyLimitState();
 }
 
-class _MonthlyLimitState extends State<MonthlyLimit> with TickerProviderStateMixin{
+class _MonthlyLimitState extends State<MonthlyLimit>
+    with TickerProviderStateMixin {
   GlobalConfiguration cfg = new GlobalConfiguration();
   TextEditingController _limitController = TextEditingController();
 
@@ -28,30 +30,23 @@ class _MonthlyLimitState extends State<MonthlyLimit> with TickerProviderStateMix
   Currency usdCurrency = Currency.create('USD', 2);
   int _monthLimit;
 
-
-
   void initState() {
     super.initState();
 
-    controller = AnimationController(vsync: this, duration: Duration(seconds:  1));
+    controller =
+        AnimationController(vsync: this, duration: Duration(seconds: 1));
 
     _paintAnm = Tween<Offset>(
       begin: Offset(-2.0, -1.0),
       end: Offset(0.0, 0.0),
     ).animate(CurvedAnimation(
-        parent: controller,
-        curve: Curves.fastLinearToSlowEaseIn
-    )
-    );
+        parent: controller, curve: Curves.fastLinearToSlowEaseIn));
 
     _cardsAnm = Tween<Offset>(
       begin: Offset(2.0, 0.0),
       end: Offset(0.0, 0.0),
     ).animate(CurvedAnimation(
-        parent: controller,
-        curve: Curves.fastLinearToSlowEaseIn
-    )
-    );
+        parent: controller, curve: Curves.fastLinearToSlowEaseIn));
 
     _setInitial();
 
@@ -62,7 +57,8 @@ class _MonthlyLimitState extends State<MonthlyLimit> with TickerProviderStateMix
 
   Widget _explainCont() {
     return Container(
-      margin: EdgeInsets.fromLTRB(45,MediaQuery.of(context).size.height* 0.1,45,60),
+      margin: EdgeInsets.fromLTRB(
+          45, MediaQuery.of(context).size.height * 0.1, 45, 60),
       child: Text(
         "Set the limit for how much to donate per month",
         style: Theme.of(context).textTheme.headline5,
@@ -87,8 +83,8 @@ class _MonthlyLimitState extends State<MonthlyLimit> with TickerProviderStateMix
   Widget _centerContent() {
     return AnimatedCrossFade(
       duration: Duration(milliseconds: 200),
-      crossFadeState: _switchVal ? CrossFadeState.showFirst : CrossFadeState
-          .showSecond,
+      crossFadeState:
+          _switchVal ? CrossFadeState.showFirst : CrossFadeState.showSecond,
       firstChild: _setLimit(),
       secondChild: _onOffToggle(),
     );
@@ -115,7 +111,7 @@ class _MonthlyLimitState extends State<MonthlyLimit> with TickerProviderStateMix
           onChange: (double value) {
             setState(() {
               _monthLimitMoney =
-              Money.fromInt((value.floor() * 100).toInt(), usdCurrency);
+                  Money.fromInt((value.floor() * 100).toInt(), usdCurrency);
             });
             // callback providing a value while its being changed (with a pan gesture)
           },
@@ -141,8 +137,8 @@ class _MonthlyLimitState extends State<MonthlyLimit> with TickerProviderStateMix
   Widget _sometimesToggle() {
     return AnimatedCrossFade(
       duration: Duration(milliseconds: 300),
-      crossFadeState: !_switchVal ? CrossFadeState.showFirst : CrossFadeState
-          .showSecond,
+      crossFadeState:
+          !_switchVal ? CrossFadeState.showFirst : CrossFadeState.showSecond,
       firstChild: Container(),
       secondChild: _onOffToggle(),
     );
@@ -180,18 +176,25 @@ class _MonthlyLimitState extends State<MonthlyLimit> with TickerProviderStateMix
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: MediaQuery.of(context).platformBrightness == Brightness.light ? Colors.grey[50] : Colors.grey[850],
+      backgroundColor:
+          MediaQuery.of(context).platformBrightness == Brightness.light
+              ? Colors.grey[50]
+              : Colors.grey[850],
       appBar: AppBar(
-        backgroundColor: MediaQuery.of(context).platformBrightness == Brightness.light ? Colors.grey[50] : Colors.grey[850],
+        backgroundColor:
+            MediaQuery.of(context).platformBrightness == Brightness.light
+                ? Colors.grey[50]
+                : Colors.grey[850],
         elevation: 0,
         centerTitle: true,
         title: Text("Monthly Limit"),
         iconTheme: IconThemeData(
-          color: MediaQuery.of(context).platformBrightness == Brightness.light ? Colors.black : Colors.white,
+          color: MediaQuery.of(context).platformBrightness == Brightness.light
+              ? Colors.black
+              : Colors.white,
         ),
       ),
       body: SingleChildScrollView(
@@ -224,10 +227,15 @@ class _MonthlyLimitState extends State<MonthlyLimit> with TickerProviderStateMix
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
     var content = '{"user_token":"$token", "monthly_limit":$_monthLimit}';
-    await http.post(
-        "${cfg.getString("host")}/users/updatemonthlylimit", body: content);
+    await http.post("${cfg.getString("host")}/users/updatemonthlylimit",
+        body: content);
     print(_monthLimit);
-    context.read<UserProfileModel>().notify(context.read<UserProfileModel>().getUserPfLetter, context.read<UserProfileModel>().getUserName, context.read<UserProfileModel>().getUserThreshold, _monthLimit.toInt(), context.read<UserProfileModel>().getUserRoundUpStatus);
+    context.read<UserProfileModel>().notify(
+        context.read<UserProfileModel>().getUserPfLetter,
+        context.read<UserProfileModel>().getUserName,
+        context.read<UserProfileModel>().getUserThreshold,
+        _monthLimit.toInt(),
+        context.read<UserProfileModel>().getUserRoundUpStatus);
   }
 
   void _setInitial() async {

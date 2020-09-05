@@ -1,19 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class UserBankModel extends ChangeNotifier{
-  String _mask="";
-  String _bankName="";
+class UserBankModel extends ChangeNotifier {
+  String _mask = "";
+  String _bankName = "";
   List _cards = [];
 
-  String get getMask=>_mask;
-  String get getBankName=> _bankName;
-  List get getCards=> _cards;
+  String get getMask => _mask;
 
-  void notify(String mask, String name, List cards){
-    _mask=convertMask(mask);
-    _bankName=name == null ? null : titleCase(name);
-    _cards= cards == null ? [] : cards;
+  String get getBankName => _bankName;
+
+  List get getCards => _cards;
+
+  void notify(String mask, String name, List cards) {
+    _mask = convertMask(mask);
+    _bankName = name == null ? null : titleCase(name);
+    _cards = cards == null ? [] : cards;
     notifyListeners();
   }
 }
@@ -29,8 +31,10 @@ String titleCase(String text) {
 }
 
 String convertMask(String mask) {
-  if (mask == null) throw ArgumentError("mask: $mask");
-  for( var i = 0 ; i < 4 - mask.length; i++) {
+  if (mask == null) {
+    mask = "0";
+  }
+  for (var i = 0; i < 4 - mask.length; i++) {
     mask = "0" + mask;
   }
   return mask;

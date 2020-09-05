@@ -11,19 +11,19 @@ import '../Pages/forgotPass.dart';
 import '../Pages/login.dart';
 import 'package:global_configuration/global_configuration.dart';
 
-class EmailAuth extends StatefulWidget{
+class EmailAuth extends StatefulWidget {
 
   final emailAddress;
   final action;
 
   EmailAuth(this.emailAddress, this.action);
 
-  
+
   @override
   _EmailAuthState createState() => _EmailAuthState();
 }
 
-class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin{
+class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin {
 
   AnimationController _controller;
   AnimationController _loadingController;
@@ -31,41 +31,43 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin{
   Animation<Offset> _bodyAn;
   Animation<Color> _loadingAn;
   final _pinController = TextEditingController();
-  final focusNode=FocusNode();
+  final focusNode = FocusNode();
   String token;
-  String _pinError='';
-  String resendText="Resend Code";
-  bool canResend=true;
-  bool missingChar=false;
-  bool loading=false;
+  String _pinError = '';
+  String resendText = "Resend Code";
+  bool canResend = true;
+  bool missingChar = false;
+  bool loading = false;
   bool resendLoading = false;
   GlobalConfiguration cfg = new GlobalConfiguration();
 
-  void initState(){
+  void initState() {
     super.initState();
 
-    _controller=AnimationController(vsync:this, duration:Duration(seconds:2));
-    _loadingController=AnimationController(vsync:this, duration:Duration(seconds:1));
+    _controller =
+        AnimationController(vsync: this, duration: Duration(seconds: 2));
+    _loadingController =
+        AnimationController(vsync: this, duration: Duration(seconds: 1));
 
     _paintAn = Tween<Offset>(
-      begin:Offset(-1.0,-1.0),
-      end:Offset(0,0)
+        begin: Offset(-1.0, -1.0),
+        end: Offset(0, 0)
     ).animate(CurvedAnimation(
-      curve:Curves.fastLinearToSlowEaseIn,
-      parent:_controller
+        curve: Curves.fastLinearToSlowEaseIn,
+        parent: _controller
     ));
 
     _bodyAn = Tween<Offset>(
-        begin:Offset(1,2),
-        end:Offset(0,0)
+        begin: Offset(1, 2),
+        end: Offset(0, 0)
     ).animate(CurvedAnimation(
-        curve:Curves.fastLinearToSlowEaseIn,
-        parent:_controller
+        curve: Curves.fastLinearToSlowEaseIn,
+        parent: _controller
     ));
     _loadingAn = _loadingController.drive(
         ColorTween(begin: Colors.lightBlue[200], end: Colors.lightBlue[600]));
 
-    Future<void>.delayed(Duration(milliseconds:500),(){
+    Future<void>.delayed(Duration(milliseconds: 500), () {
       _controller.forward();
     });
 
@@ -73,16 +75,15 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin{
 
     _getToken();
     _timePassed();
-
   }
 
-  Widget _emailIcon(){
+  Widget _emailIcon() {
     return Container(
-      child:Icon(
-        Icons.email,
-        size:100,
-        color:Color.fromRGBO(0, 174, 229, 1),
-      )
+        child: Icon(
+          Icons.email,
+          size: 100,
+          color: Color.fromRGBO(0, 174, 229, 1),
+        )
     );
   }
 
@@ -96,212 +97,251 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin{
         iconSize: 30,
         onPressed: () {
           _clearSharedPrefs();
-          Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>Login()));
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => Login()));
         },
       ),
     );
   }
-  Widget _verifyText(){
+
+  Widget _verifyText() {
     return Container(
-      margin:EdgeInsets.only(top:20),
-      child:Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children:[
-          Text(
-            'Verify Email',
-            style:TextStyle(fontSize:24, fontWeight:FontWeight.bold),
-          ),
-          Container(
-            margin:EdgeInsets.only(top:10),
-            child:Text(
-              'Please enter the 6 digit code sent to ${widget.emailAddress}',
-              style:TextStyle(fontSize:14)
-            )
-          )
-        ]
-      )
+        margin: EdgeInsets.only(top: 20),
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Verify Email',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              Container(
+                  margin: EdgeInsets.only(top: 10),
+                  child: Text(
+                      'Please enter the 6 digit code sent to ${widget
+                          .emailAddress}',
+                      style: TextStyle(fontSize: 14)
+                  )
+              )
+            ]
+        )
     );
   }
-  Widget _pinCode(){
+
+  Widget _pinCode() {
     return Container(
-      margin:EdgeInsets.only(top:10),
-      width: MediaQuery.of(context).size.width*.75,
+        margin: EdgeInsets.only(top: 10),
+        width: MediaQuery
+            .of(context)
+            .size
+            .width * .75,
         child: PinCodeTextField(
-          onSubmitted:(s){
-            if(_pinController.text.length<6){
+          onSubmitted: (s) {
+            if (_pinController.text.length < 6) {
               setState(() {
-                missingChar=!missingChar;
+                missingChar = !missingChar;
                 print('missing chars');
                 print(missingChar);
               });
             }
           },
-          onChanged:(s){
+          onChanged: (s) {
             setState(() {
-              _pinError='';
+              _pinError = '';
             });
           },
           length: 6,
           pinTheme: PinTheme(
             shape: PinCodeFieldShape.underline,
             //borderWidth:4,
-           // borderRadius: BorderRadius.circular(5),
+            // borderRadius: BorderRadius.circular(5),
             inactiveColor: !missingChar ? Colors.grey : Colors.red,
-            activeColor:Color.fromRGBO(0, 174, 229, 1),
-            selectedColor: !missingChar?Colors.grey:Colors.red,
+            activeColor: Color.fromRGBO(0, 174, 229, 1),
+            selectedColor: !missingChar ? Colors.grey : Colors.red,
             fieldHeight: 50,
             fieldWidth: 40,
           ),
           animationType: AnimationType.scale,
           animationDuration: Duration(milliseconds: 300),
           backgroundColor: Colors.transparent,
-          textStyle:TextStyle(color:Color.fromRGBO(0,174,229,1), fontSize:30),
+          textStyle: TextStyle(
+              color: Color.fromRGBO(0, 174, 229, 1), fontSize: 30),
           textInputType: TextInputType.number,
           controller: _pinController,
           focusNode: focusNode,
 
-      )
+        )
     );
   }
 
-  Widget _resendCont(){
-   return Container(
-        margin:EdgeInsets.only(top:10),
-        child:_resendContent()
+  Widget _resendCont() {
+    return Container(
+        margin: EdgeInsets.only(top: 10),
+        child: _resendContent()
     );
   }
 
-  Widget _resendContent(){
-    if(canResend){
+  Widget _resendContent() {
+    if (canResend) {
       return GestureDetector(
-          onTap:(){
+          onTap: () {
             _resend();
           },
-          child:_resendTxt()
+          child: _resendTxt()
       );
     }
     return Container(
-      child:Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children:[
-          _resendTxt(),
-          _resendLoadInd()
-        ]
-      )
+        child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _resendTxt(),
+              _resendLoadInd()
+            ]
+        )
     );
   }
 
-  Widget _resendTxt(){
+  Widget _resendTxt() {
     return Text(
         resendText,
-        style:TextStyle(color:Color.fromRGBO(0, 174, 229, 1), fontSize:12)
+        style: TextStyle(color: Color.fromRGBO(0, 174, 229, 1), fontSize: 12)
     );
   }
 
-  Widget _resendLoadInd(){
-    if(resendLoading){
+  Widget _resendLoadInd() {
+    if (resendLoading) {
       return Container(
-        margin:EdgeInsets.only(left:18),
-        child:SizedBox(
-          width:12,
-          height:12,
-            child:CircularProgressIndicator(
-                strokeWidth:2,
-                valueColor: _loadingAn
-            )
-        )
+          margin: EdgeInsets.only(left: 18),
+          child: SizedBox(
+              width: 12,
+              height: 12,
+              child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: _loadingAn
+              )
+          )
       );
     }
     return Container();
   }
 
-  Widget _errorCont(){
+  Widget _errorCont() {
     return Container(
       child: Text(
-        _pinError,
-        style:TextStyle(color:Colors.red)
+          _pinError,
+          style: TextStyle(color: Colors.red)
       ),
     );
   }
 
-  Widget _verify(){
-   return ChangeSubmitRow(
-     loading: loading,
-     animation: _loadingAn,
-     onClick: _verifyAccount,
-     text: MediaQuery.of(context).size.height > 700 ? "Verify" : '',
-   );
+  Widget _verify() {
+    return ChangeSubmitRow(
+      loading: loading,
+      animation: _loadingAn,
+      onClick: _verifyAccount,
+      text: MediaQuery
+          .of(context)
+          .size
+          .height > 700 ? "Verify" : '',
+    );
   }
 
-  Widget _mainBodyContainer(){
+  Widget _mainBodyContainer() {
     return Container(
-      child:Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          _backButton(),
-          Container(
-              margin:EdgeInsets.only(top: MediaQuery.of(context).viewInsets.bottom == 0
-                  ? MediaQuery.of(context).size.height>700 ? MediaQuery.of(context).size.height*.15 :MediaQuery.of(context).size.height *0.1
-                  : MediaQuery.of(context).size.height*.03),
-              width:MediaQuery.of(context).size.width*.85,
-              padding:EdgeInsets.fromLTRB(
-                  MediaQuery.of(context).size.width*.07,
-                  40,
-                  MediaQuery.of(context).size.width*.07,
-                  50
-              ),
-              decoration:BoxDecoration(
-                  color: MediaQuery.of(context).platformBrightness == Brightness.light ? Colors.grey[100] : Colors.grey[900],
-                  borderRadius:BorderRadius.circular(15),
-                  boxShadow: [
-                    BoxShadow(
-                      color:Colors.grey,
-                      offset:Offset.fromDirection(.9),
-                      blurRadius:10,
-                    )]
-              ),
-              child:Column(
-                  children:[
-                    _emailIcon(),
-                    _verifyText(),
-                    _pinCode(),
-                    _errorCont(),
-                    _resendCont()
-                  ]
-              )
-          ),
-          Container(height: 20,),
-          _verify(),
-        ],
-      )
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            _backButton(),
+            Container(
+                margin: EdgeInsets.only(top: MediaQuery
+                    .of(context)
+                    .viewInsets
+                    .bottom == 0
+                    ? MediaQuery
+                    .of(context)
+                    .size
+                    .height > 700 ? MediaQuery
+                    .of(context)
+                    .size
+                    .height * .15 : MediaQuery
+                    .of(context)
+                    .size
+                    .height * 0.1
+                    : MediaQuery
+                    .of(context)
+                    .size
+                    .height * .03),
+                width: MediaQuery
+                    .of(context)
+                    .size
+                    .width * .85,
+                padding: EdgeInsets.fromLTRB(
+                    MediaQuery
+                        .of(context)
+                        .size
+                        .width * .07,
+                    40,
+                    MediaQuery
+                        .of(context)
+                        .size
+                        .width * .07,
+                    50
+                ),
+                decoration: BoxDecoration(
+                    color: MediaQuery
+                        .of(context)
+                        .platformBrightness == Brightness.light ? Colors
+                        .grey[100] : Colors.grey[900],
+                    borderRadius: BorderRadius.circular(15),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey,
+                        offset: Offset.fromDirection(.9),
+                        blurRadius: 10,
+                      )
+                    ]
+                ),
+                child: Column(
+                    children: [
+                      _emailIcon(),
+                      _verifyText(),
+                      _pinCode(),
+                      _errorCont(),
+                      _resendCont()
+                    ]
+                )
+            ),
+            Container(height: 20,),
+            _verify(),
+          ],
+        )
     );
   }
 
   @override
-    Widget build(BuildContext context) {
-      return Material(
-        child:GestureDetector(
-          onTap:(){
+  Widget build(BuildContext context) {
+    return Material(
+        child: GestureDetector(
+          onTap: () {
             focusNode.unfocus();
           },
           child: SafeArea(
-              child:SlideTransition(
-                  position:_paintAn,
-                  child:CustomPaint(
-                      painter:ChangeBankPaint(),
+              child: SlideTransition(
+                  position: _paintAn,
+                  child: CustomPaint(
+                      painter: ChangeBankPaint(),
                       child: SlideTransition(
-                          position:_bodyAn,
+                          position: _bodyAn,
                           child: SingleChildScrollView(
-                              child:_mainBodyContainer()
+                              child: _mainBodyContainer()
                           )
                       )
                   )
               )
           ),
         )
-      );
-    }
+    );
+  }
 
 
   @override
@@ -311,84 +351,84 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin{
     super.dispose();
   }
 
-  _timePassed()async{
+  _timePassed() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var time = prefs.getString('time');
-    if (DateTime.now().isAfter(DateTime.parse(time))){
-      Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>Login()));
+    if (DateTime.now().isAfter(DateTime.parse(time))) {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => Login()));
       print('time elapsed');
       return;
-    }else{
-      Future<void> .delayed(Duration(minutes:1),(){
+    } else {
+      Future<void> .delayed(Duration(minutes: 1), () {
         _timePassed();
       });
     }
-
   }
 
-  _getToken() async{
-    SharedPreferences prefs=await SharedPreferences.getInstance();
+  _getToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      token=prefs.getString('token');
+      token = prefs.getString('token');
       print(token);
-      if (token==null ||token==""){
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Login()));
+      if (token == null || token == "") {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => Login()));
       }
     });
-
   }
 
-  _clearSharedPrefs() async{
-    SharedPreferences prefs=await SharedPreferences.getInstance();
+  _clearSharedPrefs() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('token', null);
     prefs.setString('signUpEmail', null);
     prefs.setString('forgotPassEmail', null);
   }
 
-  _resend() async{
-    setState((){
-      canResend=!canResend;
-      resendText="Sending";
-      resendLoading=!resendLoading;
+  _resend() async {
+    setState(() {
+      canResend = !canResend;
+      resendText = "Sending";
+      resendLoading = !resendLoading;
     });
 
-    var content='{"user_token":"$token"}';
-    var response = await http.post("${cfg.getString("host")}/users/resendemailkey", body:content);
+    var content = '{"user_token":"$token"}';
+    var response = await http.post(
+        "${cfg.getString("host")}/users/resendemailkey", body: content);
 
     print(response.body);
-    if(response.body=="rpc error: code = Unknown desc = unknown token"){
+    if (response.body == "rpc error: code = Unknown desc = unknown token") {
       setState(() {
-        resendLoading=!resendLoading;
+        resendLoading = !resendLoading;
         //Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>SignUp()));
-        _pinError="Invalid user. Please sign up";
+        _pinError = "Invalid user. Please sign up";
       });
-    }else if(response.body=="success:true"){
+    } else if (response.body == "success:true") {
       setState(() {
-        resendLoading=!resendLoading;
-        resendText="Sent";
+        resendLoading = !resendLoading;
+        resendText = "Sent";
       });
-      Future<void>.delayed(Duration(seconds:3),(){
+      Future<void>.delayed(Duration(seconds: 3), () {
         setState(() {
-          canResend=!canResend;
-          resendText="Resend Code";
+          canResend = !canResend;
+          resendText = "Resend Code";
         });
       });
     }
   }
 
   bool _checkValidPin() {
-
     bool containsLetter = RegExp(r"[A-Za-z]").hasMatch(_pinController.text);
 
-    if(_pinController.text.length<6){
+    if (_pinController.text.length < 6) {
       setState(() {
-        _pinError="Code must be 6 digits long.";
-        missingChar=!missingChar;
+        _pinError = "Code must be 6 digits long.";
+        missingChar = !missingChar;
       });
       return false;
-    }else if(containsLetter){
+    } else if (containsLetter) {
       setState(() {
-        _pinError="Code must be only numbers";
+        _pinError = "Code must be only numbers";
       });
       return false;
     }
@@ -396,73 +436,83 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin{
   }
 
 
-  _verifyAndSignup() async{
-    var content='{"user_token":"$token","key":${int.parse(_pinController.text)}}';
-    var response= await http.post("${cfg.getString("host")}/users/updatesignup", body:content);
+  _verifyAndSignup() async {
+    var content = '{"user_token":"$token","key":${int.parse(
+        _pinController.text)}}';
+    var response = await http.post(
+        "${cfg.getString("host")}/users/updatesignup", body: content);
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    print (response.body);
+    print(response.body);
 
-    if(response.body=="rpc error: code = Unknown desc = key is incorrect"||response.body=="proto: (line 1:171): invalid value for int32 type: "){
+    if (response.body == "rpc error: code = Unknown desc = key is incorrect" ||
+        response.body ==
+            "proto: (line 1:171): invalid value for int32 type: ") {
       setState(() {
-        loading=!loading;
+        loading = !loading;
         _pinError = "Incorrect code. Please try again.";
         return;
       });
-    }else if(response.body.contains("invalid user token")){
+    } else if (response.body.contains("invalid user token")) {
       prefs.setString('signUpEmail', null);
-      Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>Login()));
-    }else if(response.body=="success"){
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => Login()));
+    } else if (response.body == "success") {
       prefs.setString('signUpEmail', null);
       prefs.setString('linkBank', "");
-      if(prefs.getInt('selOrg') != null) {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>OrgSelected()));
+      if (prefs.getInt('selOrg') != null) {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => OrgSelected()));
       } else {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>LinkCredit()));
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => LinkCredit()));
       }
     } else {
       setState(() {
-        loading=!loading;
+        loading = !loading;
         _pinError = "Unknown Error, try again";
         return;
       });
     }
   }
 
-  _verifyAndEnterPass() async{
-    var content = '{"user_token": "$token", "key":${int.parse(_pinController.text)}}';
-    var response = await http.post("${cfg.getString("host")}/users/validkey", body:content);
+  _verifyAndEnterPass() async {
+    var content = '{"user_token": "$token", "key":${int.parse(
+        _pinController.text)}}';
+    var response = await http.post(
+        "${cfg.getString("host")}/users/validkey", body: content);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     print(response.body);
 
-    if(response.body.contains("key is incorrect")){
+    if (response.body.contains("key is incorrect")) {
       setState(() {
-        loading=!loading;
+        loading = !loading;
         _pinError = "Incorrect code. Please try again.";
         return;
       });
-    } else if(response.body.contains("invalid user token")){
+    } else if (response.body.contains("invalid user token")) {
       prefs.setString('forgotPassEmail', null);
-      Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>Login()));
-    }else if(response.body.contains("success")){
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => Login()));
+    } else if (response.body.contains("success")) {
       prefs.setString('forgotPassEmail', null);
-      Navigator.push(context, MaterialPageRoute(builder:(context)=>ForgotPass(int.parse(_pinController.text))));
+      Navigator.push(context, MaterialPageRoute(
+          builder: (context) => ForgotPass(int.parse(_pinController.text))));
     }
   }
 
-  _verifyAccount() async{
-
-    if(!_checkValidPin()){
+  _verifyAccount() async {
+    if (!_checkValidPin()) {
       setState(() {
         return;
       });
-    }else {
+    } else {
       setState(() {
         loading = !loading;
       });
-      if(widget.action=="signup"){
+      if (widget.action == "signup") {
         print("verifyandsignup");
         _verifyAndSignup();
-      } else if(widget.action=="forgotpass"){
+      } else if (widget.action == "forgotpass") {
         print("verifyandenterpass");
         _verifyAndEnterPass();
       }

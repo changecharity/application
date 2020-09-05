@@ -11,18 +11,17 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:http/http.dart' as http;
 import 'linkCredit.dart';
 
-
-class OrgSelected extends StatefulWidget{
+class OrgSelected extends StatefulWidget {
   @override
-  _OrgSelectedState createState()=>_OrgSelectedState();
+  _OrgSelectedState createState() => _OrgSelectedState();
 }
 
-class _OrgSelectedState extends State<OrgSelected> with TickerProviderStateMixin{
-
+class _OrgSelectedState extends State<OrgSelected>
+    with TickerProviderStateMixin {
   AnimationController _controller;
   Animation<Offset> _topDown;
   Animation<Offset> _bottomUp;
-  Animation<Offset>_leftToRight;
+  Animation<Offset> _leftToRight;
   Animation<Color> _animationC;
   AnimationController controllerC;
 
@@ -34,59 +33,51 @@ class _OrgSelectedState extends State<OrgSelected> with TickerProviderStateMixin
   int id;
   bool loading = false;
 
-  void initState(){
+  void initState() {
     super.initState();
 
     _getOrg();
 
-    _controller = AnimationController(vsync: this, duration: Duration(seconds:2));
-    controllerC = AnimationController(
-        vsync: this, duration: Duration(seconds: 1));
-
+    _controller =
+        AnimationController(vsync: this, duration: Duration(seconds: 2));
+    controllerC =
+        AnimationController(vsync: this, duration: Duration(seconds: 1));
 
     _topDown = Tween<Offset>(
       begin: Offset(1.0, -2.0),
-      end:Offset(0.0,0.0),
+      end: Offset(0.0, 0.0),
     ).animate(CurvedAnimation(
-        parent:_controller,
-        curve:Curves.fastLinearToSlowEaseIn
-    )
-    );
+        parent: _controller, curve: Curves.fastLinearToSlowEaseIn));
 
     _bottomUp = Tween<Offset>(
       begin: Offset(0.0, 1.0),
-      end:Offset(0.0,0.0),
+      end: Offset(0.0, 0.0),
     ).animate(CurvedAnimation(
-        parent:_controller,
-        curve:Curves.fastLinearToSlowEaseIn
-    )
-    );
+        parent: _controller, curve: Curves.fastLinearToSlowEaseIn));
 
     _leftToRight = Tween<Offset>(
-      begin:Offset(1.0, 0.0),
-      end:Offset(0.0, 0.0),
+      begin: Offset(1.0, 0.0),
+      end: Offset(0.0, 0.0),
     ).animate(CurvedAnimation(
-      parent:_controller,
-      curve:Curves.fastLinearToSlowEaseIn,
-    )
-    );
+      parent: _controller,
+      curve: Curves.fastLinearToSlowEaseIn,
+    ));
 
     _animationC = controllerC.drive(
         ColorTween(begin: Colors.lightBlue[200], end: Colors.lightBlue[600]));
     controllerC.repeat();
 
-
-    Future<void>.delayed(Duration(milliseconds:1000),(){
+    Future<void>.delayed(Duration(milliseconds: 1000), () {
       _controller.forward();
     });
-
   }
 
   Widget _orgSelected() {
     return Align(
       alignment: Alignment.center,
       child: Container(
-        margin: EdgeInsets.fromLTRB(0, MediaQuery.of(context).size.height * 0.11, 0, 0),
+        margin: EdgeInsets.fromLTRB(
+            0, MediaQuery.of(context).size.height * 0.11, 0, 0),
         child: Text(
           'Organization Selected',
           textAlign: TextAlign.center,
@@ -101,9 +92,9 @@ class _OrgSelectedState extends State<OrgSelected> with TickerProviderStateMixin
 
   Widget _orgLogo() {
     return Container(
-      margin:EdgeInsets.only(top:MediaQuery.of(context).size.height * 0.03),
-      height:120,
-      width:120,
+      margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.03),
+      height: 120,
+      width: 120,
       child: ClipOval(
         child: CachedNetworkImage(
           fit: BoxFit.cover,
@@ -119,7 +110,8 @@ class _OrgSelectedState extends State<OrgSelected> with TickerProviderStateMixin
     return Align(
       alignment: Alignment.center,
       child: Container(
-        margin: EdgeInsets.fromLTRB(40, MediaQuery.of(context).size.height * 0.1, 40, 0),
+        margin: EdgeInsets.fromLTRB(
+            40, MediaQuery.of(context).size.height * 0.1, 40, 0),
         child: Text(
           '$name',
           textAlign: TextAlign.center,
@@ -134,17 +126,18 @@ class _OrgSelectedState extends State<OrgSelected> with TickerProviderStateMixin
   }
 
   Widget _selectOrgCont() {
-   return ChangeSubmitRow(
-     loading: loading,
-     onClick: _setOrg,
-     text: "Select",
-     animation: _animationC,
-   );
+    return ChangeSubmitRow(
+      loading: loading,
+      onClick: _setOrg,
+      text: "Select",
+      animation: _animationC,
+    );
   }
 
   Widget _skipText() {
     return Container(
-      margin: EdgeInsets.only(top: 0, bottom: MediaQuery.of(context).size.height < 650 ? 30: 30),
+      margin: EdgeInsets.only(
+          top: 0, bottom: MediaQuery.of(context).size.height < 650 ? 30 : 30),
       alignment: Alignment.bottomCenter,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -172,28 +165,32 @@ class _OrgSelectedState extends State<OrgSelected> with TickerProviderStateMixin
   Widget build(BuildContext context) {
     return Material(
       child: SafeArea(
-        child:SlideTransition(
-            position:_leftToRight,
-            child:CustomPaint(
+        child: SlideTransition(
+            position: _leftToRight,
+            child: CustomPaint(
                 painter: ChangeHomePaint(),
-                child:Container(
-                  height:MediaQuery.of(context).size.height,
+                child: Container(
+                  height: MediaQuery.of(context).size.height,
                   width: MediaQuery.of(context).size.width,
-                  child:Column(
-                      mainAxisAlignment:MainAxisAlignment.start,
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
-                        SlideTransition(position:_topDown, child:_orgSelected()),
-                        SlideTransition(position:_bottomUp, child:_orgName()),
-                        SlideTransition(position:_bottomUp, child:_orgLogo()),
-                        Expanded(child: Container(),),
-                        SlideTransition(position:_bottomUp, child:_selectOrgCont()),
-                        Expanded(child: Container(),),
-                        SlideTransition(position:_bottomUp, child:_skipText()),
-                      ]
-                  ),
-                )
-            )
-        ),
+                        SlideTransition(
+                            position: _topDown, child: _orgSelected()),
+                        SlideTransition(position: _bottomUp, child: _orgName()),
+                        SlideTransition(position: _bottomUp, child: _orgLogo()),
+                        Expanded(
+                          child: Container(),
+                        ),
+                        SlideTransition(
+                            position: _bottomUp, child: _selectOrgCont()),
+                        Expanded(
+                          child: Container(),
+                        ),
+                        SlideTransition(
+                            position: _bottomUp, child: _skipText()),
+                      ]),
+                ))),
       ),
     );
   }
@@ -209,8 +206,8 @@ class _OrgSelectedState extends State<OrgSelected> with TickerProviderStateMixin
     token = preferences.getString('token');
     int org = preferences.getInt('selOrg');
     var content = '{"user_token":"$token", "org": $org}';
-    var response = await http.post(
-        "${cfg.getString("host")}/users/getorginfo", body: content);
+    var response = await http.post("${cfg.getString("host")}/users/getorginfo",
+        body: content);
     print(response.body);
     setState(() {
       name = jsonDecode(response.body)["name"];
@@ -219,27 +216,29 @@ class _OrgSelectedState extends State<OrgSelected> with TickerProviderStateMixin
     });
   }
 
-  void _setOrg() async{
+  void _setOrg() async {
     setState(() {
       loading = true;
     });
-    SharedPreferences prefs=await SharedPreferences.getInstance();
-    token=prefs.getString('token');
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    token = prefs.getString('token');
     var content = '{"user_token":"$token", "org":$id}';
-    var response = await http.post("${cfg.getString("host")}/users/setorg", body:content);
+    var response =
+        await http.post("${cfg.getString("host")}/users/setorg", body: content);
     print(response.body);
     prefs.setInt('selOrg', null);
     setState(() {
       loading = false;
     });
     prefs.setString('linkBank', name);
-    Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>LinkCredit()));
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => LinkCredit()));
   }
 
-  void _chooseLater() async{
-    SharedPreferences prefs=await SharedPreferences.getInstance();
+  void _chooseLater() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setInt('selOrg', null);
-    Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>LinkCredit()));
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => LinkCredit()));
   }
-
 }

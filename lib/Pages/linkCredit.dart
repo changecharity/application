@@ -14,17 +14,16 @@ import 'package:flutter_stripe_payment/flutter_stripe_payment.dart';
 
 import '../Components/securityFaq.dart';
 
-class LinkCredit extends StatefulWidget{
+class LinkCredit extends StatefulWidget {
   @override
-  _LinkCreditState createState()=>_LinkCreditState();
+  _LinkCreditState createState() => _LinkCreditState();
 }
 
-class _LinkCreditState extends State<LinkCredit> with TickerProviderStateMixin{
-
+class _LinkCreditState extends State<LinkCredit> with TickerProviderStateMixin {
   AnimationController _controller;
   Animation<Offset> _topDown;
   Animation<Offset> _bottomUp;
-  Animation<Offset>_rightToLeft;
+  Animation<Offset> _rightToLeft;
   Animation<Color> _animationC;
 
   AnimationController controllerC;
@@ -44,66 +43,57 @@ class _LinkCreditState extends State<LinkCredit> with TickerProviderStateMixin{
   GlobalConfiguration cfg = new GlobalConfiguration();
   final _stripePayment = FlutterStripePayment();
 
-  void initState(){
+  void initState() {
     super.initState();
     _stripePayment.setStripeSettings(
-        "pk_live_4emYzSEoyJOFgpVOaEqy6j2L00p4wofNb8", "{STRIPE_APPLE_PAY_MERCHANTID}");
+        "pk_live_4emYzSEoyJOFgpVOaEqy6j2L00p4wofNb8",
+        "{STRIPE_APPLE_PAY_MERCHANTID}");
     _stripePayment.onCancel = () {
       print("the payment form was cancelled");
     };
 
-    _controller = AnimationController(vsync: this, duration: Duration(seconds:2));
-    controllerC = AnimationController(
-        vsync: this, duration: Duration(seconds: 1));
+    _controller =
+        AnimationController(vsync: this, duration: Duration(seconds: 2));
+    controllerC =
+        AnimationController(vsync: this, duration: Duration(seconds: 1));
 
     _topDown = Tween<Offset>(
       begin: Offset(-1.0, -2.0),
-      end:Offset(0.0,0.0),
+      end: Offset(0.0, 0.0),
     ).animate(CurvedAnimation(
-        parent:_controller,
-        curve:Curves.fastLinearToSlowEaseIn
-    )
-    );
+        parent: _controller, curve: Curves.fastLinearToSlowEaseIn));
 
     _bottomUp = Tween<Offset>(
       begin: Offset(0.0, 1.0),
-      end:Offset(0.0,0.0),
+      end: Offset(0.0, 0.0),
     ).animate(CurvedAnimation(
-        parent:_controller,
-        curve:Curves.fastLinearToSlowEaseIn
-    )
-    );
+        parent: _controller, curve: Curves.fastLinearToSlowEaseIn));
 
     _rightToLeft = Tween<Offset>(
-      begin:Offset(1.0, 0.0),
-      end:Offset(0.0, 0.0),
+      begin: Offset(1.0, 0.0),
+      end: Offset(0.0, 0.0),
     ).animate(CurvedAnimation(
-      parent:_controller,
-      curve:Curves.fastLinearToSlowEaseIn,
-    )
-    );
+      parent: _controller,
+      curve: Curves.fastLinearToSlowEaseIn,
+    ));
 
     _animationC = controllerC.drive(
         ColorTween(begin: Colors.lightBlue[200], end: Colors.lightBlue[600]));
     controllerC.repeat();
 
-
-    Future<void>.delayed(Duration(milliseconds:1000),(){
+    Future<void>.delayed(Duration(milliseconds: 1000), () {
       _controller.forward();
     });
-
   }
 
   Widget _securedBy() {
     return Container(
-      margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.05),
+      margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.05),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(Icons.lock_outline),
-          Text(
-            " Secured by "
-          ) ,
+          Text(" Secured by "),
           Padding(
             padding: EdgeInsets.only(top: 3),
             child: Image.asset(
@@ -121,19 +111,22 @@ class _LinkCreditState extends State<LinkCredit> with TickerProviderStateMixin{
     return GestureDetector(
       onTap: () => _openCredit(),
       child: Container(
-        margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.05),
+        margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.05),
         child: Container(
           width: 115,
           height: 115,
           decoration: BoxDecoration(
-            color: Theme.of(context).brightness == Brightness.light ? Colors.grey[100] : Colors.grey[900],
-            boxShadow:  [BoxShadow(
-                color: MediaQuery
-                    .of(context)
-                    .platformBrightness == Brightness.light ? Colors
-                    .grey[300] : Colors.grey[700],
-                offset: Offset.fromDirection(1),
-                blurRadius: 15),
+            color: Theme.of(context).brightness == Brightness.light
+                ? Colors.grey[100]
+                : Colors.grey[900],
+            boxShadow: [
+              BoxShadow(
+                  color: MediaQuery.of(context).platformBrightness ==
+                          Brightness.light
+                      ? Colors.grey[300]
+                      : Colors.grey[700],
+                  offset: Offset.fromDirection(1),
+                  blurRadius: 15),
             ],
             shape: BoxShape.circle,
           ),
@@ -148,7 +141,8 @@ class _LinkCreditState extends State<LinkCredit> with TickerProviderStateMixin{
 
   Widget _linkYourText() {
     return Container(
-      margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.04, bottom: 15),
+      margin: EdgeInsets.only(
+          top: MediaQuery.of(context).size.height * 0.04, bottom: 15),
       child: Text(
         'Link your Payment Method',
         textAlign: TextAlign.center,
@@ -162,7 +156,10 @@ class _LinkCreditState extends State<LinkCredit> with TickerProviderStateMixin{
 
   Widget _explainText() {
     return Container(
-      margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.001, left: MediaQuery.of(context).size.width* 0.1, right: MediaQuery.of(context).size.width* 0.1),
+      margin: EdgeInsets.only(
+          top: MediaQuery.of(context).size.height * 0.001,
+          left: MediaQuery.of(context).size.width * 0.1,
+          right: MediaQuery.of(context).size.width * 0.1),
       child: RichText(
         textAlign: TextAlign.justify,
         text: TextSpan(
@@ -173,7 +170,8 @@ class _LinkCreditState extends State<LinkCredit> with TickerProviderStateMixin{
                 fontSize: 15,
                 color: Theme.of(context).textTheme.caption.color,
               ),
-              text:'To donate your round-ups, link a credit card to your Change Charity Account. This information is secured and protected by ',
+              text:
+                  'To donate your round-ups, link a credit card to your Change Charity Account. This information is secured and protected by ',
             ),
             WidgetSpan(
               child: Padding(
@@ -191,7 +189,7 @@ class _LinkCreditState extends State<LinkCredit> with TickerProviderStateMixin{
                 fontSize: 15,
                 color: Theme.of(context).textTheme.caption.color,
               ),
-              text:'.',
+              text: '.',
             ),
           ],
         ),
@@ -223,7 +221,8 @@ class _LinkCreditState extends State<LinkCredit> with TickerProviderStateMixin{
 
   Widget _whySecure() {
     return Container(
-      margin: EdgeInsets.only(left: MediaQuery.of(context).size.width *0.1, top: 40),
+      margin: EdgeInsets.only(
+          left: MediaQuery.of(context).size.width * 0.1, top: 40),
       alignment: Alignment.centerLeft,
       child: GestureDetector(
         onTap: () {
@@ -231,8 +230,7 @@ class _LinkCreditState extends State<LinkCredit> with TickerProviderStateMixin{
               builder: (BuildContext context) {
                 return SecurityFAQ();
               },
-              fullscreenDialog: true
-          ));
+              fullscreenDialog: true));
         },
         child: Text(
           "Security FAQ",
@@ -249,14 +247,20 @@ class _LinkCreditState extends State<LinkCredit> with TickerProviderStateMixin{
     return ChangeSubmitRow(
       loading: loading,
       onClick: _linkAccount,
-      text: _paymentMethodId == "" || _paymentMethodId == null ? "Link" : "Loading",
+      text: _paymentMethodId == "" || _paymentMethodId == null
+          ? "Link"
+          : "Loading",
       animation: _animationC,
     );
   }
 
   Widget _skipText() {
     return Container(
-      margin: EdgeInsets.only(top: 0, bottom: MediaQuery.of(context).size.height < 650 ? 20: 30, left: 30, right: 30),
+      margin: EdgeInsets.only(
+          top: 0,
+          bottom: MediaQuery.of(context).size.height < 650 ? 20 : 30,
+          left: 30,
+          right: 30),
       alignment: Alignment.bottomCenter,
       child: GestureDetector(
         onTap: () {
@@ -281,7 +285,10 @@ class _LinkCreditState extends State<LinkCredit> with TickerProviderStateMixin{
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: MediaQuery.of(context).platformBrightness == Brightness.light ? Colors.grey[50] : Colors.grey[850],
+        backgroundColor:
+            MediaQuery.of(context).platformBrightness == Brightness.light
+                ? Colors.grey[50]
+                : Colors.grey[850],
         title: Text(
           "Step One",
           style: TextStyle(
@@ -291,30 +298,38 @@ class _LinkCreditState extends State<LinkCredit> with TickerProviderStateMixin{
         centerTitle: true,
         elevation: 0,
       ),
-      backgroundColor: MediaQuery.of(context).platformBrightness == Brightness.light ? Colors.grey[50] : Colors.grey[850],
+      backgroundColor:
+          MediaQuery.of(context).platformBrightness == Brightness.light
+              ? Colors.grey[50]
+              : Colors.grey[850],
       body: Material(
         child: SafeArea(
-          child:SlideTransition(
-            position:_rightToLeft,
-            child:Container(
-              height:MediaQuery.of(context).size.height,
+          child: SlideTransition(
+            position: _rightToLeft,
+            child: Container(
+              height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
               child: Column(
-                  mainAxisAlignment:MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    SlideTransition(position:_topDown, child: _securedBy()),
-                    Expanded(child: Container(),),
+                    SlideTransition(position: _topDown, child: _securedBy()),
+                    Expanded(
+                      child: Container(),
+                    ),
                     _icon(),
                     _linkYourText(),
                     _explainText(),
                     _whySecure(),
-                    Expanded(child: Container(),),
-                    SlideTransition(position:_bottomUp, child: _submitCont()),
+                    Expanded(
+                      child: Container(),
+                    ),
+                    SlideTransition(position: _bottomUp, child: _submitCont()),
                     _errCont(),
-                    Expanded(child: Container(),),
-                    SlideTransition(position:_bottomUp, child: _skipText()),
-                  ]
-              ),
+                    Expanded(
+                      child: Container(),
+                    ),
+                    SlideTransition(position: _bottomUp, child: _skipText()),
+                  ]),
             ),
           ),
         ),
@@ -331,14 +346,13 @@ class _LinkCreditState extends State<LinkCredit> with TickerProviderStateMixin{
   Future<bool> _openCredit() async {
     FocusScope.of(context).unfocus();
     setState(() {
-      _plaidErr='';
+      _plaidErr = '';
     });
 
     var paymentResponse = await _stripePayment.addPaymentMethod();
 
     setState(() {
-      if (paymentResponse.status ==
-          PaymentResponseStatus.succeeded) {
+      if (paymentResponse.status == PaymentResponseStatus.succeeded) {
         _paymentMethodId = paymentResponse.paymentMethodId;
         loading = true;
       } else {
@@ -346,21 +360,24 @@ class _LinkCreditState extends State<LinkCredit> with TickerProviderStateMixin{
       }
     });
 
-    if(paymentResponse.status == PaymentResponseStatus.succeeded) {
+    if (paymentResponse.status == PaymentResponseStatus.succeeded) {
       print("paymentId is $_paymentMethodId");
-      await  _checkAndApply();
+      await _checkAndApply();
     }
 
     print("payment id is: $_paymentMethodId");
   }
 
   Future<bool> _checkAndApply() async {
-    SharedPreferences prefs=await SharedPreferences.getInstance();
-    token=prefs.getString('token');
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    token = prefs.getString('token');
     var content = '{"user_token":"$token"}';
-    var response = await http.post("${cfg.getString("host")}/users/genephemeraltoken", body: content);
+    var response = await http.post(
+        "${cfg.getString("host")}/users/genephemeraltoken",
+        body: content);
     var decodedRes = jsonDecode(response.body);
-    var intentResponse = await _stripePayment.setupPaymentIntent(decodedRes["token"], _paymentMethodId);
+    var intentResponse = await _stripePayment.setupPaymentIntent(
+        decodedRes["token"], _paymentMethodId);
 
     print("status is: ${intentResponse.status}");
 
@@ -369,13 +386,14 @@ class _LinkCreditState extends State<LinkCredit> with TickerProviderStateMixin{
       return true;
     } else if (intentResponse.status == PaymentResponseStatus.failed) {
       setState(() {
-        _plaidErr ="Issue verifying your card. Please try a different card.";
+        _plaidErr = "Issue verifying your card. Please try a different card.";
         _paymentMethodId = '';
         loading = false;
       });
       return false;
     } else {
-      _plaidErr ="Issue verifying your card at this time. Either try a different card, or try again later.";
+      _plaidErr =
+          "Issue verifying your card at this time. Either try a different card, or try again later.";
       loading = false;
       return false;
     }
@@ -384,36 +402,41 @@ class _LinkCreditState extends State<LinkCredit> with TickerProviderStateMixin{
   Future _linkAccount() async {
     await _openCredit();
 
-    if(_paymentMethodId == '' || _paymentMethodId == null){
+    if (_paymentMethodId == '' || _paymentMethodId == null) {
       setState(() {
         loading = false;
       });
       return;
     }
 
-    SharedPreferences prefs=await SharedPreferences.getInstance();
-    token=prefs.getString('token');
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    token = prefs.getString('token');
     var content = '{"user_token":"$token"}';
-    var response = await http.post("${cfg.getString("host")}/users/checkcuslinkedcard", body: content);
+    var response = await http.post(
+        "${cfg.getString("host")}/users/checkcuslinkedcard",
+        body: content);
     if (response.body == "success") {
       setState(() {
         loading = false;
       });
 
       prefs.setString('linkBank', null);
-      Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>LinkBank()));
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => LinkBank()));
     } else {
       print(response.body);
       setState(() {
         loading = false;
-        _plaidErr = 'There was an error linking your credit card at this time. Either try a different account, or try to re-link this card in a few hours';
+        _plaidErr =
+            'There was an error linking your credit card at this time. Either try a different account, or try to re-link this card in a few hours';
       });
     }
   }
 
-  void _chooseLater() async{
-    SharedPreferences prefs=await SharedPreferences.getInstance();
+  void _chooseLater() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('linkBank', null);
-    Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>HomePage()));
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => HomePage()));
   }
 }

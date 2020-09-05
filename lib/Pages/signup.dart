@@ -26,21 +26,21 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
   double drawTime = 0.0;
   double drawDuration = 1.8;
 
-  final _nameController= TextEditingController();
-  final _passController= TextEditingController();
-  final _emailController= TextEditingController();
-  final _confirmPassController= TextEditingController();
-  final nameFocusNode=FocusNode();
-  final emailFocusNode=FocusNode();
-  final passFocusNode=FocusNode();
-  final confirmPassFocusNode=FocusNode();
-  final tosFocusNode=FocusNode();
-  String _nameErr='';
-  String _passErr='';
+  final _nameController = TextEditingController();
+  final _passController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _confirmPassController = TextEditingController();
+  final nameFocusNode = FocusNode();
+  final emailFocusNode = FocusNode();
+  final passFocusNode = FocusNode();
+  final confirmPassFocusNode = FocusNode();
+  final tosFocusNode = FocusNode();
+  String _nameErr = '';
+  String _passErr = '';
   String _confirmPassErr = '';
-  String _emailErr='';
-  bool obscurePass=true;
-  bool loading=false;
+  String _emailErr = '';
+  bool obscurePass = true;
+  bool loading = false;
   bool _tosAccepted = false;
 
   GlobalConfiguration cfg = new GlobalConfiguration();
@@ -51,7 +51,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
     //set animations
     controller = AnimationController(
         vsync: this, duration: Duration(seconds: drawDuration.toInt()));
-    loadingController= AnimationController(
+    loadingController = AnimationController(
         vsync: this, duration: Duration(seconds: 1));
 
     animation = Tween<Offset>(
@@ -73,7 +73,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
 
     loadingController.repeat();
 
-    Future<void>.delayed(Duration(milliseconds:500), () {
+    Future<void>.delayed(Duration(milliseconds: 500), () {
       controller.forward();
       print(animation.value);
     });
@@ -96,12 +96,24 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
 
   //Sign Up
   Widget _signUpText() {
-    if(MediaQuery.of(context).viewInsets.bottom != 0) {
+    if (MediaQuery
+        .of(context)
+        .viewInsets
+        .bottom != 0) {
       return Text("");
     }
     return Container(
-      margin: EdgeInsets.only(top: MediaQuery.of(context).viewInsets.bottom == 0
-          ? MediaQuery.of(context).size.height < 700 ? 0 : MediaQuery.of(context).size.height *0.05
+      margin: EdgeInsets.only(top: MediaQuery
+          .of(context)
+          .viewInsets
+          .bottom == 0
+          ? MediaQuery
+          .of(context)
+          .size
+          .height < 700 ? 0 : MediaQuery
+          .of(context)
+          .size
+          .height * 0.05
           : 0),
       alignment: Alignment.center,
       child: Text(
@@ -119,9 +131,9 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
       focusNode: nameFocusNode,
       autofillHint: AutofillHints.name,
       hintText: 'Legal Name',
-      prefixIcon: Icons.person,
+      prefixIcon: Icons.person_outline_rounded,
       errMsg: _nameErr,
-      errFunc: (s){
+      errFunc: (s) {
         setState(() {
           _nameErr = s;
         });
@@ -135,9 +147,9 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
       autofillHint: AutofillHints.email,
       focusNode: emailFocusNode,
       hintText: 'Email',
-      prefixIcon: Icons.mail,
+      prefixIcon: Icons.mail_outline_rounded,
       errMsg: _emailErr,
-      errFunc: (s){
+      errFunc: (s) {
         setState(() {
           _emailErr = s;
         });
@@ -152,9 +164,9 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
       autofillHint: AutofillHints.newPassword,
       isPassword: true,
       hintText: 'Password',
-      prefixIcon: Icons.lock,
+      prefixIcon: Icons.lock_outline_rounded,
       errMsg: _passErr,
-      errFunc: (s){
+      errFunc: (s) {
         setState(() {
           _passErr = s;
         });
@@ -170,9 +182,9 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
       isPassword: true,
       last: true,
       hintText: 'Confirm Password',
-      prefixIcon: Icons.lock,
+      prefixIcon: Icons.lock_outline_rounded,
       errMsg: _confirmPassErr,
-      errFunc: (s){
+      errFunc: (s) {
         setState(() {
           _confirmPassErr = s;
         });
@@ -201,19 +213,28 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
           RichText(
             text: TextSpan(
               style: TextStyle(
-                color: MediaQuery.of(context).platformBrightness == Brightness.light ? Colors.black : Colors.white,
+                color: MediaQuery
+                    .of(context)
+                    .platformBrightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white,
               ),
               children: [
                 TextSpan(
                   text: 'I agree to the ',
-                  recognizer: TapGestureRecognizer()..onTap = () {
-                    setState(() {_tosAccepted = !_tosAccepted;});
-                  },
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      setState(() {
+                        _tosAccepted = !_tosAccepted;
+                      });
+                    },
                 ),
                 TextSpan(
                   text: 'Terms',
                   style: TextStyle(fontWeight: FontWeight.bold),
-                  recognizer: TapGestureRecognizer()..onTap = () => _launchURL("https://changecharity.io/terms-of-service"),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () =>
+                        _launchURL("https://changecharity.io/terms-of-service"),
                 ),
                 TextSpan(
                   text: ' and ',
@@ -221,7 +242,9 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                 TextSpan(
                   text: 'Privacy Policy',
                   style: TextStyle(fontWeight: FontWeight.bold),
-                  recognizer: TapGestureRecognizer()..onTap = () => _launchURL("https://changecharity.io/privacy-policy"),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () =>
+                        _launchURL("https://changecharity.io/privacy-policy"),
                 ),
               ],
             ),
@@ -237,7 +260,10 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
       animation: loadingAn,
       loading: loading,
       onClick: _signUp,
-      text: MediaQuery.of(context).size.height > 700 ? "Sign Up" : '',
+      text: MediaQuery
+          .of(context)
+          .size
+          .height > 700 ? "Sign Up" : '',
     );
   }
 
@@ -245,8 +271,8 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Material(
-      child:GestureDetector(
-        onTap:(){
+      child: GestureDetector(
+        onTap: () {
           FocusScope.of(context).unfocus();
         },
         child: SafeArea(
@@ -255,7 +281,10 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
             child: CustomPaint(
               painter: ChangeSignUpPaint(),
               child: Container(
-                height: MediaQuery.of(context).size.height,
+                height: MediaQuery
+                    .of(context)
+                    .size
+                    .height,
                 child: SlideTransition(
                   position: animationB,
                   child: SingleChildScrollView(
@@ -264,8 +293,17 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                         children: <Widget>[
                           _backButton(),
                           _signUpText(),
-                          Container(height: MediaQuery.of(context).viewInsets.bottom == 0
-                              ? MediaQuery.of(context).size.height>700 ? 60 : MediaQuery.of(context).size.height *0.05
+                          Container(height: MediaQuery
+                              .of(context)
+                              .viewInsets
+                              .bottom == 0
+                              ? MediaQuery
+                              .of(context)
+                              .size
+                              .height > 700 ? 60 : MediaQuery
+                              .of(context)
+                              .size
+                              .height * 0.05
                               : 0,),
                           _nameInput(),
                           _emailInput(),
@@ -295,29 +333,30 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
 
   //uses SharedPreferences to set token on sign up.
   //If token available(sign up successful), pushes to verify page
-  void _saveSignUp(val) async{
-    SharedPreferences prefs=await SharedPreferences.getInstance();
+  void _saveSignUp(val) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('token', val);
     prefs.setString('signUpEmail', "${_emailController.text}");
-   if(prefs.getString('token')!=null&&prefs.getString('token')!=''){
-      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder:(context)=>EmailAuth(_emailController.text, "signup")), (route) => false);
+    if (prefs.getString('token') != null && prefs.getString('token') != '') {
+      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+          builder: (context) => EmailAuth(_emailController.text, "signup")), (
+          route) => false);
     }
   }
 
   //sets the time plus thirty minutes to store in shared preferences.
   //On verify page, after 30 minutes, get redirected back to sign up. account is no longer valid.
-  void _setTime()async{
-    var timePlusThirty=DateTime.now().add(new Duration(seconds:1800));
-    SharedPreferences timePref =await SharedPreferences.getInstance();
+  void _setTime() async {
+    var timePlusThirty = DateTime.now().add(new Duration(seconds: 1800));
+    SharedPreferences timePref = await SharedPreferences.getInstance();
     timePref.setString('time', timePlusThirty.toString());
     print(timePlusThirty.toString());
   }
 
   bool _checkValidName() {
-
-    if(_nameController.text==''||_nameController.text==null){
-      setState((){
-        _nameErr="This field can't be blank";
+    if (_nameController.text == '' || _nameController.text == null) {
+      setState(() {
+        _nameErr = "This field can't be blank";
       });
       return false;
     }
@@ -326,82 +365,85 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
 
   //throws errors if email isn't valid
   bool _checkValidEmail() {
+    bool emailValid = RegExp(
+        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+        .hasMatch(_emailController.text);
 
-    bool emailValid = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(_emailController.text);
-
-    if(_emailController.text==''||_emailController.text==null){
-      setState((){
-        _emailErr="This field can't be blank";
+    if (_emailController.text == '' || _emailController.text == null) {
+      setState(() {
+        _emailErr = "This field can't be blank";
       });
       return false;
-    } else if(!emailValid){
-      setState((){
-        _emailErr="This is not a valid email address";
+    } else if (!emailValid) {
+      setState(() {
+        _emailErr = "This is not a valid email address";
       });
       return false;
     }
     return true;
-
   }
 
   //throws errors if password isn't valid
-  bool _checkValidPassword(){
-
+  bool _checkValidPassword() {
     bool containsCap = RegExp(r"[A-Z]").hasMatch(_passController.text);
-    var containsNumb=RegExp(r"\d").hasMatch(_passController.text);
+    var containsNumb = RegExp(r"\d").hasMatch(_passController.text);
     //regex not working for this.have to fix:
 //    var containsSpecialChar=RegExp(r"^\W").hasMatch(_passController.text);
-    if (_passController.text ==''|| _passController.text==null){
-      setState((){
-        _passErr="This field can't be blank";
+    if (_passController.text == '' || _passController.text == null) {
+      setState(() {
+        _passErr = "This field can't be blank";
       });
       return false;
-    }else if(_passController.text.length<6) {
+    } else if (_passController.text.length < 6) {
       setState(() {
         _passErr = "Must be longer than 6 characters";
       });
       return false;
-    }else if(!containsCap){
+    } else if (!containsCap) {
       setState(() {
-        _passErr="Must contain at least one capital letter";
+        _passErr = "Must contain at least one capital letter";
       });
       return false;
-    } else if(!containsNumb){
+    } else if (!containsNumb) {
       setState(() {
-        _passErr="Must contain at least one number";
+        _passErr = "Must contain at least one number";
       });
       return false;
-    } else if(_passController.text != _confirmPassController.text) {
+    } else if (_passController.text != _confirmPassController.text) {
       setState(() {
-        _confirmPassErr= "Passwords do not match";
+        _confirmPassErr = "Passwords do not match";
       });
       return false;
     }
     return true;
-
   }
 
   //called on click of sign up button. checks email, password, and plaid before making api call and signing up.
   //if sign up is successful, api sends back token which gets stored in shared preferences
-  _signUp()async{
-    if(!_checkValidName() || !_checkValidEmail() || !_checkValidPassword()){
+  _signUp() async {
+    if (!_checkValidName() || !_checkValidEmail() || !_checkValidPassword()) {
       return;
-    }else{
+    } else {
       setState(() {
-        loading=!loading;
+        loading = !loading;
       });
-      var content='{"legal_name":"${_nameController.text}","email":"${_emailController.text}","password":"${_passController.text}"}';
-      var response= await http.post("${cfg.getString("host")}/users/signup", body:content).timeout(Duration(seconds: 7));
+      var content = '{"legal_name":"${_nameController
+          .text}","email":"${_emailController
+          .text}","password":"${_passController.text}"}';
+      var response = await http.post(
+          "${cfg.getString("host")}/users/signup", body: content).timeout(
+          Duration(seconds: 7));
 
       print(response.body);
 
-      if(response.body=="rpc error: code = Unknown desc = email exists"){
+      if (response.body == "rpc error: code = Unknown desc = email exists") {
         setState(() {
-          _emailErr="Email Taken";
-          loading=!loading;
+          _emailErr = "Email Taken";
+          loading = !loading;
         });
         return;
-      } else if(response.body.startsWith("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9")){
+      } else
+      if (response.body.startsWith("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9")) {
         _saveSignUp(response.body);
         _setTime();
         print("successful");

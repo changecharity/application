@@ -1,21 +1,22 @@
+import 'package:change_charity_components/change_charity_components.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:change_charity_components/change_charity_components.dart';
+
 import 'splash.dart';
 
-class Change extends StatefulWidget{
+class Change extends StatefulWidget {
   @override
   _ChangeState createState() => _ChangeState();
 }
 
-class _ChangeState extends State<Change>{
+class _ChangeState extends State<Change> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Change',
       home: Splash(),
       theme: ChangeTheme(isDark: false).themeData,
-      darkTheme:ChangeTheme(isDark: true).themeData,
+      darkTheme: ChangeTheme(isDark: true).themeData,
       themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
     );
@@ -41,11 +42,10 @@ ThemeData _lightTheme() {
       ),
       enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(
-            style: BorderStyle.none,
-            color: Colors.grey[900],
-            width: 1.0,
-          )
-      ),
+        style: BorderStyle.none,
+        color: Colors.grey[900],
+        width: 1.0,
+      )),
       focusedBorder: OutlineInputBorder(
         borderSide: BorderSide(
           style: BorderStyle.none,
@@ -74,7 +74,7 @@ ThemeData _lightTheme() {
     ),
     buttonTheme: base.buttonTheme.copyWith(
       buttonColor: Colors.grey[300],
-      shape:RoundedRectangleBorder(
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(40)),
       ),
       textTheme: ButtonTextTheme.normal,
@@ -90,24 +90,24 @@ ThemeData _lightTheme() {
 }
 
 TextTheme _lightTextTheme(TextTheme base) {
-  return base.copyWith(
-    headline5: base.headline5.copyWith(
-      fontWeight: FontWeight.w500,
-    ),
-    headline6: base.headline6.copyWith(
-        fontSize: 18.0
-    ),
-    caption: base.caption.copyWith(
-      fontWeight: FontWeight.w400,
-      fontSize: 12.0,
-    ),
-    bodyText1: base.bodyText1.copyWith(
-      fontWeight: FontWeight.w500,
-      fontSize: 16.0,
-    ),
-  ).apply(
-    fontFamily: 'Montserrat',
-    displayColor: Colors.black,
-    bodyColor: Colors.black,
-  );
+  return base
+      .copyWith(
+        headline5: base.headline5.copyWith(
+          fontWeight: FontWeight.w500,
+        ),
+        headline6: base.headline6.copyWith(fontSize: 18.0),
+        caption: base.caption.copyWith(
+          fontWeight: FontWeight.w400,
+          fontSize: 12.0,
+        ),
+        bodyText1: base.bodyText1.copyWith(
+          fontWeight: FontWeight.w500,
+          fontSize: 16.0,
+        ),
+      )
+      .apply(
+        fontFamily: 'Montserrat',
+        displayColor: Colors.black,
+        bodyColor: Colors.black,
+      );
 }

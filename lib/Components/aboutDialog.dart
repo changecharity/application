@@ -24,7 +24,7 @@ class _AboutChangeState extends State<AboutChange> {
       applicationLegalese: "© 2020 Change Charity, LLC",
       children: [
         Padding(
-          padding: EdgeInsets.fromLTRB(25,20,20,0),
+          padding: EdgeInsets.fromLTRB(25, 20, 20, 0),
           child: Text(
             'Change Charity was created with one goal in mind. To help out non-profits. We have been working tirelessly towards this goal, and really believe this is an incredible step in the right direction. We appreciate all feedback and any ideas of how we can improve our product. ',
             textAlign: TextAlign.justify,
@@ -34,7 +34,7 @@ class _AboutChangeState extends State<AboutChange> {
     );
   }
 
-  void _getInfo() async{
+  void _getInfo() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     setState(() {
       version = packageInfo.version;

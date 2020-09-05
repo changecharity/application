@@ -28,10 +28,10 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
   AnimationController controller;
   AnimationController controllerC;
 
-  final _emailController=TextEditingController();
+  final _emailController = TextEditingController();
   final _passController = TextEditingController();
-  final emailFocusNode=FocusNode();
-  final  passFocusNode =FocusNode();
+  final emailFocusNode = FocusNode();
+  final passFocusNode = FocusNode();
   String _emailErr = '';
   String _passErr = '';
 
@@ -40,7 +40,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
   double drawDuration = 2.0;
   double loadDuration = 1;
 
-  bool obscurePass=true;
+  bool obscurePass = true;
   bool loading = false;
 
   void initState() {
@@ -82,15 +82,27 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
 
     Future<void>.delayed(Duration(milliseconds: 700), () {
       controller.forward();
-      print(MediaQuery.of(context).viewInsets.bottom);
+      print(MediaQuery
+          .of(context)
+          .viewInsets
+          .bottom);
     });
   }
 
   Widget _helloContainer() {
-    if (MediaQuery.of(context).viewInsets.bottom == 0){
+    if (MediaQuery
+        .of(context)
+        .viewInsets
+        .bottom == 0) {
       return Container(
         margin: EdgeInsets.only(
-            top: MediaQuery.of(context).size.height < 650 ? 70 : MediaQuery.of(context).size.height * 0.16, bottom: 10),
+            top: MediaQuery
+                .of(context)
+                .size
+                .height < 650 ? 70 : MediaQuery
+                .of(context)
+                .size
+                .height * 0.16, bottom: 10),
         alignment: Alignment.center,
         child: Image.asset(
           "images/logo-circle.png",
@@ -104,22 +116,34 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
 
   Widget _messageContainer() {
     return Container(
-      margin: EdgeInsets.only(top: MediaQuery.of(context).viewInsets.bottom == 0
-          ? 10
-          : MediaQuery.of(context).viewInsets.bottom < 100
-          ? MediaQuery.of(context).viewInsets.bottom
-          : 150),
-      alignment: Alignment.center,
-      child: MediaQuery.of(context).viewInsets.bottom == 0 ? Text(
-        'Sign in to your account',
-        style: TextStyle(
-          fontSize: 25,
-        ),
-      ) : Text(
-        'Welcome Back',
-        style: TextStyle(
-          fontSize: 29,
-        ),)
+        margin: EdgeInsets.only(top: MediaQuery
+            .of(context)
+            .viewInsets
+            .bottom == 0
+            ? 10
+            : MediaQuery
+            .of(context)
+            .viewInsets
+            .bottom < 100
+            ? MediaQuery
+            .of(context)
+            .viewInsets
+            .bottom
+            : 150),
+        alignment: Alignment.center,
+        child: MediaQuery
+            .of(context)
+            .viewInsets
+            .bottom == 0 ? Text(
+          'Sign in to your account',
+          style: TextStyle(
+            fontSize: 25,
+          ),
+        ) : Text(
+          'Welcome Back',
+          style: TextStyle(
+            fontSize: 29,
+          ),)
     );
   }
 
@@ -128,7 +152,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
       controller: _emailController,
       focusNode: emailFocusNode,
       hintText: "Email",
-      prefixIcon: Icons.mail,
+      prefixIcon: Icons.mail_outline_rounded,
       errMsg: _emailErr,
       autofillHint: AutofillHints.email,
       errFunc: (String s) {
@@ -144,7 +168,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
       controller: _passController,
       focusNode: passFocusNode,
       hintText: "Password",
-      prefixIcon: Icons.lock,
+      prefixIcon: Icons.lock_outline_rounded,
       errMsg: _passErr,
       isPassword: true,
       last: true,
@@ -160,20 +184,22 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
 
   Widget _forgotPass() {
     return Container(
-      alignment: Alignment.centerRight,
-      margin: EdgeInsets.only(right: 35, top: 0),
-      child: GestureDetector(
-        onTap:(){
-          showDialog(context:context, builder:(context)=>EnterEmail(), barrierDismissible: true);
-        },
-        child:Text(
-          'Forgot your password?',
-          style: TextStyle(
-            fontSize: 16,
-            color: Colors.grey[600],
+        alignment: Alignment.centerRight,
+        margin: EdgeInsets.only(right: 35, top: 0),
+        child: GestureDetector(
+          onTap: () {
+            showDialog(context: context,
+                builder: (context) => EnterEmail(),
+                barrierDismissible: true);
+          },
+          child: Text(
+            'Forgot your password?',
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.grey[600],
+            ),
           ),
-        ),
-      )
+        )
     );
   }
 
@@ -181,14 +207,20 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
     return ChangeSubmitRow(
       animation: animationC,
       loading: loading,
-      text: MediaQuery.of(context).size.height > 700 ? "Sign In" : '',
+      text: MediaQuery
+          .of(context)
+          .size
+          .height > 700 ? "Sign In" : '',
       onClick: _submit,
     );
   }
 
   Widget _createText() {
     return Container(
-      margin: EdgeInsets.only(top: 0, bottom: MediaQuery.of(context).size.height < 700 ? 3: 30),
+      margin: EdgeInsets.only(top: 0, bottom: MediaQuery
+          .of(context)
+          .size
+          .height < 700 ? 3 : 30),
       alignment: Alignment.bottomCenter,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -225,49 +257,59 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final bool isLight =  MediaQuery.of(context).platformBrightness == Brightness.light;
+    final bool isLight = MediaQuery
+        .of(context)
+        .platformBrightness == Brightness.light;
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       systemNavigationBarColor: isLight ? Colors.grey[50] : Colors.grey[850],
-      systemNavigationBarIconBrightness: isLight ? Brightness.dark : Brightness.light,
+      systemNavigationBarIconBrightness: isLight ? Brightness.dark : Brightness
+          .light,
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: isLight ? Brightness.dark : Brightness.light,
       statusBarBrightness: isLight ? Brightness.dark : Brightness.light,
     ));
     return Material(
-      child:GestureDetector(
-        onTap:(){
-          FocusScope.of(context).unfocus();
-        },
-        child: SingleChildScrollView(
-          child: SlideTransition(
-            position: animationB,
-            child: CustomPaint(
-              painter: ChangeLoginPaint(),
-              child: Container(
-                height: MediaQuery.of(context).size.height,
-                child: SlideTransition(
-                  position: animation,
-                  child: AutofillGroup(
-                    child: Column(
-                      children: <Widget>[
-                        SlideTransition(child: _helloContainer(), position: animationD),
-                        _messageContainer(),
-                        Container(height:MediaQuery.of(context).size.height < 700 ? 10 : 50,),
-                        _emailInput(),
-                        _passInput(),
-                        _forgotPass(),
-                        _signinContainer(),
-                        Expanded(child: Text(""),),
-                        _createText(),
-                      ],
+        child: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).unfocus();
+          },
+          child: SingleChildScrollView(
+            child: SlideTransition(
+              position: animationB,
+              child: CustomPaint(
+                painter: ChangeLoginPaint(),
+                child: Container(
+                  height: MediaQuery
+                      .of(context)
+                      .size
+                      .height,
+                  child: SlideTransition(
+                    position: animation,
+                    child: AutofillGroup(
+                      child: Column(
+                        children: <Widget>[
+                          SlideTransition(
+                              child: _helloContainer(), position: animationD),
+                          _messageContainer(),
+                          Container(height: MediaQuery
+                              .of(context)
+                              .size
+                              .height < 700 ? 10 : 50,),
+                          _emailInput(),
+                          _passInput(),
+                          _forgotPass(),
+                          _signinContainer(),
+                          Expanded(child: Text(""),),
+                          _createText(),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
           ),
-        ),
-      )
+        )
     );
   }
 
@@ -279,48 +321,45 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
   }
 
 
-  void _saveLogin(val) async{
+  void _saveLogin(val) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('token', val);
-    Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>HomePage()));
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => HomePage()));
   }
 
-  void _saveEmailAddress(val) async{
-    SharedPreferences emailPrefs=await SharedPreferences.getInstance();
+  void _saveEmailAddress(val) async {
+    SharedPreferences emailPrefs = await SharedPreferences.getInstance();
     emailPrefs.setString('emailAddress', val);
   }
 
-  bool _checkValidEmail(){
+  bool _checkValidEmail() {
+    bool emailValid = RegExp(
+        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+        .hasMatch(_emailController.text);
 
-    bool emailValid = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(_emailController.text);
-
-    if(_emailController.text==''||_emailController.text==null){
-      setState((){
-        _emailErr="This field can't be blank";
-
+    if (_emailController.text == '' || _emailController.text == null) {
+      setState(() {
+        _emailErr = "This field can't be blank";
       });
       return false;
-    } else if(!emailValid){
-      setState((){
-        _emailErr="This is not a valid email address";
+    } else if (!emailValid) {
+      setState(() {
+        _emailErr = "This is not a valid email address";
       });
       return false;
     }
     return true;
-
   }
 
-  bool _checkValidPassword(){
-
-
-    if (_passController.text ==''|| _passController.text==null){
-      setState((){
-        _passErr="This field can't be blank";
+  bool _checkValidPassword() {
+    if (_passController.text == '' || _passController.text == null) {
+      setState(() {
+        _passErr = "This field can't be blank";
       });
       return false;
     }
-      return true;
-
+    return true;
   }
 
   _submit() async {
@@ -342,11 +381,12 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
     var content = '{"email": "${_emailController
         .text}", "password":"${_passController.text}"}';
     try {
-      var response = await http.post("${cfg.getString("host")}/users/login", body: content)
+      var response = await http.post(
+          "${cfg.getString("host")}/users/login", body: content)
           .catchError((e) => print("error is $e"));
       print(response.body);
       switch (response.body) {
-        case "rpc error: code = Unknown desc = Wrong Email":
+        case "Wrong Email":
           {
             setState(() {
               _emailErr = "An account with this email does not exist";
@@ -355,7 +395,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
             return;
           }
           break;
-        case "rpc error: code = Unknown desc = Wrong Password":
+        case "Wrong Password":
           {
             setState(() {
               _passErr = "Incorrect Password";
@@ -382,17 +422,17 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
       }
 
       print(response.body);
-    } on TimeoutException catch(err) {
+    } on TimeoutException catch (err) {
       print(err);
       setState(() {
         loading = !loading;
       });
-    } on SocketException catch(err) {
+    } on SocketException catch (err) {
       print(err);
       setState(() {
         loading = !loading;
       });
-    } on NoSuchMethodError catch(err) {
+    } on NoSuchMethodError catch (err) {
       print(err);
       setState(() {
         loading = !loading;
