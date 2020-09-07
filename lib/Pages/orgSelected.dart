@@ -1,14 +1,15 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:change_charity_components/change_charity_components.dart';
-import 'package:global_configuration/global_configuration.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:global_configuration/global_configuration.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'linkCredit.dart';
 
 class OrgSelected extends StatefulWidget {
@@ -198,21 +199,33 @@ class _OrgSelectedState extends State<OrgSelected>
   @override
   void dispose() {
     _controller.dispose();
+    controllerC.dispose();
     super.dispose();
   }
 
+  // gets the org info and its id
   _getOrg() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     token = preferences.getString('token');
     int org = preferences.getInt('selOrg');
-    var content = '{"user_token":"$token", "org": $org}';
-    var response = await http.post("${cfg.getString("host")}/users/getorginfo",
-        body: content);
-    print(response.body);
+    var content = '{"user_token":"$token", "org": 12}';
+    var orgRes = await http.post(
+      "${cfg.getString("host")}/users/getorginfo",
+      body: content,
+    );
+
+    if (orgRes.body.contains("no rows in")) {
+      _chooseLater();
+      return;
+    }
+
+    var res = jsonDecode(orgRes.body);
+    print("org res is: $res");
+
     setState(() {
-      name = jsonDecode(response.body)["name"];
-      logo = jsonDecode(response.body)["logo"];
-      id = jsonDecode(response.body)["id"];
+      name = res["name"];
+      logo = res["logo"] ?? "";
+      id = res["id"];
     });
   }
 

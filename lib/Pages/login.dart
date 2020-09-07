@@ -1,17 +1,18 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:flutter/services.dart';
 
+import 'package:change/Pages/homePage.dart';
+import 'package:change_charity_components/change_charity_components.dart';
+import 'package:flutter/animation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/animation.dart';
+import 'package:flutter/services.dart';
+import 'package:global_configuration/global_configuration.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'signup.dart';
-import 'homePage.dart';
+
 import '../Components/enterEmailDialog.dart';
-import 'package:global_configuration/global_configuration.dart';
-import 'package:change_charity_components/change_charity_components.dart';
+import 'signup.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -20,6 +21,7 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> with TickerProviderStateMixin {
   GlobalConfiguration cfg = new GlobalConfiguration();
+  final formKey = GlobalKey<FormState>();
 
   Animation<Offset> animation;
   Animation<Offset> animationB;
@@ -34,7 +36,6 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
   final passFocusNode = FocusNode();
   String _emailErr = '';
   String _passErr = '';
-
 
   double drawTime = 0.0;
   double drawDuration = 2.0;
@@ -82,27 +83,18 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
 
     Future<void>.delayed(Duration(milliseconds: 700), () {
       controller.forward();
-      print(MediaQuery
-          .of(context)
-          .viewInsets
-          .bottom);
+      print(MediaQuery.of(context).viewInsets.bottom);
     });
   }
 
   Widget _helloContainer() {
-    if (MediaQuery
-        .of(context)
-        .viewInsets
-        .bottom == 0) {
+    if (MediaQuery.of(context).viewInsets.bottom == 0) {
       return Container(
         margin: EdgeInsets.only(
-            top: MediaQuery
-                .of(context)
-                .size
-                .height < 650 ? 70 : MediaQuery
-                .of(context)
-                .size
-                .height * 0.16, bottom: 10),
+            top: MediaQuery.of(context).size.height < 650
+                ? 70
+                : MediaQuery.of(context).size.height * 0.16,
+            bottom: 10),
         alignment: Alignment.center,
         child: Image.asset(
           "images/logo-circle.png",
@@ -116,35 +108,26 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
 
   Widget _messageContainer() {
     return Container(
-        margin: EdgeInsets.only(top: MediaQuery
-            .of(context)
-            .viewInsets
-            .bottom == 0
-            ? 10
-            : MediaQuery
-            .of(context)
-            .viewInsets
-            .bottom < 100
-            ? MediaQuery
-            .of(context)
-            .viewInsets
-            .bottom
-            : 150),
+        margin: EdgeInsets.only(
+            top: MediaQuery.of(context).viewInsets.bottom == 0
+                ? 10
+                : MediaQuery.of(context).viewInsets.bottom < 100
+                    ? MediaQuery.of(context).viewInsets.bottom
+                    : 150),
         alignment: Alignment.center,
-        child: MediaQuery
-            .of(context)
-            .viewInsets
-            .bottom == 0 ? Text(
-          'Sign in to your account',
-          style: TextStyle(
-            fontSize: 25,
-          ),
-        ) : Text(
-          'Welcome Back',
-          style: TextStyle(
-            fontSize: 29,
-          ),)
-    );
+        child: MediaQuery.of(context).viewInsets.bottom == 0
+            ? Text(
+                'Sign in to your account',
+                style: TextStyle(
+                  fontSize: 25,
+                ),
+              )
+            : Text(
+                'Welcome Back',
+                style: TextStyle(
+                  fontSize: 29,
+                ),
+              ));
   }
 
   Widget _emailInput() {
@@ -188,7 +171,8 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
         margin: EdgeInsets.only(right: 35, top: 0),
         child: GestureDetector(
           onTap: () {
-            showDialog(context: context,
+            showDialog(
+                context: context,
                 builder: (context) => EnterEmail(),
                 barrierDismissible: true);
           },
@@ -199,28 +183,22 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
               color: Colors.grey[600],
             ),
           ),
-        )
-    );
+        ));
   }
 
   Widget _signinContainer() {
     return ChangeSubmitRow(
       animation: animationC,
       loading: loading,
-      text: MediaQuery
-          .of(context)
-          .size
-          .height > 700 ? "Sign In" : '',
+      text: MediaQuery.of(context).size.height > 700 ? "Sign In" : '',
       onClick: _submit,
     );
   }
 
   Widget _createText() {
     return Container(
-      margin: EdgeInsets.only(top: 0, bottom: MediaQuery
-          .of(context)
-          .size
-          .height < 700 ? 3 : 30),
+      margin: EdgeInsets.only(
+          top: 0, bottom: MediaQuery.of(context).size.height < 700 ? 3 : 30),
       alignment: Alignment.bottomCenter,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -257,71 +235,69 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final bool isLight = MediaQuery
-        .of(context)
-        .platformBrightness == Brightness.light;
+    final bool isLight =
+        MediaQuery.of(context).platformBrightness == Brightness.light;
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       systemNavigationBarColor: isLight ? Colors.grey[50] : Colors.grey[850],
-      systemNavigationBarIconBrightness: isLight ? Brightness.dark : Brightness
-          .light,
+      systemNavigationBarIconBrightness:
+          isLight ? Brightness.dark : Brightness.light,
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: isLight ? Brightness.dark : Brightness.light,
       statusBarBrightness: isLight ? Brightness.dark : Brightness.light,
     ));
     return Material(
         child: GestureDetector(
-          onTap: () {
-            FocusScope.of(context).unfocus();
-          },
-          child: SingleChildScrollView(
-            child: SlideTransition(
-              position: animationB,
-              child: CustomPaint(
-                painter: ChangeLoginPaint(),
-                child: Container(
-                  height: MediaQuery
-                      .of(context)
-                      .size
-                      .height,
-                  child: SlideTransition(
-                    position: animation,
-                    child: AutofillGroup(
-                      child: Column(
-                        children: <Widget>[
-                          SlideTransition(
-                              child: _helloContainer(), position: animationD),
-                          _messageContainer(),
-                          Container(height: MediaQuery
-                              .of(context)
-                              .size
-                              .height < 700 ? 10 : 50,),
-                          _emailInput(),
-                          _passInput(),
-                          _forgotPass(),
-                          _signinContainer(),
-                          Expanded(child: Text(""),),
-                          _createText(),
-                        ],
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: SingleChildScrollView(
+        child: SlideTransition(
+          position: animationB,
+          child: CustomPaint(
+            painter: ChangeLoginPaint(),
+            child: Container(
+              height: MediaQuery.of(context).size.height,
+              child: SlideTransition(
+                position: animation,
+                child: AutofillGroup(
+                  child: Column(
+                    children: <Widget>[
+                      SlideTransition(
+                          child: _helloContainer(), position: animationD),
+                      _messageContainer(),
+                      Container(
+                        height:
+                            MediaQuery.of(context).size.height < 700 ? 10 : 50,
                       ),
-                    ),
+                      _emailInput(),
+                      _passInput(),
+                      _forgotPass(),
+                      _signinContainer(),
+                      Expanded(
+                        child: Text(""),
+                      ),
+                      _createText(),
+                    ],
                   ),
                 ),
               ),
             ),
           ),
-        )
-    );
+        ),
+      ),
+    ));
   }
 
   @override
   void dispose() {
+    TextInput.finishAutofillContext();
     controller.dispose();
     controllerC.dispose();
     super.dispose();
   }
 
-
   void _saveLogin(val) async {
+    TextInput.finishAutofillContext();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('token', val);
     Navigator.pushReplacement(
@@ -335,7 +311,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
 
   bool _checkValidEmail() {
     bool emailValid = RegExp(
-        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
         .hasMatch(_emailController.text);
 
     if (_emailController.text == '' || _emailController.text == null) {
@@ -367,8 +343,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
     if (!_checkValidEmail()) {
       print(_emailErr);
       return;
-    }
-    else if (!_checkValidPassword()) {
+    } else if (!_checkValidPassword()) {
       print(_passErr);
       return;
     }
@@ -378,11 +353,11 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
       print("loading");
     });
 
-    var content = '{"email": "${_emailController
-        .text}", "password":"${_passController.text}"}';
+    var content =
+        '{"email": "${_emailController.text}", "password":"${_passController.text}"}';
     try {
-      var response = await http.post(
-          "${cfg.getString("host")}/users/login", body: content)
+      var response = await http
+          .post("${cfg.getString("host")}/users/login", body: content)
           .catchError((e) => print("error is $e"));
       print(response.body);
       switch (response.body) {
@@ -440,4 +415,3 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
     }
   }
 }
-

@@ -10,8 +10,16 @@ class UserOrgModel extends ChangeNotifier {
   String get getOrgImg => _userOrgImg;
 
   void notify(String name, String img) {
-    _userOrg = name;
-    _userOrgImg = img;
+    _userOrg = _checkName(name);
+    _userOrgImg = img != "" ? img : "error";
     notifyListeners();
+  }
+
+  String _checkName(String n) {
+    n ??= "";
+    if (n == "") {
+      return "Choose Your Organization";
+    }
+    return n;
   }
 }

@@ -1,12 +1,9 @@
-import 'package:change/Models/userProfileModel.dart';
+import 'package:change/Components/routes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:global_configuration/global_configuration.dart';
-import 'package:sleek_circular_slider/sleek_circular_slider.dart';
-import 'package:provider/provider.dart';
-import 'package:http/http.dart' as http;
 import 'package:money2/money2.dart';
+import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 
 class MonthlyLimit extends StatefulWidget {
   MonthlyLimit(this.initialVal);
@@ -119,7 +116,7 @@ class _MonthlyLimitState extends State<MonthlyLimit>
             setState(() {
               _monthLimit = (endValue.floor() * 100).toInt();
             });
-            _setMonthlyLimit();
+            Routes(context: context).setMonthlyLimit(_monthLimit);
           },
           innerWidget: (double value) {
             return Center(
@@ -162,7 +159,7 @@ class _MonthlyLimitState extends State<MonthlyLimit>
                     _monthLimit = 6000;
                   }
                 });
-                _setMonthlyLimit();
+                Routes(context: context).setMonthlyLimit(_monthLimit);
               },
               inactiveTrackColor: Colors.grey[300],
               inactiveThumbColor: Colors.grey[500],
@@ -221,21 +218,6 @@ class _MonthlyLimitState extends State<MonthlyLimit>
   void dispose() {
     controller.dispose();
     super.dispose();
-  }
-
-  void _setMonthlyLimit() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var token = prefs.getString('token');
-    var content = '{"user_token":"$token", "monthly_limit":$_monthLimit}';
-    await http.post("${cfg.getString("host")}/users/updatemonthlylimit",
-        body: content);
-    print(_monthLimit);
-    context.read<UserProfileModel>().notify(
-        context.read<UserProfileModel>().getUserPfLetter,
-        context.read<UserProfileModel>().getUserName,
-        context.read<UserProfileModel>().getUserThreshold,
-        _monthLimit.toInt(),
-        context.read<UserProfileModel>().getUserRoundUpStatus);
   }
 
   void _setInitial() async {

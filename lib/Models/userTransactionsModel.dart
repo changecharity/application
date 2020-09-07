@@ -12,7 +12,7 @@ class UserTransactionsModel extends ChangeNotifier {
   }
 
   void addTrans(List trans) {
-    if(trans == null || trans == []) {
+    if (trans == null || trans == []) {
       return;
     }
     _transactions += trans;

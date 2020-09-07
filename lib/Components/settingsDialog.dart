@@ -1,11 +1,12 @@
+import 'package:change/Components/routes.dart';
+import 'package:change/Models/userProfileModel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'securityFaq.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'aboutDialog.dart';
 
-import '../Pages/login.dart';
+import 'aboutDialog.dart';
+import 'securityFaq.dart';
 
 class SettingsDialog extends StatefulWidget {
   _SettingsDialogState createState() => _SettingsDialogState();
@@ -16,6 +17,9 @@ class _SettingsDialogState extends State<SettingsDialog>
   AnimationController controller;
   Animation<Offset> _paintAnm;
   Animation<Offset> _cardsAnm;
+
+  TextStyle errorStyle = TextStyle(color: Colors.redAccent);
+  TextStyle captionStyle;
 
   void initState() {
     super.initState();
@@ -42,14 +46,15 @@ class _SettingsDialogState extends State<SettingsDialog>
   Widget _FAQ() {
     return ListTile(
       contentPadding: EdgeInsets.symmetric(horizontal: 30, vertical: 3),
-      leading: Icon(Icons.help_outline),
+      leading: Icon(Icons.help_outline_rounded),
       title: Text('FAQ'),
       onTap: () {
-        Navigator.of(context).push(new MaterialPageRoute<Null>(
-            builder: (BuildContext context) {
-              return SecurityFAQ();
-            },
-            fullscreenDialog: true));
+        Navigator.of(context).push(
+          new MaterialPageRoute<Null>(
+            builder: (BuildContext context) => SecurityFAQ(),
+            fullscreenDialog: true,
+          ),
+        );
       },
     );
   }
@@ -57,9 +62,14 @@ class _SettingsDialogState extends State<SettingsDialog>
   Widget _contactUs() {
     return ListTile(
       contentPadding: EdgeInsets.symmetric(horizontal: 30, vertical: 3),
-      leading: Icon(Icons.people),
-      title: Text('Contact Us'),
-      subtitle: Text('Questions? Feedback? Need Help?'),
+      leading: Icon(Icons.people_outline_rounded),
+      title: Text(
+        'Contact Us',
+      ),
+      subtitle: Text(
+        'Questions? Feedback? Need Help?',
+        style: captionStyle,
+      ),
       onTap: () {
         launch('mailto:support@changecharity.io?subject=AppSupport');
       },
@@ -69,13 +79,34 @@ class _SettingsDialogState extends State<SettingsDialog>
   Widget _appInfo() {
     return ListTile(
       contentPadding: EdgeInsets.symmetric(horizontal: 30, vertical: 3),
-      leading: Icon(Icons.info_outline),
+      leading: Icon(Icons.info_outline_rounded),
       title: Text('App Info'),
       onTap: () {
         showDialog(
-            context: context,
-            builder: (context) => AboutChange(),
-            barrierDismissible: true);
+          context: context,
+          builder: (context) => AboutChange(),
+          barrierDismissible: true,
+        );
+      },
+    );
+  }
+
+  Widget _pauseTrans() {
+    return Consumer<UserProfileModel>(
+      builder: (context, prof, widget) {
+        return ListTile(
+          contentPadding: EdgeInsets.symmetric(horizontal: 30, vertical: 3),
+          leading: Icon(prof.getUserRoundUpStatus
+              ? Icons.pause_circle_outline_rounded
+              : Icons.play_circle_outline_rounded),
+          title: Text('Pause Round-Ups'),
+          subtitle: Text(
+            '${prof.getUserRoundUpStatus ? "Running" : "Paused"}',
+            style: prof.getUserRoundUpStatus ? captionStyle : errorStyle,
+          ),
+          onTap: () =>
+              Routes(context: context).setRUStatus(!prof.getUserRoundUpStatus),
+        );
       },
     );
   }
@@ -83,22 +114,32 @@ class _SettingsDialogState extends State<SettingsDialog>
   Widget _logOutText() {
     return Container(
       margin: EdgeInsets.only(top: 20),
-      height: 40,
-      width: 50,
-      child: MaterialButton(
-        child: Text(
-          "Log Out",
-          style: TextStyle(
-            color: Colors.redAccent,
+      height: 60,
+      child: FittedBox(
+        fit: BoxFit.fitHeight,
+        child: MaterialButton(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(5)),
           ),
+          child: Text(
+            "Log Out",
+            style: TextStyle(
+              color: Colors.redAccent,
+            ),
+          ),
+          onPressed: Routes(context: context).logOut,
         ),
-        onPressed: _logout,
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    captionStyle = TextStyle(
+      color: MediaQuery.of(context).platformBrightness == Brightness.light
+          ? Colors.grey[700]
+          : Colors.grey[400],
+    );
     return Scaffold(
       backgroundColor:
           MediaQuery.of(context).platformBrightness == Brightness.light
@@ -126,6 +167,7 @@ class _SettingsDialogState extends State<SettingsDialog>
             child: ListView(
               children: [
                 _FAQ(),
+                _pauseTrans(),
                 _contactUs(),
                 _appInfo(),
                 _logOutText(),
@@ -141,14 +183,5 @@ class _SettingsDialogState extends State<SettingsDialog>
   void dispose() {
     controller.dispose();
     super.dispose();
-  }
-
-  void _logout() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('token', null);
-    Navigator.pushAndRemoveUntil(
-        context,
-        PageRouteBuilder(pageBuilder: (_, __, ___) => Login()),
-        (route) => false);
   }
 }

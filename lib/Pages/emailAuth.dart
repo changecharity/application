@@ -2,29 +2,27 @@ import 'package:change/Pages/linkCredit.dart';
 import 'package:change_charity_components/change_charity_components.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:global_configuration/global_configuration.dart';
 import 'package:http/http.dart' as http;
+import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'linkCredit.dart';
-import '../Pages/orgSelected.dart';
+
 import '../Pages/forgotPass.dart';
 import '../Pages/login.dart';
-import 'package:global_configuration/global_configuration.dart';
+import '../Pages/orgSelected.dart';
+import 'linkCredit.dart';
 
 class EmailAuth extends StatefulWidget {
-
   final emailAddress;
   final action;
 
   EmailAuth(this.emailAddress, this.action);
-
 
   @override
   _EmailAuthState createState() => _EmailAuthState();
 }
 
 class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin {
-
   AnimationController _controller;
   AnimationController _loadingController;
   Animation<Offset> _paintAn;
@@ -49,21 +47,13 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin {
     _loadingController =
         AnimationController(vsync: this, duration: Duration(seconds: 1));
 
-    _paintAn = Tween<Offset>(
-        begin: Offset(-1.0, -1.0),
-        end: Offset(0, 0)
-    ).animate(CurvedAnimation(
-        curve: Curves.fastLinearToSlowEaseIn,
-        parent: _controller
-    ));
+    _paintAn = Tween<Offset>(begin: Offset(-1.0, -1.0), end: Offset(0, 0))
+        .animate(CurvedAnimation(
+            curve: Curves.fastLinearToSlowEaseIn, parent: _controller));
 
-    _bodyAn = Tween<Offset>(
-        begin: Offset(1, 2),
-        end: Offset(0, 0)
-    ).animate(CurvedAnimation(
-        curve: Curves.fastLinearToSlowEaseIn,
-        parent: _controller
-    ));
+    _bodyAn = Tween<Offset>(begin: Offset(1, 2), end: Offset(0, 0)).animate(
+        CurvedAnimation(
+            curve: Curves.fastLinearToSlowEaseIn, parent: _controller));
     _loadingAn = _loadingController.drive(
         ColorTween(begin: Colors.lightBlue[200], end: Colors.lightBlue[600]));
 
@@ -80,13 +70,11 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin {
   Widget _emailIcon() {
     return Container(
         child: Icon(
-          Icons.email,
-          size: 100,
-          color: Color.fromRGBO(0, 174, 229, 1),
-        )
-    );
+      Icons.email,
+      size: 100,
+      color: Color.fromRGBO(0, 174, 229, 1),
+    ));
   }
-
 
   Widget _backButton() {
     return Container(
@@ -107,33 +95,23 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin {
   Widget _verifyText() {
     return Container(
         margin: EdgeInsets.only(top: 20),
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Verify Email',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              Container(
-                  margin: EdgeInsets.only(top: 10),
-                  child: Text(
-                      'Please enter the 6 digit code sent to ${widget
-                          .emailAddress}',
-                      style: TextStyle(fontSize: 14)
-                  )
-              )
-            ]
-        )
-    );
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(
+            'Verify Email',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          Container(
+              margin: EdgeInsets.only(top: 10),
+              child: Text(
+                  'Please enter the 6 digit code sent to ${widget.emailAddress}',
+                  style: TextStyle(fontSize: 14)))
+        ]));
   }
 
   Widget _pinCode() {
     return Container(
         margin: EdgeInsets.only(top: 10),
-        width: MediaQuery
-            .of(context)
-            .size
-            .width * .75,
+        width: MediaQuery.of(context).size.width * .75,
         child: PinCodeTextField(
           onSubmitted: (s) {
             if (_pinController.text.length < 6) {
@@ -163,21 +141,16 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin {
           animationType: AnimationType.scale,
           animationDuration: Duration(milliseconds: 300),
           backgroundColor: Colors.transparent,
-          textStyle: TextStyle(
-              color: Color.fromRGBO(0, 174, 229, 1), fontSize: 30),
+          textStyle:
+              TextStyle(color: Color.fromRGBO(0, 174, 229, 1), fontSize: 30),
           textInputType: TextInputType.number,
           controller: _pinController,
           focusNode: focusNode,
-
-        )
-    );
+        ));
   }
 
   Widget _resendCont() {
-    return Container(
-        margin: EdgeInsets.only(top: 10),
-        child: _resendContent()
-    );
+    return Container(margin: EdgeInsets.only(top: 10), child: _resendContent());
   }
 
   Widget _resendContent() {
@@ -186,25 +159,17 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin {
           onTap: () {
             _resend();
           },
-          child: _resendTxt()
-      );
+          child: _resendTxt());
     }
     return Container(
         child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _resendTxt(),
-              _resendLoadInd()
-            ]
-        )
-    );
+            children: [_resendTxt(), _resendLoadInd()]));
   }
 
   Widget _resendTxt() {
-    return Text(
-        resendText,
-        style: TextStyle(color: Color.fromRGBO(0, 174, 229, 1), fontSize: 12)
-    );
+    return Text(resendText,
+        style: TextStyle(color: Color.fromRGBO(0, 174, 229, 1), fontSize: 12));
   }
 
   Widget _resendLoadInd() {
@@ -215,21 +180,14 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin {
               width: 12,
               height: 12,
               child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  valueColor: _loadingAn
-              )
-          )
-      );
+                  strokeWidth: 2, valueColor: _loadingAn)));
     }
     return Container();
   }
 
   Widget _errorCont() {
     return Container(
-      child: Text(
-          _pinError,
-          style: TextStyle(color: Colors.red)
-      ),
+      child: Text(_pinError, style: TextStyle(color: Colors.red)),
     );
   }
 
@@ -238,111 +196,76 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin {
       loading: loading,
       animation: _loadingAn,
       onClick: _verifyAccount,
-      text: MediaQuery
-          .of(context)
-          .size
-          .height > 700 ? "Verify" : '',
+      text: MediaQuery.of(context).size.height > 700 ? "Verify" : '',
     );
   }
 
   Widget _mainBodyContainer() {
     return Container(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            _backButton(),
-            Container(
-                margin: EdgeInsets.only(top: MediaQuery
-                    .of(context)
-                    .viewInsets
-                    .bottom == 0
-                    ? MediaQuery
-                    .of(context)
-                    .size
-                    .height > 700 ? MediaQuery
-                    .of(context)
-                    .size
-                    .height * .15 : MediaQuery
-                    .of(context)
-                    .size
-                    .height * 0.1
-                    : MediaQuery
-                    .of(context)
-                    .size
-                    .height * .03),
-                width: MediaQuery
-                    .of(context)
-                    .size
-                    .width * .85,
-                padding: EdgeInsets.fromLTRB(
-                    MediaQuery
-                        .of(context)
-                        .size
-                        .width * .07,
-                    40,
-                    MediaQuery
-                        .of(context)
-                        .size
-                        .width * .07,
-                    50
-                ),
-                decoration: BoxDecoration(
-                    color: MediaQuery
-                        .of(context)
-                        .platformBrightness == Brightness.light ? Colors
-                        .grey[100] : Colors.grey[900],
-                    borderRadius: BorderRadius.circular(15),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey,
-                        offset: Offset.fromDirection(.9),
-                        blurRadius: 10,
-                      )
-                    ]
-                ),
-                child: Column(
-                    children: [
-                      _emailIcon(),
-                      _verifyText(),
-                      _pinCode(),
-                      _errorCont(),
-                      _resendCont()
-                    ]
-                )
-            ),
-            Container(height: 20,),
-            _verify(),
-          ],
-        )
-    );
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        _backButton(),
+        Container(
+            margin: EdgeInsets.only(
+                top: MediaQuery.of(context).viewInsets.bottom == 0
+                    ? MediaQuery.of(context).size.height > 700
+                        ? MediaQuery.of(context).size.height * .15
+                        : MediaQuery.of(context).size.height * 0.1
+                    : MediaQuery.of(context).size.height * .03),
+            width: MediaQuery.of(context).size.width * .85,
+            padding: EdgeInsets.fromLTRB(
+                MediaQuery.of(context).size.width * .07,
+                40,
+                MediaQuery.of(context).size.width * .07,
+                50),
+            decoration: BoxDecoration(
+                color: MediaQuery.of(context).platformBrightness ==
+                        Brightness.light
+                    ? Colors.grey[100]
+                    : Colors.grey[900],
+                borderRadius: BorderRadius.circular(15),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey,
+                    offset: Offset.fromDirection(.9),
+                    blurRadius: 10,
+                  )
+                ]),
+            child: Column(children: [
+              _emailIcon(),
+              _verifyText(),
+              _pinCode(),
+              _errorCont(),
+              widget.action == "signup" ? _resendCont() : Container(),
+            ])),
+        Container(
+          height: 20,
+        ),
+        _verify(),
+      ],
+    ));
   }
 
   @override
   Widget build(BuildContext context) {
     return Material(
         child: GestureDetector(
-          onTap: () {
-            focusNode.unfocus();
-          },
-          child: SafeArea(
-              child: SlideTransition(
-                  position: _paintAn,
-                  child: CustomPaint(
-                      painter: ChangeBankPaint(),
-                      child: SlideTransition(
-                          position: _bodyAn,
-                          child: SingleChildScrollView(
-                              child: _mainBodyContainer()
-                          )
-                      )
-                  )
-              )
-          ),
-        )
-    );
+      onTap: () {
+        focusNode.unfocus();
+      },
+      child: SafeArea(
+          child: SlideTransition(
+              position: _paintAn,
+              child: CustomPaint(
+                  painter: ChangeBankPaint(),
+                  child: SlideTransition(
+                      position: _bodyAn,
+                      child: SingleChildScrollView(
+                          child: _mainBodyContainer()))))),
+    ));
   }
-
 
   @override
   void dispose() {
@@ -360,7 +283,7 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin {
       print('time elapsed');
       return;
     } else {
-      Future<void> .delayed(Duration(minutes: 1), () {
+      Future<void>.delayed(Duration(minutes: 1), () {
         _timePassed();
       });
     }
@@ -393,11 +316,11 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin {
     });
 
     var content = '{"user_token":"$token"}';
-    var response = await http.post(
-        "${cfg.getString("host")}/users/resendemailkey", body: content);
+    var response = await http
+        .post("${cfg.getString("host")}/users/resendemailkey", body: content);
 
     print(response.body);
-    if (response.body == "rpc error: code = Unknown desc = unknown token") {
+    if (response.body == "unknown token") {
       setState(() {
         resendLoading = !resendLoading;
         //Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>SignUp()));
@@ -435,18 +358,15 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin {
     return true;
   }
 
-
   _verifyAndSignup() async {
-    var content = '{"user_token":"$token","key":${int.parse(
-        _pinController.text)}}';
-    var response = await http.post(
-        "${cfg.getString("host")}/users/updatesignup", body: content);
+    var content =
+        '{"user_token":"$token","key":${int.parse(_pinController.text)}}';
+    var response = await http
+        .post("${cfg.getString("host")}/users/updatesignup", body: content);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     print(response.body);
 
-    if (response.body == "rpc error: code = Unknown desc = key is incorrect" ||
-        response.body ==
-            "proto: (line 1:171): invalid value for int32 type: ") {
+    if (response.body == "key is incorrect") {
       setState(() {
         loading = !loading;
         _pinError = "Incorrect code. Please try again.";
@@ -476,14 +396,14 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin {
   }
 
   _verifyAndEnterPass() async {
-    var content = '{"user_token": "$token", "key":${int.parse(
-        _pinController.text)}}';
-    var response = await http.post(
-        "${cfg.getString("host")}/users/validkey", body: content);
+    var content =
+        '{"user_token": "$token", "key":${int.parse(_pinController.text)}}';
+    var response = await http.post("${cfg.getString("host")}/users/validkey",
+        body: content);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     print(response.body);
 
-    if (response.body.contains("key is incorrect")) {
+    if (response.body.contains("wrong key")) {
       setState(() {
         loading = !loading;
         _pinError = "Incorrect code. Please try again.";
@@ -495,8 +415,11 @@ class _EmailAuthState extends State<EmailAuth> with TickerProviderStateMixin {
           context, MaterialPageRoute(builder: (context) => Login()));
     } else if (response.body.contains("success")) {
       prefs.setString('forgotPassEmail', null);
-      Navigator.push(context, MaterialPageRoute(
-          builder: (context) => ForgotPass(int.parse(_pinController.text))));
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  ForgotPass(int.parse(_pinController.text))));
     }
   }
 

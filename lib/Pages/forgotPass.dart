@@ -1,14 +1,14 @@
 import 'package:change_charity_components/change_charity_components.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:global_configuration/global_configuration.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:global_configuration/global_configuration.dart';
-import 'signup.dart';
+
 import 'login.dart';
+import 'signup.dart';
 
 class ForgotPass extends StatefulWidget {
-
   final int pin;
 
   ForgotPass(this.pin);
@@ -18,7 +18,6 @@ class ForgotPass extends StatefulWidget {
 }
 
 class _ForgotPassState extends State<ForgotPass> with TickerProviderStateMixin {
-
   String _passErr = "";
   String token;
   final _passController = TextEditingController();
@@ -40,8 +39,7 @@ class _ForgotPassState extends State<ForgotPass> with TickerProviderStateMixin {
     _loadingController =
         AnimationController(vsync: this, duration: Duration(seconds: 1));
     _loadingAn = _loadingController.drive(
-        ColorTween(begin: Colors.lightBlue[200], end: Colors.lightBlue[600])
-    );
+        ColorTween(begin: Colors.lightBlue[200], end: Colors.lightBlue[600]));
     _loadingController.repeat();
   }
 
@@ -52,30 +50,22 @@ class _ForgotPassState extends State<ForgotPass> with TickerProviderStateMixin {
           Icons.lock,
           size: 100,
           color: Color.fromRGBO(0, 174, 229, 1),
-        )
-    );
+        ));
   }
 
   Widget _forgotPassText() {
     return Container(
         margin: EdgeInsets.only(top: 20),
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Reset Password',
-                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-              ),
-              Container(
-                  margin: EdgeInsets.only(top: 10),
-                  child: Text(
-                      'Please enter your new password',
-                      style: TextStyle(fontSize: 16)
-                  )
-              )
-            ]
-        )
-    );
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(
+            'Reset Password',
+            style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+          ),
+          Container(
+              margin: EdgeInsets.only(top: 10),
+              child: Text('Please enter your new password',
+                  style: TextStyle(fontSize: 16)))
+        ]));
   }
 
   Widget _passInput() {
@@ -113,77 +103,56 @@ class _ForgotPassState extends State<ForgotPass> with TickerProviderStateMixin {
       onClick: _resetPass,
       animation: _loadingAn,
       loading: loading,
-      text: MediaQuery
-          .of(context)
-          .size
-          .height > 700 ? "Reset" : "",
+      text: MediaQuery.of(context).size.height > 700 ? "Reset" : "",
     );
   }
 
   Widget _mainBodyContainer() {
     return Container(
-        padding: EdgeInsets.only(bottom: MediaQuery
-            .of(context)
-            .viewInsets
-            .bottom),
+        padding:
+            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: Column(
           children: <Widget>[
             Container(
-              margin: EdgeInsets.only(top: MediaQuery
-                  .of(context)
-                  .viewInsets
-                  .bottom == 0
-                  ? MediaQuery
-                  .of(context)
-                  .size
-                  .height > 700 ? MediaQuery
-                  .of(context)
-                  .size
-                  .height * .2 : MediaQuery
-                  .of(context)
-                  .size
-                  .height * 0.15
-                  : MediaQuery
-                  .of(context)
-                  .size
-                  .height * .01),
-              width: MediaQuery
-                  .of(context)
-                  .size
-                  .width * .85,
+              margin: EdgeInsets.only(
+                  top: MediaQuery.of(context).viewInsets.bottom == 0
+                      ? MediaQuery.of(context).size.height > 700
+                          ? MediaQuery.of(context).size.height * .2
+                          : MediaQuery.of(context).size.height * 0.15
+                      : MediaQuery.of(context).size.height * .01),
+              width: MediaQuery.of(context).size.width * .85,
               padding: EdgeInsets.fromLTRB(0, 40, 0, 20),
               decoration: BoxDecoration(
-                  color: MediaQuery
-                      .of(context)
-                      .platformBrightness == Brightness.light
+                  color: MediaQuery.of(context).platformBrightness ==
+                          Brightness.light
                       ? Colors.grey[100]
                       : Colors.grey[900],
                   borderRadius: BorderRadius.circular(15),
                   boxShadow: [
-                    BoxShadow(color: Colors.grey,
+                    BoxShadow(
+                        color: Colors.grey,
                         offset: Offset.fromDirection(.9),
                         blurRadius: 10)
-                  ]
-              ),
+                  ]),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   _passIcon(),
                   _forgotPassText(),
-                  Container(height: 30,),
+                  Container(
+                    height: 30,
+                  ),
                   _passInput(),
                   _confirmPassInput(),
                 ],
               ),
             ),
-            Container(height: MediaQuery
-                .of(context)
-                .size
-                .height * 0.02,),
+            Container(
+              height: MediaQuery.of(context).size.height * 0.02,
+            ),
             _reset(),
           ],
-        )
-    );
+        ));
   }
 
   @override
@@ -196,9 +165,7 @@ class _ForgotPassState extends State<ForgotPass> with TickerProviderStateMixin {
         child: SafeArea(
           child: CustomPaint(
             painter: ChangeBankPaint(),
-            child: SingleChildScrollView(
-                child: _mainBodyContainer()
-            ),
+            child: SingleChildScrollView(child: _mainBodyContainer()),
           ),
         ),
       ),
@@ -247,8 +214,8 @@ class _ForgotPassState extends State<ForgotPass> with TickerProviderStateMixin {
         _passErr = "Must contain at least one number";
       });
       return false;
-    } else
-    if (_confirmController.text == '' || _confirmController.text == null) {
+    } else if (_confirmController.text == '' ||
+        _confirmController.text == null) {
       setState(() {
         _passErr = "Please confirm password";
       });
@@ -276,11 +243,10 @@ class _ForgotPassState extends State<ForgotPass> with TickerProviderStateMixin {
         loading = !loading;
       });
 
-
-      var content = '{"user_token":"$token", "password":"${_passController
-          .text}", "key":${widget.pin}}';
-      var response = await http.post(
-          "${cfg.getString("host")}/users/forgotpass", body: content);
+      var content =
+          '{"user_token":"$token", "password":"${_passController.text}", "key":${widget.pin}}';
+      var response = await http
+          .post("${cfg.getString("host")}/users/forgotpass", body: content);
       print(response.body);
       if (response.body.contains("success")) {
         Navigator.pushReplacement(
@@ -288,5 +254,4 @@ class _ForgotPassState extends State<ForgotPass> with TickerProviderStateMixin {
       }
     }
   }
-
 }

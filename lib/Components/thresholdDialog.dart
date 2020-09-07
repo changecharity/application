@@ -1,10 +1,9 @@
+import 'package:change/Components/routes.dart';
 import 'package:change/Models/userProfileModel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:global_configuration/global_configuration.dart';
-import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ThresholdDialog extends StatefulWidget {
   ThresholdDialog(this.initialVal);
@@ -26,7 +25,7 @@ class _ThresholdDialogState extends State<ThresholdDialog>
   ColorTween _colorTween;
 
   bool sliderChanging = false;
-  var threshold = 100;
+  int threshold = 100;
 
   void initState() {
     super.initState();
@@ -143,7 +142,7 @@ class _ThresholdDialogState extends State<ThresholdDialog>
                         onChangeEnd: (s) {
                           setState(() {
                             sliderChanging = !sliderChanging;
-                            _setThreshold();
+                            Routes(context: context).setThreshold(threshold);
                           });
                         },
                         min: 50,
@@ -221,20 +220,5 @@ class _ThresholdDialogState extends State<ThresholdDialog>
           (widget.initialVal == 50 ? 0.01 : 0);
       threshold = context.read<UserProfileModel>().getUserThreshold;
     });
-  }
-
-  void _setThreshold() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var token = prefs.getString('token');
-    var content = '{"user_token":"$token", "threshold":"${threshold.toInt()}"}';
-    await http.post("${cfg.getString("host")}/users/updatethreshold",
-        body: content);
-    print(threshold);
-    context.read<UserProfileModel>().notify(
-        context.read<UserProfileModel>().getUserPfLetter,
-        context.read<UserProfileModel>().getUserName,
-        threshold.toInt(),
-        context.read<UserProfileModel>().getUserMonthlyLimit,
-        context.read<UserProfileModel>().getUserRoundUpStatus);
   }
 }

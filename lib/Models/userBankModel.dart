@@ -31,10 +31,8 @@ String titleCase(String text) {
 }
 
 String convertMask(String mask) {
-  if (mask == null) {
-    mask = "0";
-  }
-  for (var i = 0; i < 4 - mask.length; i++) {
+  mask ??= "0";
+  for (var i = 0; i < 4 - mask.length + i; i++) {
     mask = "0" + mask;
   }
   return mask;

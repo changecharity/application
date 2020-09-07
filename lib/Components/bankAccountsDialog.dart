@@ -1,9 +1,9 @@
+import 'package:change_charity_components/change_charity_components.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:change_charity_components/change_charity_components.dart';
-import '../Models/userBankModel.dart';
 
+import '../Models/userBankModel.dart';
 import '../Pages/linkBank.dart';
 
 class BankAccountsDialog extends StatefulWidget {
@@ -67,7 +67,7 @@ class _BankAccountDialogState extends State<BankAccountsDialog>
                 padding: EdgeInsets.only(top: 30, left: 30),
                 child: Icon(
                   icon,
-                  size: 45,
+                  size: 35,
                 ),
               ),
               Align(
@@ -158,7 +158,9 @@ class _BankAccountDialogState extends State<BankAccountsDialog>
             if (idx < userBank.getCards.length + 1) {
               print(userBank.getCards);
               return _bankCard(
-                idx == 0 ? Icons.credit_card : Icons.business,
+                idx == 0
+                    ? Icons.credit_card_rounded
+                    : Icons.account_balance_outlined,
                 idx == 0 ? 'Payment Method' : 'Round-Up Account',
                 idx == 0
                     ? userBank.getMask

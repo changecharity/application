@@ -1,10 +1,11 @@
 import 'package:change_charity_components/change_charity_components.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
-import '../Pages/emailAuth.dart';
 import 'package:global_configuration/global_configuration.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../Pages/emailAuth.dart';
 
 class EnterEmail extends StatefulWidget {
   _EnterEmailState createState() => _EnterEmailState();
@@ -34,14 +35,18 @@ class _EnterEmailState extends State<EnterEmail> with TickerProviderStateMixin {
   Widget _confirmText() {
     return Column(
       children: <Widget>[
-        Text('Forgot Password?',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+        Text(
+          'Forgot Password?',
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
         Container(
           margin: EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 50),
-          child: Text('Please enter your email address to continue:',
-              style: TextStyle(
-                fontSize: 14,
-              )),
+          child: Text(
+            'Please enter your email address to continue:',
+            style: TextStyle(
+              fontSize: 14,
+            ),
+          ),
         ),
       ],
     );
@@ -133,8 +138,7 @@ class _EnterEmailState extends State<EnterEmail> with TickerProviderStateMixin {
         .post("${cfg.getString("host")}/users/sendforgotpass", body: content);
     print(response.body);
 
-    if (response.body ==
-        "rpc error: code = Unknown desc = email does not exist") {
+    if (response.body == "email does not exist") {
       setState(() {
         loading = !loading;
         _emailErr = "No account associated with this email";

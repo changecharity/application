@@ -1,3 +1,4 @@
+import 'package:change/Pages/homePage.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -5,7 +6,6 @@ import 'package:global_configuration/global_configuration.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Pages/emailAuth.dart';
-import 'Pages/homePage.dart';
 import 'Pages/linkCredit.dart';
 import 'Pages/login.dart';
 import 'Pages/welcomePage.dart';

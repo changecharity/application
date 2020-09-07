@@ -6,13 +6,13 @@ import 'package:change_charity_components/change_charity_components.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_stripe_payment/flutter_stripe_payment.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:http/http.dart' as http;
-import 'homePage.dart';
-import 'package:flutter_stripe_payment/flutter_stripe_payment.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Components/securityFaq.dart';
+import 'homePage.dart';
 
 class LinkCredit extends StatefulWidget {
   @override
@@ -45,8 +45,10 @@ class _LinkCreditState extends State<LinkCredit> with TickerProviderStateMixin {
 
   void initState() {
     super.initState();
+    // pk_test_bHQ5HsOjOo9ZQgGGwKrP5nwj001n62UgBV
+    // pk_live_4emYzSEoyJOFgpVOaEqy6j2L00p4wofNb8
     _stripePayment.setStripeSettings(
-        "pk_live_4emYzSEoyJOFgpVOaEqy6j2L00p4wofNb8",
+        "pk_test_bHQ5HsOjOo9ZQgGGwKrP5nwj001n62UgBV",
         "{STRIPE_APPLE_PAY_MERCHANTID}");
     _stripePayment.onCancel = () {
       print("the payment form was cancelled");
@@ -302,34 +304,33 @@ class _LinkCreditState extends State<LinkCredit> with TickerProviderStateMixin {
           MediaQuery.of(context).platformBrightness == Brightness.light
               ? Colors.grey[50]
               : Colors.grey[850],
-      body: Material(
-        child: SafeArea(
-          child: SlideTransition(
-            position: _rightToLeft,
-            child: Container(
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    SlideTransition(position: _topDown, child: _securedBy()),
-                    Expanded(
-                      child: Container(),
-                    ),
-                    _icon(),
-                    _linkYourText(),
-                    _explainText(),
-                    _whySecure(),
-                    Expanded(
-                      child: Container(),
-                    ),
-                    SlideTransition(position: _bottomUp, child: _submitCont()),
-                    _errCont(),
-                    Expanded(
-                      child: Container(),
-                    ),
-                    SlideTransition(position: _bottomUp, child: _skipText()),
-                  ]),
+      body: SafeArea(
+        child: SlideTransition(
+          position: _rightToLeft,
+          child: Container(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                SlideTransition(position: _topDown, child: _securedBy()),
+                Expanded(
+                  child: Container(),
+                ),
+                _icon(),
+                _linkYourText(),
+                _explainText(),
+                _whySecure(),
+                Expanded(
+                  child: Container(),
+                ),
+                SlideTransition(position: _bottomUp, child: _submitCont()),
+                _errCont(),
+                Expanded(
+                  child: Container(),
+                ),
+                SlideTransition(position: _bottomUp, child: _skipText()),
+              ],
             ),
           ),
         ),
@@ -340,10 +341,11 @@ class _LinkCreditState extends State<LinkCredit> with TickerProviderStateMixin {
   @override
   void dispose() {
     _controller.dispose();
+    controllerC.dispose();
     super.dispose();
   }
 
-  Future<bool> _openCredit() async {
+  void _openCredit() async {
     FocusScope.of(context).unfocus();
     setState(() {
       _plaidErr = '';
@@ -372,19 +374,20 @@ class _LinkCreditState extends State<LinkCredit> with TickerProviderStateMixin {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token');
     var content = '{"user_token":"$token"}';
-    var response = await http.post(
+    var ephRes = await http.post(
         "${cfg.getString("host")}/users/genephemeraltoken",
         body: content);
-    var decodedRes = jsonDecode(response.body);
-    var intentResponse = await _stripePayment.setupPaymentIntent(
-        decodedRes["token"], _paymentMethodId);
 
-    print("status is: ${intentResponse.status}");
+    var res = jsonDecode(ephRes.body);
+    print("ephemeral token res is: $res");
+    var intentRes =
+        await _stripePayment.setupPaymentIntent(res["token"], _paymentMethodId);
+    print("status is: ${intentRes.status}");
 
-    if (intentResponse.status == PaymentResponseStatus.succeeded) {
+    if (intentRes.status == PaymentResponseStatus.succeeded) {
       print(_paymentMethodId);
       return true;
-    } else if (intentResponse.status == PaymentResponseStatus.failed) {
+    } else if (intentRes.status == PaymentResponseStatus.failed) {
       setState(() {
         _plaidErr = "Issue verifying your card. Please try a different card.";
         _paymentMethodId = '';

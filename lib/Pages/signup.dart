@@ -1,16 +1,16 @@
+import 'package:change_charity_components/change_charity_components.dart';
 import 'package:change_charity_components/paintings.dart';
 import 'package:change_charity_components/submit_row.dart';
+import 'package:flutter/animation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/animation.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:change_charity_components/change_charity_components.dart';
-import 'emailAuth.dart';
 
+import 'emailAuth.dart';
 
 class SignUp extends StatefulWidget {
   @override
@@ -29,7 +29,8 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
   final _nameController = TextEditingController();
   final _passController = TextEditingController();
   final _emailController = TextEditingController();
-  final _confirmPassController = TextEditingController();
+
+  // final _confirmPassController = TextEditingController();
   final nameFocusNode = FocusNode();
   final emailFocusNode = FocusNode();
   final passFocusNode = FocusNode();
@@ -37,7 +38,8 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
   final tosFocusNode = FocusNode();
   String _nameErr = '';
   String _passErr = '';
-  String _confirmPassErr = '';
+
+  // String _confirmPassErr = '';
   String _emailErr = '';
   bool obscurePass = true;
   bool loading = false;
@@ -51,8 +53,8 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
     //set animations
     controller = AnimationController(
         vsync: this, duration: Duration(seconds: drawDuration.toInt()));
-    loadingController = AnimationController(
-        vsync: this, duration: Duration(seconds: 1));
+    loadingController =
+        AnimationController(vsync: this, duration: Duration(seconds: 1));
 
     animation = Tween<Offset>(
       begin: Offset(-1.0, 0.0),
@@ -96,25 +98,16 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
 
   //Sign Up
   Widget _signUpText() {
-    if (MediaQuery
-        .of(context)
-        .viewInsets
-        .bottom != 0) {
+    if (MediaQuery.of(context).viewInsets.bottom != 0) {
       return Text("");
     }
     return Container(
-      margin: EdgeInsets.only(top: MediaQuery
-          .of(context)
-          .viewInsets
-          .bottom == 0
-          ? MediaQuery
-          .of(context)
-          .size
-          .height < 700 ? 0 : MediaQuery
-          .of(context)
-          .size
-          .height * 0.05
-          : 0),
+      margin: EdgeInsets.only(
+          top: MediaQuery.of(context).viewInsets.bottom == 0
+              ? MediaQuery.of(context).size.height < 700
+                  ? 0
+                  : MediaQuery.of(context).size.height * 0.05
+              : 0),
       alignment: Alignment.center,
       child: Text(
         'Sign Up',
@@ -174,23 +167,23 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
     );
   }
 
-  Widget _confirmPassInput() {
-    return ChangeTextInput(
-      controller: _confirmPassController,
-      autofillHint: AutofillHints.newPassword,
-      focusNode: confirmPassFocusNode,
-      isPassword: true,
-      last: true,
-      hintText: 'Confirm Password',
-      prefixIcon: Icons.lock_outline_rounded,
-      errMsg: _confirmPassErr,
-      errFunc: (s) {
-        setState(() {
-          _confirmPassErr = s;
-        });
-      },
-    );
-  }
+  // Widget _confirmPassInput() {
+  //   return ChangeTextInput(
+  //     controller: _confirmPassController,
+  //     autofillHint: AutofillHints.newPassword,
+  //     focusNode: confirmPassFocusNode,
+  //     isPassword: true,
+  //     last: true,
+  //     hintText: 'Confirm Password',
+  //     prefixIcon: Icons.lock_outline_rounded,
+  //     errMsg: _confirmPassErr,
+  //     errFunc: (s) {
+  //       setState(() {
+  //         _confirmPassErr = s;
+  //       });
+  //     },
+  //   );
+  // }
 
   Widget _tosPrivacyCont() {
     return Container(
@@ -213,9 +206,8 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
           RichText(
             text: TextSpan(
               style: TextStyle(
-                color: MediaQuery
-                    .of(context)
-                    .platformBrightness == Brightness.light
+                color: MediaQuery.of(context).platformBrightness ==
+                        Brightness.light
                     ? Colors.black
                     : Colors.white,
               ),
@@ -224,9 +216,11 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                   text: 'I agree to the ',
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {
-                      setState(() {
-                        _tosAccepted = !_tosAccepted;
-                      });
+                      setState(
+                        () {
+                          _tosAccepted = !_tosAccepted;
+                        },
+                      );
                     },
                 ),
                 TextSpan(
@@ -260,10 +254,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
       animation: loadingAn,
       loading: loading,
       onClick: _signUp,
-      text: MediaQuery
-          .of(context)
-          .size
-          .height > 700 ? "Sign Up" : '',
+      text: MediaQuery.of(context).size.height > 700 ? "Sign Up" : '',
     );
   }
 
@@ -281,10 +272,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
             child: CustomPaint(
               painter: ChangeSignUpPaint(),
               child: Container(
-                height: MediaQuery
-                    .of(context)
-                    .size
-                    .height,
+                height: MediaQuery.of(context).size.height,
                 child: SlideTransition(
                   position: animationB,
                   child: SingleChildScrollView(
@@ -293,22 +281,17 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                         children: <Widget>[
                           _backButton(),
                           _signUpText(),
-                          Container(height: MediaQuery
-                              .of(context)
-                              .viewInsets
-                              .bottom == 0
-                              ? MediaQuery
-                              .of(context)
-                              .size
-                              .height > 700 ? 60 : MediaQuery
-                              .of(context)
-                              .size
-                              .height * 0.05
-                              : 0,),
+                          Container(
+                            height: MediaQuery.of(context).viewInsets.bottom ==
+                                    0
+                                ? MediaQuery.of(context).size.height > 700
+                                    ? 100
+                                    : MediaQuery.of(context).size.height * 0.08
+                                : 0,
+                          ),
                           _nameInput(),
                           _emailInput(),
                           _passInput(),
-                          _confirmPassInput(),
                           _tosPrivacyCont(),
                           _signUpCont(),
                         ],
@@ -338,9 +321,11 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
     prefs.setString('token', val);
     prefs.setString('signUpEmail', "${_emailController.text}");
     if (prefs.getString('token') != null && prefs.getString('token') != '') {
-      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
-          builder: (context) => EmailAuth(_emailController.text, "signup")), (
-          route) => false);
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+              builder: (context) => EmailAuth(_emailController.text, "signup")),
+          (route) => false);
     }
   }
 
@@ -366,7 +351,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
   //throws errors if email isn't valid
   bool _checkValidEmail() {
     bool emailValid = RegExp(
-        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
         .hasMatch(_emailController.text);
 
     if (_emailController.text == '' || _emailController.text == null) {
@@ -409,12 +394,13 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
         _passErr = "Must contain at least one number";
       });
       return false;
-    } else if (_passController.text != _confirmPassController.text) {
-      setState(() {
-        _confirmPassErr = "Passwords do not match";
-      });
-      return false;
     }
+    // else if (_passController.text != _confirmPassController.text) {
+    //   setState(() {
+    //     _confirmPassErr = "Passwords do not match";
+    //   });
+    //   return false;
+    // }
     return true;
   }
 
@@ -427,23 +413,22 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
       setState(() {
         loading = !loading;
       });
-      var content = '{"legal_name":"${_nameController
-          .text}","email":"${_emailController
-          .text}","password":"${_passController.text}"}';
-      var response = await http.post(
-          "${cfg.getString("host")}/users/signup", body: content).timeout(
-          Duration(seconds: 7));
+      var content =
+          '{"legal_name":"${_nameController.text}","email":"${_emailController.text}","password":"${_passController.text}"}';
+      var response = await http
+          .post("${cfg.getString("host")}/users/signup", body: content)
+          .timeout(Duration(seconds: 7));
 
       print(response.body);
 
-      if (response.body == "rpc error: code = Unknown desc = email exists") {
+      if (response.body == "email exists") {
         setState(() {
           _emailErr = "Email Taken";
           loading = !loading;
         });
         return;
-      } else
-      if (response.body.startsWith("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9")) {
+      } else if (response.body
+          .startsWith("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9")) {
         _saveSignUp(response.body);
         _setTime();
         print("successful");
